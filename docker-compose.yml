@@ -1,0 +1,7 @@
+app:
+  image: node:latest
+  ports:
+    - 3000:3000
+  volumes:
+    - .:/app
+  working_dir: /app

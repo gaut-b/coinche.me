@@ -1,0 +1,14 @@
+body {
+  background-color: green;
+}
+
+.cardinal-points {
+  .north, .south {
+    width: 100%;
+    text-align: center;
+  }
+
+  .east, .west {
+    margin: 1rem 0;
+  }
+}

@@ -1,0 +1,14 @@
+.hand {
+	padding: 0;
+	margin: 0;
+  display: inline-block;
+
+  &.is-compact {
+    img.playing-card {
+      margin-left: -8rem;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}

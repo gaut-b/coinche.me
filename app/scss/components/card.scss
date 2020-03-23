@@ -1,0 +1,18 @@
+img.playing-card {
+	width: 10rem;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: initial;
+  box-sizing: initial;
+  transition: ease 0.1s transform;
+  &:not(:last-child) {
+    margin-right: 1rem;
+  }
+  &:not(.is-hidden-face) {
+    cursor: pointer;
+    &:hover {
+      transform: translateY(-2rem);
+    }
+  }
+}

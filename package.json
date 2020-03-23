@@ -1,0 +1,30 @@
+{
+  "name": "coincheur",
+  "version": "1.0.0",
+  "description": "Jouer aux cartes en ligne entre amis sans création de compte",
+  "main": "index.js",
+  "repository": "git@github.com:augnustin/coincheur.git",
+  "author": "Augustin RIEDINGER",
+  "license": "MIT",
+  "scripts": {
+    "start": "node -r esm index.js",
+    "dev": "parcel watch -d build app/index.html"
+  },
+  "dependencies": {
+    "bulma": "^0.8.1",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "^7.9.1",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-wildcard": "^6.0.0",
+    "sass": "^1.26.3"
+  }
+}
