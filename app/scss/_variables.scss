@@ -1,0 +1,6 @@
+$card_ratio: 1.39375;
+$card_width: 8rem;
+$card_height: $card_width * $card_ratio;
+// $card_height: 12rem;
+// $card_width: $card_height / $card_ratio;
+$card_space: $card_width / 4;

@@ -1,0 +1,29 @@
+@import '../variables';
+
+.playing-table {
+  position: relative;
+  height: 2 * ($card_height + $card_space);
+  width: 2 * ($card_width + $card_space);
+  .table-slot {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: $card_width;
+    height: $card_height;
+    &.is-north {
+      top: -50%;
+    }
+    &.is-east {
+      right: -50%;
+    }
+    &.is-south {
+      bottom: -50%;
+    }
+    &.is-west {
+      left: -50%;
+    }
+  }
+}

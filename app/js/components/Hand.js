@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import '../../scss/components/hand.scss';
 import Card from './Card';
 
-const Hand = ({cards, isHidden, isCompact}) => {
+const Hand = ({cards, isSelectable, isHidden, style}) => {
 
   return (
-    <div className={`hand ${isCompact && 'is-compact'}`}>
-      {cards.map(c => <Card isHidden={isHidden} key={c} value={c} />)}
+    <div className={`hand is-${style}`}>
+      {cards.map(c => <Card isSelectable={isSelectable} key={c} value={isHidden ? '' : c} />)}
     </div>
   )
 };
+
+Hand.propTypes = {
+  cards: PropTypes.array.isRequired,
+  isHidden: PropTypes.bool,
+  isSelectable: PropTypes.bool,
+  style: PropTypes.string.isRequired,
+}
 
 export default Hand;

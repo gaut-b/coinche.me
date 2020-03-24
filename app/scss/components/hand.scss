@@ -1,3 +1,5 @@
+@import '../variables';
+
 .hand {
 	padding: 0;
 	margin: 0;
@@ -5,7 +7,7 @@
 
   &.is-compact {
     img.playing-card {
-      margin-left: -8rem;
+      margin-left: $card_space - $card_width;
       &:first-child {
         margin-left: 0;
       }

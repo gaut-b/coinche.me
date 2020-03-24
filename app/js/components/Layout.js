@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import Card from './Card.js'
 import Hand from './Hand.js';
+import Table from './Table.js';
+import Player from './Player.js';
 
 const Layout = () => (
   <div className="container">
@@ -11,26 +13,21 @@ const Layout = () => (
     </div>
     <div className="section cardinal-points">
       <div className="level">
-        <div className="north">
-          <Hand cards={['2C', '2H']} isHidden={true} isCompact={true} />
-        </div>
+        <Player name="player 1" position="north" cards={['2C', '2H']} tricks={[]}/>
       </div>
       <div className="level">
         <div className="level-left">
-          <div className="west">
-            <Hand cards={['2C', '2H']} isHidden={true} isCompact={true} />
-          </div>
+          <Player name="player 2" position="west" cards={['2C', '2H']} tricks={[]}/>
+        </div>
+        <div className="level-item">
+          <Table cards={[{value: '3C', position: 'south'}, {value: '3H', position: 'west'}, {value: '2C', position: 'north'}]} />
         </div>
         <div className="level-right">
-          <div className="east">
-            <Hand cards={['2C', '2H']} isHidden={true} isCompact={true} />
-          </div>
+          <Player name="player 3" position="east" cards={['2C', '2H']} tricks={[]}/>
         </div>
       </div>
       <div className="level">
-        <div className="south">
-          <Hand cards={['2C', '2H']} isHidden={false} isCompact={true} />
-        </div>
+        <Player name="Moi" position="south" cards={['2C', '2H']} isFirstPerson={true} tricks={[]} />
       </div>
     </div>
   </div>

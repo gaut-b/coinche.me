@@ -1,5 +1,8 @@
+@import '../variables';
+
 img.playing-card {
-	width: 10rem;
+  // width: 10rem;
+  height: $card_height;
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -7,12 +10,12 @@ img.playing-card {
   box-sizing: initial;
   transition: ease 0.1s transform;
   &:not(:last-child) {
-    margin-right: 1rem;
+    margin-right: $card_space / 2;
   }
-  &:not(.is-hidden-face) {
+  &.selectable {
     cursor: pointer;
     &:hover {
-      transform: translateY(-2rem);
+      transform: translateY(-$card_space);
     }
   }
 }
