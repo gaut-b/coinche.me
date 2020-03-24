@@ -7,7 +7,7 @@ import Card from './Card';
 const Hand = ({cards, isSelectable, isHidden, style}) => {
 
   return (
-    <div className={`hand is-${style}`}>
+    <div className={`hand is-${style} ${isHidden ? 'is-hidden-face' : ''}`}>
       {cards.map(c => <Card isSelectable={isSelectable} key={c} value={isHidden ? '' : c} />)}
     </div>
   )

@@ -12,5 +12,10 @@
         margin-left: 0;
       }
     }
+    &.is-hidden-face {
+      img.playing-card {
+        margin-left: ($card_space / 2) - $card_width;
+      }
+    }
   }
 }

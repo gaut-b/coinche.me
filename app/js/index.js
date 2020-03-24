@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 
-import Layout from './components/Layout';
+import Game from './containers/Game';
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Layout />
-    </Provider>,
-    document.getElementById('container')
+  <Provider store={store}>
+    <Game />
+  </Provider>,
+  document.getElementById('container')
 );

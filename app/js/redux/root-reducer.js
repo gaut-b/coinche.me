@@ -1,26 +1,40 @@
 import { combineReducers } from 'redux';
+import {DISTRIBUTE} from './actions';
 import {DECK32, DECK52} from '../constants/decks';
+import {
+  POSITIONS,
+  NORTH,
+  EAST,
+  SOUTH,
+  WEST,
+} from '../constants/positions';
+import {shuffle} from '../utils/array';
 
 const INITIAL_STATE = {
-  deck: DECK32,
+  deck: shuffle(DECK32),
   onTable: [],
   players: [{
-    name: 'Player One',
+    position: SOUTH,
+    name: 'Me',
     hand: [],
     tricks: [],
     isFirstPerson: true,
   }, {
-    name: 'Player two',
+    position: WEST,
+    name: 'Ennemi à abattre 1',
+    hand: [],
+    tricks: [],
+    isVirtual: true,
+    isDealer: true,
+  }, {
+    position: NORTH,
+    name: 'Copaing',
     hand: [],
     tricks: [],
     isVirtual: true,
   }, {
-    name: 'Player three',
-    hand: [],
-    tricks: [],
-    isVirtual: true,
-  }, {
-    name: 'Player four',
+    position: EAST,
+    name: 'Ennemi à abattre 2',
     hand: [],
     tricks: [],
     isVirtual: true,
@@ -30,9 +44,28 @@ const INITIAL_STATE = {
 
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case DISTRIBUTE:
+      console.log('coucou')
+      const dealerIndex = state.players.findIndex(p => p.isDealer);
+      const nbPlayers = state.players.length;
+      const playersWithHand = state.deck.reduce((players, card, deckIndex) => {
+        const nextPlayerIndex = (dealerIndex + deckIndex) % nbPlayers;
+        return players.map((player, playerIndex) => {
+          if (nextPlayerIndex === playerIndex) {
+            return Object.assign({}, player, {
+              hand: player.hand.concat(card),
+            })
+          } else {
+            return player;
+          }
+        })
+      }, state.players);
+      return Object.assign({}, state, {
+        players: playersWithHand
+      });
     default:
       return state;
   };
 };
 
-export default combineReducers({rootReducer});
+export default rootReducer;
