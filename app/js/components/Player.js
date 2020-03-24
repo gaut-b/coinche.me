@@ -5,11 +5,11 @@ import '../../scss/components/player.scss';
 
 import Hand from './Hand.js';
 
-const Player = ({name, position, isFirstPerson, isDealer, hand, tricks}) => {
+const Player = ({name, position, isFirstPerson, isDealer, hand, tricks, onPlayCard}) => {
   return (
     <div className={`player is-${position}`}>
       <p className={`name ${isDealer ? 'is-dealer' : ''}`}>{name}</p>
-      <Hand cards={hand} isSelectable={isFirstPerson} isHidden={!isFirstPerson} style="compact" />
+      <Hand onPlayCard={onPlayCard} cards={hand} isSelectable={isFirstPerson} isHidden={!isFirstPerson} style="compact" />
     </div>
   );
 }

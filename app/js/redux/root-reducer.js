@@ -1,5 +1,8 @@
 import { combineReducers } from 'redux';
-import {DISTRIBUTE} from './actions';
+import {
+  DISTRIBUTE,
+  PLAY_CARD,
+} from './actions';
 import {DECK32, DECK52} from '../constants/decks';
 import {
   POSITIONS,
@@ -45,7 +48,6 @@ const INITIAL_STATE = {
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case DISTRIBUTE:
-      console.log('coucou')
       const dealerIndex = state.players.findIndex(p => p.isDealer);
       const nbPlayers = state.players.length;
       const playersWithHand = state.deck.reduce((players, card, deckIndex) => {
@@ -63,6 +65,22 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, {
         players: playersWithHand
       });
+      case PLAY_CARD:
+        const {card} = action;
+        const playerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
+        const playerPosition = state.players[playerIndex].position;
+        const playersUpdated = state.players.map((player) => {
+          return Object.assign({}, player, {
+            hand: player.hand.filter(c => c !== card),
+          })
+        });
+        return Object.assign({}, state, {
+          players: playersUpdated,
+          onTable: state.onTable.filter(({position}) => position !== playerPosition).concat({
+            value: card,
+            position: playerPosition,
+          })
+        });
     default:
       return state;
   };

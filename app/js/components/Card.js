@@ -6,9 +6,9 @@ import '../../scss/components/card.scss';
 // Can't use import, require needed :(
 const images = require('../../images/cards/*.svg');
 
-const Card = ({value, isHidden, isSelectable}) => {
-  const image = !isHidden && images[value] || images['BLUE_BACK'];
-  return (image ? <img className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>)
+const Card = ({value, isHidden, isSelectable, onPlayCard}) => {
+  const image = isHidden ? images['BLUE_BACK'] : images[value];
+  return (image ? <img onClick={e => onPlayCard(value)} className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>)
 }
 
 Card.propTypes = {
