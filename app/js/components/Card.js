@@ -10,14 +10,19 @@ const images = require('../../images/cards/*.svg');
 
 const Card = ({value, isHidden, isSelectable, playCard}) => {
   const image = isHidden ? images['BLUE_BACK'] : images[value];
-  return (image ? <img onClick={e => playCard(value)} className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>)
+
+  const handleClick = (e) => {
+    if (!isSelectable) return;
+    playCard(value)
+  }
+  return (image ? <img onClick={e => handleClick(event)} className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>)
 }
 
 Card.propTypes = {
   isHidden: PropTypes.bool,
   isSelectable: PropTypes.bool,
   value: PropTypes.string.isRequired,
-  playCard: PropTypes.func.isRequired
+  playCard: PropTypes.func.isRequired,
 }
 
 const mapDispatchToProps = (dispatch) => ({

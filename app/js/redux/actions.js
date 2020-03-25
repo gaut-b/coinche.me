@@ -18,6 +18,6 @@ export function playCard(card) {
 export function collect(cards) {
   return {
     type: ACTIONS.COLLECT,
-    payload: cards
+    payload: cards,
   }
 };
