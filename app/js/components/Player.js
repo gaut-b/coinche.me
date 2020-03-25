@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import '../../scss/components/player.scss';
 
 import Hand from './Hand.js';
+import Tricks from './Tricks.js';
 
-const Player = ({name, position, isFirstPerson, isDealer, hand, tricks}) => {
+const Player = ({tablePosition, players}) => {
+
+  const player = players.find(p => p.position === tablePosition)
+  if (!player) return null;
+  const { name,
+          position,
+          isFirstPerson,
+          isDealer,
+          hand,
+          tricks,
+        } = player;
+
   return (
     <div className={`player is-${position}`}>
       <p className={`name ${isDealer ? 'is-dealer' : ''}`}>{name}</p>
@@ -15,12 +28,13 @@ const Player = ({name, position, isFirstPerson, isDealer, hand, tricks}) => {
 }
 
 Player.propTypes = {
-  name: PropTypes.string,
-  position: PropTypes.string.isRequired,
-  isDealer: PropTypes.bool,
-  isFirstPerson: PropTypes.bool,
-  hand: PropTypes.array.isRequired,
-  tricks: PropTypes.array.isRequired,
+  tablePosition: PropTypes.string.isRequired,
+  players: PropTypes.array.isRequired,
 }
 
-export default Player;
+const mapStateToProps = (state) => ({
+  players: state.players,
+});
+
+export default connect(mapStateToProps)(Player);
+
