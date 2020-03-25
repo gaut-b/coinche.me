@@ -10,7 +10,7 @@ import {
 import Table from './Table.js';
 import Player from './Player.js';
 
-const Game = ({onTable, players, onDistribute, onPlayCard}) => {
+const Game = ({onTable, players, onDistribute}) => {
   const emptyHands = players.map(p => p.hand).every(h => !h.length);
   return (
     <div className="container">
@@ -27,21 +27,21 @@ const Game = ({onTable, players, onDistribute, onPlayCard}) => {
       }
       <div className="section">
         <div className="level">
-          <Player onPlayCard={onPlayCard} {...players.find(p => p.position === NORTH)}/>
+          <Player {...players.find(p => p.position === NORTH)}/>
         </div>
         <div className="level">
           <div className="level-left">
-            <Player onPlayCard={onPlayCard} {...players.find(p => p.position === WEST)}/>
+            <Player {...players.find(p => p.position === WEST)}/>
           </div>
           <div className="level-item">
             <Table cards={onTable} />
           </div>
           <div className="level-right">
-            <Player onPlayCard={onPlayCard} {...players.find(p => p.position === EAST)}/>
+            <Player {...players.find(p => p.position === EAST)}/>
           </div>
         </div>
         <div className="level">
-          <Player onPlayCard={onPlayCard} {...players.find(p => p.position === SOUTH)}/>
+          <Player {...players.find(p => p.position === SOUTH)}/>
         </div>
       </div>
     </div>
