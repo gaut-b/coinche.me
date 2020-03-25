@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { playCard } from '../redux/actions';
 import PropTypes from 'prop-types';
 
 import '../../scss/components/card.scss';
@@ -6,15 +8,20 @@ import '../../scss/components/card.scss';
 // Can't use import, require needed :(
 const images = require('../../images/cards/*.svg');
 
-const Card = ({value, isHidden, isSelectable, onPlayCard}) => {
+const Card = ({value, isHidden, isSelectable, playCard}) => {
   const image = isHidden ? images['BLUE_BACK'] : images[value];
-  return (image ? <img onClick={e => onPlayCard(value)} className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>)
+  return (image ? <img onClick={e => playCard(value)} className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>)
 }
 
 Card.propTypes = {
   isHidden: PropTypes.bool,
   isSelectable: PropTypes.bool,
   value: PropTypes.string.isRequired,
+  playCard: PropTypes.func.isRequired
 }
 
-export default Card;
+const mapDispatchToProps = (dispatch) => ({
+  playCard: value => dispatch(playCard(value)),
+})
+
+export default connect(null, mapDispatchToProps)(Card);
