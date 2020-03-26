@@ -27,21 +27,21 @@ const Game = ({onTable, players, onDistribute}) => {
       }
       <div className="section">
         <div className="level">
-          <Player {...players.find(p => p.position === NORTH)}/>
+          <Player tablePosition={NORTH} />
         </div>
         <div className="level">
           <div className="level-left">
-            <Player {...players.find(p => p.position === WEST)}/>
+            <Player tablePosition={WEST} />
           </div>
           <div className="level-item">
             <Table cards={onTable} />
           </div>
           <div className="level-right">
-            <Player {...players.find(p => p.position === EAST)}/>
+            <Player tablePosition={EAST} />
           </div>
         </div>
         <div className="level">
-          <Player {...players.find(p => p.position === SOUTH)}/>
+          <Player tablePosition={SOUTH} />
         </div>
       </div>
     </div>
