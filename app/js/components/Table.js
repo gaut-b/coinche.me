@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { collect } from '../redux/actions';
 import PropTypes from 'prop-types';
 
 import '../../scss/components/table.scss';
 import Card from './Card';
 
-const Table = ({cards}) => {
+const Table = ({cards, collect}) => {
   return (
-    <div className="playing-table">
+    <div className="playing-table" onClick={() => collect(cards)}>
       {cards.map(({position, value}, index) => {
         return (
           <div key={value} className={`table-slot is-${position}`} style={{zIndex: index}}>
@@ -22,4 +24,8 @@ Table.propTypes = {
   cards: PropTypes.array.isRequired,
 }
 
-export default Table;
+const mapDispatchToProps = (dispatch) => ({
+  collect: (cards) => dispatch(collect(cards)),
+})
+
+export default connect(null, mapDispatchToProps)(Table);
