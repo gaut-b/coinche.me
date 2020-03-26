@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { ACTIONS } from './actions';
+import actionTypes from './actions.types';
 import {DECK32, DECK52} from '../constants/decks';
 import {
   POSITIONS,
@@ -44,7 +44,7 @@ const INITIAL_STATE = {
 
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case ACTIONS.DISTRIBUTE:
+    case actionTypes.DISTRIBUTE:
       const dealerIndex = state.players.findIndex(p => p.isDealer);
       const nbPlayers = state.players.length;
       const playersWithHand = state.deck.reduce((players, card, deckIndex) => {
@@ -62,7 +62,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, {
         players: playersWithHand
       });
-    case ACTIONS.PLAY_CARD: {
+    case actionTypes.PLAY_CARD: {
       const card = action.payload;
       const playerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
       const playerPosition = state.players[playerIndex].position;
@@ -79,7 +79,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         })
       });
     };
-    case ACTIONS.COLLECT:
+    case actionTypes.COLLECT:
       const cards = action.payload; //It's not mandatory to pass cards as arguments because cards and state.onTable are equals
       if (!cards) return state;
       const playerIndex = state.players.findIndex(p => p.isFirstPerson);

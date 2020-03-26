@@ -19,10 +19,7 @@ const Game = ({onTable, players, onDistribute}) => {
   useEffect( () => {
     socket.emit('joining', { data: 'User joining the room !' });
     socket.on('welcoming', (data) => console.log(data));
-    return () => {
-      socket.emit('leaving', {data: 'User leaving the room !'});
-    }
-  });
+  }, []);
 
   return (
     <div className="container">

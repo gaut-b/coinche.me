@@ -1,23 +1,19 @@
-export const ACTIONS = {
-  DISTRIBUTE: 'DISTRIBUTE',
-  PLAY_CARD: 'PLAY_CARD',
-  COLLECT: 'COLLECT',
-};
+import actionTypes from './actions.types';
 
 export function distribute() {
-  return { type: ACTIONS.DISTRIBUTE }
+  return { type: actionTypes.DISTRIBUTE }
 };
 
 export function playCard(card) {
   return {
-    type: ACTIONS.PLAY_CARD,
+    type: actionTypes.PLAY_CARD,
     payload: card,
   }
 };
 
 export function collect(cards) {
   return {
-    type: ACTIONS.COLLECT,
+    type: actionTypes.COLLECT,
     payload: cards
   }
 };

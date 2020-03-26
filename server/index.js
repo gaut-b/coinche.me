@@ -4,19 +4,23 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
+const Redis = require('ioredis');
+const redisURL = "redis://redis";
+
 app.use(express.static('build'));
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
+const initRedis = () => {
+  const sub = new Redis(redisURL);
+  const pub = new Redis(redisURL);
+  return {sub, pub};
+}
+
 io.on('connection', (socket) => {
-  socket.on('joining', (data) => {
-    console.log(data);
-    socket.emit('welcoming', { hello: 'world'})
-  });
-  socket.on('leaving', (data) => {
-    console.log(data);
-  });
+  const {sub, pub} = initRedis();
+  console.log(socket.id)
 });
 
 server.listen(PORT, () => {
