@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 
 import {
   NORTH,
@@ -10,8 +10,20 @@ import {
 import Table from './Table.js';
 import Player from './Player.js';
 
+const io = require('socket.io-client');
+const socket = io('http://localhost:3000');
+
 const Game = ({onTable, players, onDistribute}) => {
   const emptyHands = players.map(p => p.hand).every(h => !h.length);
+
+  useEffect( () => {
+    socket.emit('joining', { data: 'User joining the room !' });
+    socket.on('welcoming', (data) => console.log(data));
+    return () => {
+      socket.emit('leaving', {data: 'User leaving the room !'});
+    }
+  });
+
   return (
     <div className="container">
       <div className="has-text-centered">
