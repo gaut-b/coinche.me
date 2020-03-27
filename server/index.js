@@ -32,25 +32,25 @@ app.post('/joinTable', async (req, res) => {
   res.send({tableId: tableId})
 });
 
-const broadcastToClients = store => next => action => {
-  console.log(action)
-  const returnValue = next(action)
-  // Do the broadcast
-  return returnValue;
-};
+// const broadcastToClients = store => next => action => {
+//   console.log(action)
+//   const returnValue = next(action)
+//   // Do the broadcast
+//   return returnValue;
+// };
 
-const store = createStore(rootReducer, applyMiddleware(...[storeToRedis, broadcastToClients]));
+// const store = createStore(rootReducer, applyMiddleware(...[storeToRedis, broadcastToClients]));
 
-console.log(store.getState());
+// console.log(store.getState());
 
-store.dispatch({
-  type: 'RECEIVE',
-  payload: {
-    message: 'hello',
-  },
-})
+// store.dispatch({
+//   type: 'RECEIVE',
+//   payload: {
+//     message: 'hello',
+//   },
+// })
 
-console.log(store.getState());
+// console.log(store.getState());
 
 io.on('connection', (socket) => {
   //socket.on('disconnect', reason => console.log(socket.id));
