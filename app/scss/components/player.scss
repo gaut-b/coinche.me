@@ -8,11 +8,39 @@
 
   &.is-west, &.is-east {
     margin: 1rem 0;
+    min-width: 10vw;
+  }
+
+  &.is-north {
+    .name {
+      margin-bottom: 0;
+      margin-top: 1rem;
+    }
+  }
+
+  @media screen and (max-width: $tablet) {
+    &:not(.is-south) {
+      .hand {
+        display: none;
+      }
+    }
+    &.is-west .name {
+      transform: rotate(-90deg) translateX(-50%) translateY(25%);
+      transform-origin: left;
+      max-width: 20vw;
+    }
+    &.is-east .name {
+      transform: rotate(90deg) translateX(50%) translateY(25%);
+      transform-origin: right;
+      max-width: 20vw;
+    }
   }
 
   .name {
     text-align: center;
     margin-bottom: 1rem;
+    cursor: pointer;
+
     &.is-dealer {
       font-weight: bold;
     }

@@ -15,7 +15,11 @@ const Card = ({value, isHidden, isSelectable, playCard}) => {
     if (!isSelectable) return;
     playCard(value)
   }
-  return (image ? <img onClick={e => handleClick(event)} className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>)
+  return (
+    <div className="card-wrapper">
+      {image ? <img onClick={e => handleClick(event)} className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>}
+    </div>
+  )
 }
 
 Card.propTypes = {

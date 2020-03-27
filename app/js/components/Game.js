@@ -11,6 +11,7 @@ import {
 
 import Table from './Table.js';
 import Player from './Player.js';
+import Header from './Header.js';
 
 const io = require('socket.io-client');
 const socket = io('http://localhost:3000');
@@ -54,36 +55,33 @@ const Game = ({onTable, deck, dealerIndex, nbPlayers, players, distributeSocket,
   }, [players]);
 
   return (
-    <div className="container">
-      <div className="has-text-centered">
-        <h1 className="title is-1">Le coincheur</h1>
-        <p className="subtitle">Jouez en ligne avec vos amis</p>
-      </div>
-      {
-        !isDistributed && (
-          <div className="section has-text-centered">
-            <button onClick={handleClick} className="button is-dark is-large">Distribuer une partie</button>
-          </div>
-        )
-      }
-      <div className="section">
-        <div className="level">
-          <Player tablePosition={NORTH} />
-        </div>
-        <div className="level">
-          <div className="level-left">
-            <Player tablePosition={WEST} />
-          </div>
-          <div className="level-item">
-            <Table cards={onTable} />
-          </div>
-          <div className="level-right">
-            <Player tablePosition={EAST} />
-          </div>
-        </div>
-        <div className="level">
-          <Player tablePosition={SOUTH} />
-        </div>
+    <div>
+      <Header />
+      <div className="section is-full-screen">
+        {
+          !isDistributed ? (
+            <ul className="commands">
+              <li>
+                <button onClick={handleClick} className="button is-primary is-large is-rounded">Distribuer une partie</button>
+              </li>
+            </ul>
+          ) : (
+            <div className="level-container">
+              <div className="level is-mobile">
+                <Player tablePosition={NORTH} />
+              </div>
+              <div className="level is-mobile">
+                <Player tablePosition={WEST} />
+                <div className="level-item">
+                  <Table cards={onTable} />
+                </div>
+                <Player tablePosition={EAST} />
+              </div>
+              <div className="level is-mobile">
+                <Player tablePosition={SOUTH} />
+              </div>
+            </div>
+          )}
       </div>
     </div>
   );
