@@ -19,31 +19,33 @@ const initRedis = () => {
 }
 
 io.on('connection', (socket) => {
-  socket.on('disconnect', reason => console.log(reason));
+  socket.on('disconnect', reason => console.log(socket.id));
 
   socket.on('joinTable', data => {
-    console.log('User joining table', data.table)
-    socket.join(data.table)
+    const {tableId, username} = data
+    console.log(`User ${username} joining table ${tableId}`)
+    socket.join(tableId)
   });
 
   socket.on('leaveTable', data => {
-    console.log('User leaving table', data.table)
-    socket.leave(data.table);
+    console.log(`User ${username} leaving table ${tableId}`)
+    socket.leave(tableId);
+  });
+
+  socket.on('cardsDistributed', (data) => {
+    const {table, hands} = data
+    console.log('Broadcasting to the table', table, data);
+    socket.emit('cardsDistributed', hands);
+    socket.broadcast
+    .to(table)
+    .emit('cardsDistributed', hands);
   });
 
   // socket.on('cardsDistributed', (data) => {
   //   const {table, hands} = data
   //   console.log('Broadcasting to the table', table, data);
-  //   socket.broadcast
-  //   .to(table)
-  //   .emit('cardsDistributed', hands);
+  //   io.emit('cardsDistributed', hands);
   // });
-
-  socket.on('cardsDistributed', (data) => {
-    const {table, hands} = data
-    console.log('Broadcasting to the table', table, data);
-    io.emit('cardsDistributed', hands);
-  });
 
   // const {sub, pub} = initRedis();
   // sub.subscribe('gameState');

@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { distributeSocket, distribute } from '../redux/actions';
+import useSocket from './useSocket';
 
 import {
   NORTH,
@@ -12,46 +13,33 @@ import {
 import Table from './Table.js';
 import Player from './Player.js';
 
-const io = require('socket.io-client');
-const socket = io('http://localhost:3000');
-socket.emit('joiningTable', {table: 'coinche'});
+const Game = ({onTable, isDistributed, deck, dealerIndex, nbPlayers, players, distributeSocket, distribute}) => {
 
-const Game = ({onTable, deck, dealerIndex, nbPlayers, players, distributeSocket, distribute}) => {
+  const tableId = 'coinche';
+  const username = 'tiego';
 
-  const [isDistributed, setDistributed] = useState(false)
-  const [conn, setConn] = useState({
-    atTable: false,
-    tableName: 'coinche'
-  });
+  const [socket] = useSocket('http://localhost:3000');
+  socket.connect()
 
   const handleClick = () => {
-    setDistributed(!isDistributed);
-    distributeSocket(socket, conn.tableName, deck, dealerIndex, nbPlayers);
+    distributeSocket(socket, tableId, deck, dealerIndex, nbPlayers);
   }
 
-  //  useEffect(() => {
+  useEffect(() => {
+    socket.emit('joinTable', {
+      tableId,
+      username,
+    });
 
-  //   if(conn.atTable) {
-  //     console.log('joining room');
-  //     socket.emit('joiningTable', {table: 'coinche'});
-  //   }
-
-  //   return () => {
-  //     if(conn.atTable) {
-  //       console.log('leaving room');
-  //       socket.emit('leavingTable', {
-  //         tableName: 'coinche'
-  //       })
-  //     }
-  //   }
-  // });
-
-  useEffect( () => {
     socket.on('cardsDistributed', hands => {
-      console.log('heyyyy')
       distribute(JSON.parse(hands));
     });
-  }, [players]);
+
+    return () => {
+      console.log('leaving room');
+      socket.emit('leaveTable', {tableId, username});
+    }
+  }, []);
 
   return (
     <div className="container">
@@ -91,6 +79,7 @@ const Game = ({onTable, deck, dealerIndex, nbPlayers, players, distributeSocket,
 
 const mapStateToProps = (state) => ({
   deck: state.deck,
+  isDistributed: state.isDistributed,
   dealerIndex: state.players.findIndex(p => p.isDealer),
   nbPlayers: state.players.length,
   onTable: state.onTable,

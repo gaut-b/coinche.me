@@ -12,6 +12,7 @@ import {shuffle} from '../utils/array';
 
 const INITIAL_STATE = {
   deck: shuffle(DECK32),
+  isDistributed: false,
   onTable: [],
   players: [{
     position: SOUTH,
@@ -56,6 +57,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
+        isDistributed: true,
         players: updatedPlayers,
       };
 
