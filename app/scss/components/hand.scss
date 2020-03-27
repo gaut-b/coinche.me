@@ -1,21 +1,19 @@
 @import '../variables';
 
 .hand {
-	padding: 0;
-	margin: 0;
-  display: inline-block;
-
+	padding: $card_width / 2;
+	margin: auto;
+  display: flex;
+  width: 100%;
+  max-width: 9*$card_width;
+  height: $card_height;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  img.playing-card {
+    // margin-right: -2*$card_width;
+  }
   &.is-compact {
-    img.playing-card {
-      margin-left: $card_space - $card_width;
-      &:first-child {
-        margin-left: 0;
-      }
-    }
-    &.is-hidden-face {
-      img.playing-card {
-        margin-left: ($card_space / 2) - $card_width;
-      }
-    }
+    max-width: 3*$card_width;
+    margin: auto;
   }
 }

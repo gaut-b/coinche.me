@@ -1,0 +1,23 @@
+$card_ratio: 1.39375;
+// $card_width: 8rem;
+// $card_height: $card_width * $card_ratio;
+$card_height: 16vh;
+$card_width: $card_height / $card_ratio;
+$card_space: $card_width / 4;
+
+$tablet: 600px;
+
+$white: white;
+$black: black;
+$red: d40000;
+$green: #02731E;
+
+$text: $white;
+$text-strong: darken($text, 5%);
+$background: $green;
+$primary: $red;
+
+$navbar-background-color: transparent;
+$navbar-breakpoint: 10000px;
+$navbar-item-color: $white;
+$navbar-item-hover-color: darken($white, 10%);

@@ -1,14 +1,27 @@
 body {
-  background-color: green;
+  background: url(../images/leather_1.png);
+  // background: url(../images/geometric-leaves.png);
+  background-color: $background;
 }
 
-.cardinal-points {
-  .north, .south {
-    width: 100%;
-    text-align: center;
+.section {
+  &.is-full-screen {
+    height: 100vh;
+    padding-top: $navbar-height + 1rem;
   }
+}
 
-  .east, .west {
-    margin: 1rem 0;
+.level-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  max-width: $widescreen;
+  margin: auto;
+  > .level:not(:last-child) {
+    margin-bottom: 0;
+  }
+  .level-item {
+    margin: 0 1rem;
   }
 }

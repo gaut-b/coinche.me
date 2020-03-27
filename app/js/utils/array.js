@@ -5,3 +5,7 @@ export const shuffle = a => {
   }
   return a;
 }
+
+export const random = a => {
+  return a[Math.floor(Math.random() * a.length)];
+}

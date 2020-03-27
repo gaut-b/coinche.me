@@ -1,20 +1,26 @@
 @import '../variables';
 
+.card-wrapper {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
 img.playing-card {
-  // width: 10rem;
+  position: absolute;
+  width: $card_width;
   height: $card_height;
-	margin: 0;
+  max-width: none;
+	margin: -$card_width/2;
 	padding: 0;
 	border: 0;
 	vertical-align: initial;
   box-sizing: initial;
   transition: ease 0.1s transform;
-  &:not(:last-child) {
-    margin-right: $card_space / 2;
-  }
   &.selectable {
     cursor: pointer;
     &:hover {
+      z-index: 1;
       transform: translateY(-$card_space);
     }
   }
