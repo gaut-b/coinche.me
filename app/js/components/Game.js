@@ -29,29 +29,30 @@ const Game = ({onTable, players, onDistribute}) => {
     <div>
       <Header />
       <div className="section is-full-screen">
-        <div className="level-container">
-          <div className="level is-mobile">
-            <Player tablePosition={NORTH} />
-          </div>
-          <div className="level is-mobile">
-            <Player tablePosition={WEST} />
-            <div className="level-item">
-              {
-                emptyHands ? (
-                  <div className="section has-text-centered">
-                    <button onClick={onDistribute} className="button is-primary is-large is-rounded">Distribuer une partie</button>
-                  </div>
-                ) : (
+        {
+          emptyHands ? (
+            <ul className="commands">
+              <li>
+                <button onClick={onDistribute} className="button is-primary is-large is-rounded">Distribuer une partie</button>
+              </li>
+            </ul>
+          ) : (
+            <div className="level-container">
+              <div className="level is-mobile">
+                <Player tablePosition={NORTH} />
+              </div>
+              <div className="level is-mobile">
+                <Player tablePosition={WEST} />
+                <div className="level-item">
                   <Table cards={onTable} />
-                )
-              }
+                </div>
+                <Player tablePosition={EAST} />
+              </div>
+              <div className="level is-mobile">
+                <Player tablePosition={SOUTH} />
+              </div>
             </div>
-            <Player tablePosition={EAST} />
-          </div>
-          <div className="level is-mobile">
-            <Player tablePosition={SOUTH} />
-          </div>
-        </div>
+          )}
       </div>
     </div>
   );

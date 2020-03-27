@@ -8,6 +8,14 @@ body {
   &.is-full-screen {
     height: 100vh;
     padding-top: $navbar-height + 1rem;
+
+    ul.commands {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 100%;
+      align-items: center;
+    }
   }
 }
 
