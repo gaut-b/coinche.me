@@ -13,10 +13,11 @@ import {
 import Table from './Table.js';
 import Player from './Player.js';
 
-const Game = ({onTable, isDistributed, deck, dealerIndex, nbPlayers, players, distributeSocket, distribute}) => {
+const Game = ({onTable, isDistributed, deck, dealerIndex, nbPlayers, players, distributeSocket, distribute, ...props}) => {
 
-  const tableId = 'coinche';
-  const username = 'tiego';
+  const {tableId, username} = props.match.params;
+  // const tableId = 'coinche';
+  // const username = 'tiego';
 
   const [socket] = useSocket('http://localhost:3000');
   socket.connect()

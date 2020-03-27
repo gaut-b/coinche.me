@@ -1,25 +1,39 @@
 import express from 'express';
+import { v4 as uuid } from 'uuid';
 
 const app = express();
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 const Redis = require('ioredis');
 const redisURL = "redis://redis";
 
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('build'));
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
-const initRedis = () => {
-  const sub = new Redis(redisURL);
-  const pub = new Redis(redisURL);
-  return {sub, pub};
-}
+const redis = new Redis(redisURL);
+
+app.post('/createTable', (req, res) => {
+  const tableId = uuid();
+  const {username} = req.body;
+  redis.set(tableId, [username]);
+  res.send({tableId})
+});
+
+app.post('/joinTable', async (req, res) => {
+  const {tableId, username} = req.body;
+  res.send({tableId: tableId})
+});
 
 io.on('connection', (socket) => {
-  socket.on('disconnect', reason => console.log(socket.id));
+  //socket.on('disconnect', reason => console.log(socket.id));
 
   socket.on('joinTable', data => {
     const {tableId, username} = data
@@ -40,15 +54,6 @@ io.on('connection', (socket) => {
     .to(table)
     .emit('cardsDistributed', hands);
   });
-
-  // socket.on('cardsDistributed', (data) => {
-  //   const {table, hands} = data
-  //   console.log('Broadcasting to the table', table, data);
-  //   io.emit('cardsDistributed', hands);
-  // });
-
-  // const {sub, pub} = initRedis();
-  // sub.subscribe('gameState');
 
 });
 
