@@ -68,17 +68,17 @@ const Game = ({onTable, deck, dealerIndex, nbPlayers, players, distributeSocket,
           ) : (
             <div className="level-container">
               <div className="level is-mobile">
-                <Player tablePosition={NORTH} />
+                <Player position={NORTH} />
               </div>
               <div className="level is-mobile">
-                <Player tablePosition={WEST} />
+                <Player position={WEST} />
                 <div className="level-item">
                   <Table cards={onTable} />
                 </div>
-                <Player tablePosition={EAST} />
+                <Player position={EAST} />
               </div>
               <div className="level is-mobile">
-                <Player tablePosition={SOUTH} />
+                <Player position={SOUTH} />
               </div>
             </div>
           )}
