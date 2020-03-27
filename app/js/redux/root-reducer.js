@@ -45,23 +45,37 @@ const INITIAL_STATE = {
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case actionTypes.DISTRIBUTE:
-      const dealerIndex = state.players.findIndex(p => p.isDealer);
-      const nbPlayers = state.players.length;
-      const playersWithHand = state.deck.reduce((players, card, deckIndex) => {
-        const nextPlayerIndex = (dealerIndex + deckIndex) % nbPlayers;
-        return players.map((player, playerIndex) => {
-          if (nextPlayerIndex === playerIndex) {
-            return Object.assign({}, player, {
-              hand: player.hand.concat(card),
-            })
-          } else {
-            return player;
-          }
-        })
-      }, state.players);
-      return Object.assign({}, state, {
-        players: playersWithHand
+
+      const hands = action.payload;
+      const updatedPlayers = state.players.map( (player, index) => {
+        return {
+          ...player,
+          hand: [...hands[index]],
+        }
       });
+
+      return {
+        ...state,
+        players: updatedPlayers,
+      };
+
+      // const dealerIndex = state.players.findIndex(p => p.isDealer);
+      // const nbPlayers = state.players.length;
+      // const playersWithHand = state.deck.reduce((players, card, deckIndex) => {
+      //   const nextPlayerIndex = (dealerIndex + deckIndex) % nbPlayers;
+      //   return players.map((player, playerIndex) => {
+      //     if (nextPlayerIndex === playerIndex) {
+      //       return Object.assign({}, player, {
+      //         hand: player.hand.concat(card),
+      //       })
+      //     } else {
+      //       return player;
+      //     }
+      //   })
+      // }, state.players);
+      // return Object.assign({}, state, {
+      //   players: playersWithHand
+      // });
     case actionTypes.PLAY_CARD: {
       const card = action.payload;
       const playerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
@@ -82,7 +96,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.COLLECT:
       const cards = action.payload; //It's not mandatory to pass cards as arguments because cards and state.onTable are equals
       if (!cards) return state;
-      const playerIndex = state.players.findIndex(p => p.isFirstPerson);
+      const playerIndex = state.players.findIndex(p => p.position === SOUTH);
       const playersUpdated = state.players.map((player, index) => {
         if (index === playerIndex) {
           cards.reverse().forEach( c => player.tricks.unshift(c.value))
@@ -99,3 +113,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 };
 
 export default rootReducer;
+
+
+

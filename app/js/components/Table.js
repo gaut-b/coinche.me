@@ -7,8 +7,14 @@ import '../../scss/components/table.scss';
 import Card from './Card';
 
 const Table = ({cards, collect}) => {
+
+  const handleClick = (e) => {
+    e.stopPropagation();
+    collect(cards);
+  };
+
   return (
-    <div className="playing-table" onClick={() => collect(cards)}>
+    <div className="playing-table" onClick={(e) => handleClick(e)}>
       {cards.map(({position, value}, index) => {
         return (
           <div key={value} className={`table-slot is-${position}`} style={{zIndex: index}}>
