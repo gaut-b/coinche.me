@@ -1,9 +1,5 @@
 import express from 'express';
-<<<<<<< HEAD
 import { v4 as uuid } from 'uuid';
-=======
-import { createStore, applyMiddleware } from 'redux';
->>>>>>> server-side-store
 
 const app = express();
 const cors = require('cors');
@@ -14,20 +10,14 @@ const io = require('socket.io')(server);
 
 const Redis = require('ioredis');
 const redisURL = "redis://redis";
-<<<<<<< HEAD
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
-=======
-const redisInstance = new Redis(redisURL);
-const redisKey = 'XXXXXX';
->>>>>>> server-side-store
 app.use(express.static('build'));
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
-<<<<<<< HEAD
 const redis = new Redis(redisURL);
 
 app.post('/createTable', (req, res) => {
@@ -41,21 +31,6 @@ app.post('/joinTable', async (req, res) => {
   const {tableId, username} = req.body;
   res.send({tableId: tableId})
 });
-=======
-const rootReducer = (state = {test: 'coucou'}, action) => {
-  switch (action.type) {
-    case 'RECEIVE':
-      return {test: action.payload.message};
-    default:
-      return state;
-  }
-}
-
-const storeToRedis = store => next => action => {
-  next(action);
-  return redisInstance.set('redisKey', store.getState()).then(v => console.log(v))
-}
->>>>>>> server-side-store
 
 const broadcastToClients = store => next => action => {
   console.log(action)
