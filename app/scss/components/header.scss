@@ -1,0 +1,5 @@
+@import '../variables';
+
+.navbar-burger:hover span {
+  background-color: $navbar-item-hover-color;
+}

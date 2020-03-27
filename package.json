@@ -7,7 +7,7 @@
   "author": "Augustin RIEDINGER",
   "license": "MIT",
   "scripts": {
-    "watch-app": "parcel watch -d build app/index.html",
+    "watch-app": "parcel  watch -d build --hmr-port 36449 app/index.html",
     "watch-server": "nodemon -r esm --watch server server/index.js",
     "dev": "concurrently \"yarn watch-app\" \"yarn watch-server\"",
     "build": "parcel build -d build app/index.html",
