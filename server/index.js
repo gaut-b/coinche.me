@@ -1,4 +1,5 @@
 import express from 'express';
+import { createStore, applyMiddleware } from 'redux';
 
 const app = express();
 const server = require('http').Server(app);
@@ -6,17 +7,46 @@ const io = require('socket.io')(server);
 
 const Redis = require('ioredis');
 const redisURL = "redis://redis";
-
+const redisInstance = new Redis(redisURL);
+const redisKey = 'XXXXXX';
 app.use(express.static('build'));
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
-const initRedis = () => {
-  const sub = new Redis(redisURL);
-  const pub = new Redis(redisURL);
-  return {sub, pub};
+const rootReducer = (state = {test: 'coucou'}, action) => {
+  switch (action.type) {
+    case 'RECEIVE':
+      return {test: action.payload.message};
+    default:
+      return state;
+  }
 }
+
+const storeToRedis = store => next => action => {
+  next(action);
+  return redisInstance.set('redisKey', store.getState()).then(v => console.log(v))
+}
+
+const broadcastToClients = store => next => action => {
+  console.log(action)
+  const returnValue = next(action)
+  // Do the broadcast
+  return returnValue;
+};
+
+const store = createStore(rootReducer, applyMiddleware(...[storeToRedis, broadcastToClients]));
+
+console.log(store.getState());
+
+store.dispatch({
+  type: 'RECEIVE',
+  payload: {
+    message: 'hello',
+  },
+})
+
+console.log(store.getState());
 
 io.on('connection', (socket) => {
   socket.on('disconnect', reason => console.log(reason));
