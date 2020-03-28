@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
 import actionTypes from './actions.types';
 import {DECK32, DECK52} from '../constants/decks';
+import redisInstance, {redisKey} from '../redis';
+
 import {
   POSITIONS,
   NORTH,

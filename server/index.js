@@ -33,7 +33,7 @@ app.post('/joinTable', async (req, res) => {
   res.send({tableId: tableId})
 });
 
-app.get('/game', async (req, res) => {
+app.get('/game/:tableId', async (req, res) => {
   res.sendFile('build/index.html', {root: `${__dirname}/..`});
 });
 
