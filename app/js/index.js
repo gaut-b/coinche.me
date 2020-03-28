@@ -11,7 +11,7 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Route exact path="/" component={LandingPage} />
-      <Route exact path="/game/tableId=:tableId&username=:username" component={GamePage} />
+      <Route exact path="/game?tableId=:tableId&username=:username" component={GamePage} />
     </BrowserRouter>
   </Provider>,
   document.getElementById('container')

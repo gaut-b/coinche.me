@@ -1,5 +1,6 @@
 import express from 'express';
 import { v4 as uuid } from 'uuid';
+import redisInstance from './redis';
 
 const app = express();
 const cors = require('cors');
@@ -18,18 +19,22 @@ app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
-const redis = new Redis(redisURL);
-
 app.post('/createTable', (req, res) => {
   const tableId = uuid();
   const {username} = req.body;
-  redis.set(tableId, [username]);
-  res.send({tableId})
+  redisInstance.set(tableId, [username]);
+  res.send({tableId: tableId})
+  // res.redirect(`/game?tableId=${tableId}&username=${username}`)
 });
 
 app.post('/joinTable', async (req, res) => {
   const {tableId, username} = req.body;
+  // res.redirect(`/game?tableId=${tableId}&username=${username}`)
   res.send({tableId: tableId})
+});
+
+app.get('/game', async (req, res) => {
+  res.sendFile('build/index.html', {root: `${__dirname}/..`});
 });
 
 // const broadcastToClients = store => next => action => {
