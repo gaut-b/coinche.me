@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Layout from '../components/Layout';
 
 const LandingPage = (props) => {
 
@@ -37,34 +38,43 @@ const LandingPage = (props) => {
   };
 
   return (
-    <div className="container">
-      <div className="has-text-centered">
-        <h1 className="title is-1"><h1>Welcome to the coincheur Confiné !</h1></h1>
-        <p className="subtitle">Jouez en ligne avec vos amis</p>
+    <Layout>
+      <div className="columns">
+        <div className="column is-6 is-offset-3">
+          <form className="section">
+            <div className="field">
+              <label className="label">Choose a nickname</label>
+              <input
+                className='input'
+                type="text"
+                placeholder="Enter your nickname ..."
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                />
+            </div>
+            <div className="field">
+              <button className="button is-primary is-rounded" onClick={handleClick}>Create a table</button>
+            </div>
+          </form>
+          <p className="has-text-centered">- OR -</p>
+          <form className="section">
+            <div className="field">
+              <label className="label">Or join a table</label>
+              <input
+                className="input"
+                type="text"
+                placeholder="Enter the table id ..."
+                value={tableId}
+                onChange={(e) => setTableId(e.target.value)}
+              />
+            </div>
+            <div className="field">
+              <button className="button is-primary is-rounded" type="submit" onClick={handleSubmit}>JOIN</button>
+            </div>
+          </form>
+        </div>
       </div>
-      <div className="section">
-        <form>
-          <label>Choose a nickname</label>
-          <input
-            type="text"
-            placeholder="Enter your nickname ..."
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </form>
-        <button onClick={handleClick}>Create a table</button>
-        <form>
-          <label>Or join a table</label>
-          <input
-            type="text"
-            placeholder="Enter the table id ..."
-            value={tableId}
-            onChange={(e) => setTableId(e.target.value)}
-          />
-          <button type="submit" onClick={handleSubmit}>JOIN</button>
-        </form>
-      </div>
-    </div>
+    </Layout>
   );
 };
 

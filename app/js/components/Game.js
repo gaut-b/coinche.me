@@ -45,33 +45,30 @@ const Game = ({onTable, isDistributed, deck, dealerIndex, nbPlayers, players, di
 
   return (
     <div>
-      <Header />
-      <div className="section is-full-screen">
-        {
-          !isDistributed ? (
-            <ul className="commands">
-              <li>
-                <button onClick={handleClick} className="button is-primary is-large is-rounded">Distribuer une partie</button>
-              </li>
-            </ul>
-          ) : (
-            <div className="level-container">
-              <div className="level is-mobile">
-                <Player position={NORTH} />
-              </div>
-              <div className="level is-mobile">
-                <Player position={WEST} />
-                <div className="level-item">
-                  <Table cards={onTable} />
-                </div>
-                <Player position={EAST} />
-              </div>
-              <div className="level is-mobile">
-                <Player position={SOUTH} />
-              </div>
+      {
+        !isDistributed ? (
+          <ul className="commands">
+            <li>
+              <button onClick={handleClick} className="button is-primary is-large is-rounded">Distribuer une partie</button>
+            </li>
+          </ul>
+        ) : (
+          <div className="level-container">
+            <div className="level is-mobile">
+              <Player position={NORTH} />
             </div>
-          )}
-      </div>
+            <div className="level is-mobile">
+              <Player position={WEST} />
+              <div className="level-item">
+                <Table cards={onTable} />
+              </div>
+              <Player position={EAST} />
+            </div>
+            <div className="level is-mobile">
+              <Player position={SOUTH} />
+            </div>
+          </div>
+        )}
     </div>
   );
 }
