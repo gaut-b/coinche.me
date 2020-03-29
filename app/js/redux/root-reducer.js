@@ -14,7 +14,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case actionTypes.UPDATED_SERVER_STATE:
       console.log('received', actionTypes.UPDATED_SERVER_STATE)
-      return subjectivizeState(action.result);
+      return action.result;
     default:
       return state;
   };

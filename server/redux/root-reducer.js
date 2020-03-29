@@ -9,23 +9,23 @@ export const INITIAL_STATE = {
   onTable: [],
   players: [{
     name: 'Sud',
-    position: SOUTH,
+    position: null,
     isDealer: true,
     hand: [],
     tricks: [],
   }, {
     name: 'Ouest',
-    position: WEST,
+    position: null,
     hand: [],
     tricks: [],
   }, {
     name: 'Nord',
-    position: NORTH,
+    position: null,
     hand: [],
     tricks: [],
   }, {
     name: 'Est',
-    position: EAST,
+    position: null,
     hand: [],
     tricks: [],
   }],
