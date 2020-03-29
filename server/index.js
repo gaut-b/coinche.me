@@ -1,7 +1,7 @@
 import express from 'express';
 import { v4 as uuid } from 'uuid';
 import getStore from './redux/store';
-import subjectiveState from './redux/subjectiveState';
+import broadcastSubjectiveState from './redux/broadcastSubjectiveState';
 import {join, leave} from './redux/actions';
 
 const app = express();
@@ -28,27 +28,40 @@ app.get('/game/:tableId', async (req, res) => {
   res.sendFile('build/index.html', {root: `${__dirname}/..`});
 });
 
-io.on('connection', async (socket) => {
-  const tableId = socket.handshake.query.tableId;
-  if (!tableId) return;
-  console.log('User joined', tableId, socket.id);
+try {
+  io.on('connection', socket => {
+    console.log('new connection', socket.id)
+    // const tableId = socket.handshake.query.tableId;
+    // if (!tableId) return;
+    // console.log('User joined', tableId, socket.id);
 
-  const store = await getStore(tableId);
-  store.dispatch(join(socket.id));
-  io.emit('updated_state', subjectiveState(store, socket.id));
+    socket.on('join', async ({tableId}) => {
+      console.log('received connect', tableId, socket.id)
+      socket.join(tableId);
+      const store = await getStore(tableId);
+      store.dispatch(join(socket.id));
+      broadcastSubjectiveState(tableId, io, store);
+    })
 
-  socket.on('dispatch', action => {
-    console.log('User dispatched', tableId, socket.id, action);
-    store.dispatch(action);
-    io.emit('updated_state', subjectiveState(store, socket.id));
+    socket.on('dispatch', async ({tableId, action}) => {
+      console.log('User dispatched', socket.id, tableId, action);
+      const store = await getStore(tableId);
+      store.dispatch(action);
+      broadcastSubjectiveState(tableId, io, store);
+    });
+
+    socket.on('disconnect', async ({tableId}) => {
+      console.log('User leaved', socket.id, tableId);
+      const store = await getStore(tableId);
+      store.dispatch(leave(socket.id));
+      broadcastSubjectiveState(tableId, io, store);
+    });
   });
+} catch(e) {
+  console.error('Socket error:')
+  console.error(e);
+}
 
-  socket.on('disconnect', function(){
-    console.log('User leaved', tableId, socket.id);
-    store.dispatch(leave(socket.id));
-    io.emit('updated_state', subjectiveState(store, socket.id));
-  });
-});
 
 server.listen(PORT, () => {
   console.log(`Le coincheur listening on port ${PORT}!`)

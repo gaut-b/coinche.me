@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { Redirect } from "react-router-dom";
 import Layout from '../components/Layout';
 import Game from '../components/Game';
 
-const GamePage = (props) => {
+const GamePage = ({match: {params: {tableId}}}) => {
+  if (!tableId) return (
+    <Redirect to="/" />
+  );
   return (
     <Layout>
-      <Game {...props} />
+      <Game tableId={tableId} />
     </Layout>
   );
 };

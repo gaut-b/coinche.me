@@ -14,17 +14,17 @@ import {
 import Table from './Table.js';
 import Player from './Player.js';
 
-const Game = ({onTable, deck, distribute, players, subscribeServerUpdate, unsubscribeServerUpdate, ...props}) => {
+const Game = ({onTable, deck, distribute, players, subscribeServerUpdate, unsubscribeServerUpdate, tableId}) => {
 
   useBeforeunload(() => {
-    unsubscribeServerUpdate()
+    unsubscribeServerUpdate(tableId)
   });
 
   useEffect(() => {
-    subscribeServerUpdate()
+    subscribeServerUpdate(tableId)
 
     return () => {
-      unsubscribeServerUpdate();
+      unsubscribeServerUpdate(tableId);
     }
   }, []);
 
@@ -75,9 +75,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  subscribeServerUpdate: () => dispatch(subscribeServerUpdate()),
-  unsubscribeServerUpdate: () => dispatch(unsubscribeServerUpdate()),
-  distribute: () => dispatch(distribute()),
+  subscribeServerUpdate: (tableId) => dispatch(subscribeServerUpdate(tableId)),
+  unsubscribeServerUpdate: (tableId) => dispatch(unsubscribeServerUpdate(tableId)),
+  distribute: (tableId) => dispatch(distribute(tableId)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
