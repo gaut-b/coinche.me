@@ -24,6 +24,17 @@ export function distribute() {
   }
 }
 
+export function playCard(playerId, card) {
+  return {
+    event: 'dispatch',
+    emit: true,
+    payload: {
+      type: 'PLAY_CARD',
+      payload: {playerId, card}
+    }
+  }
+};
+
 // // Action creator with received function:
 // export function subscribeConversation() {
 //   return dispatch => dispatch({

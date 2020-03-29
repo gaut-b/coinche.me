@@ -19,9 +19,10 @@ const Player = ({position, player, playRandomCard}) => {
           hand,
           tricks,
           isVirtual,
+          id
         } = player;
 
-  const $name = <p onClick={e => playRandomCard(hand)} className={`name ${isDealer ? 'is-dealer' : ''}`}>{isVirtual ? 'BOT' : name} ({pluralize(tricks.length, 'pli')})</p>;
+  const $name = <p onClick={e => playRandomCard(id, hand)} className={`name ${isDealer ? 'is-dealer' : ''}`}>{isVirtual ? 'BOT' : name} ({pluralize(tricks.length, 'pli')})</p>;
 
   return (
     <div className={`player is-${position}`}>
@@ -42,7 +43,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  playRandomCard: hand => dispatch(playCard(random(hand))),
+  playRandomCard: (playerId, hand) => dispatch(playCard(playerId, random(hand))),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Player);
