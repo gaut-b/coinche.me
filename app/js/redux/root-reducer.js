@@ -6,16 +6,17 @@ const INITIAL_STATE = {
   players: [],
 }
 
+const subjectivizeState = (serverState, id) => {
+  return serverState;
+}
+
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case actionTypes.UPDATED_SERVER_STATE:
-      return action.result;
+      return subjectivizeState(action.result);
     default:
       return state;
   };
 };
 
 export default rootReducer;
-
-
-
