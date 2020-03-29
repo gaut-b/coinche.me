@@ -1,4 +1,4 @@
-import import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
+import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
 
 export default function subjectiveState(store, playerId) {
   const state = store.getState();
