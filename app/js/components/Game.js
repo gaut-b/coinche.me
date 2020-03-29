@@ -43,7 +43,7 @@ const Game = ({onTable, deck, distribute, players, subscribeServerUpdate, unsubs
 
             <ul className="commands">
               <li>
-                <button onClick={distribute} className="button is-primary is-large is-rounded">Distribuer une partie</button>
+                <button onClick={() => distribute(tableId)} className="button is-primary is-large is-rounded">Distribuer une partie</button>
               </li>
             </ul>
           </div>
