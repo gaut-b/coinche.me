@@ -71,10 +71,26 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           }
         })
       }, state.players);
+
+      const playerSortedHands = players.map((player) => {
+        const sortedSpades = player.hand.filter(c => c.includes('S')).sort();
+        const sortedHearts = player.hand.filter(c => c.includes('H')).sort();
+        const sortedClubs = player.hand.filter(c => c.includes('C')).sort();
+        const sortedDiamonds = player.hand.filter(c => c.includes('D')).sort();
+
+        const sortedHand = [].concat(sortedSpades).concat(sortedHearts).concat(sortedDiamonds).concat(sortedClubs);
+
+        return {
+          ...player,
+          hand: sortedHand,
+        };
+      });
+
       return {
         ...state,
-        ...{players}
-      }
+        players: playerSortedHands
+      };
+
     case actionTypes.PLAY_CARD: {
       const {playerId, card} = action.payload;
       // For now, all players doesn't have id's, but it'll be faster to check id than cards
