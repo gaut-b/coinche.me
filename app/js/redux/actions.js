@@ -19,10 +19,33 @@ export function distribute() {
     event: 'dispatch',
     emit: true,
     payload: {
-      type: 'DISTRIBUTE',
+      type: actionTypes.DISTRIBUTE,
     }
   }
 }
+
+export function playCard(playerId, card) {
+  return {
+    event: 'dispatch',
+    emit: true,
+    payload: {
+      type: actionTypes.PLAY_CARD,
+      payload: {playerId, card}
+    }
+  }
+};
+
+export function collect(cards) {
+  return {
+    event: 'dispatch',
+    emit: true,
+    payload: {
+      type: actionTypes.COLLECT,
+      payload: cards
+    }
+  }
+};
+
 
 // // Action creator with received function:
 // export function subscribeConversation() {
