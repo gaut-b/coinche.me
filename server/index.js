@@ -1,6 +1,7 @@
 import express from 'express';
 import { v4 as uuid } from 'uuid';
 import getStore from './redux/store';
+import subjectiveState from './redux/subjectiveState';
 import {join, leave} from './redux/actions';
 
 const app = express();
@@ -34,18 +35,18 @@ io.on('connection', async (socket) => {
 
   const store = await getStore(tableId);
   store.dispatch(join(socket.id));
-  io.emit('updated_state', store.getState());
+  io.emit('updated_state', subjectiveState(store, socket.id));
 
   socket.on('dispatch', action => {
     console.log('User dispatched', tableId, socket.id, action);
     store.dispatch(action);
-    io.emit('updated_state', store.getState());
+    io.emit('updated_state', subjectiveState(store, socket.id));
   });
 
   socket.on('disconnect', function(){
     console.log('User leaved', tableId, socket.id);
     store.dispatch(leave(socket.id));
-    io.emit('updated_state', store.getState());
+    io.emit('updated_state', subjectiveState(store, socket.id));
   });
 });
 
