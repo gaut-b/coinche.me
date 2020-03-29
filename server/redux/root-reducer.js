@@ -13,21 +13,25 @@ export const INITIAL_STATE = {
     isDealer: true,
     hand: [],
     tricks: [],
+    id: null,
   }, {
     name: 'Ouest',
     position: null,
     hand: [],
     tricks: [],
+    id: null,
   }, {
     name: 'Nord',
     position: null,
     hand: [],
     tricks: [],
+    id: null,
   }, {
     name: 'Est',
     position: null,
     hand: [],
     tricks: [],
+    id: null,
   }],
   score: '',
 };
@@ -40,7 +44,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         players: state.players.map((p, i) => {
           return {
             ...p,
-            ...{id: i === state.players.findIndex(p => !p.id) ? action.payload : null},
+            ...{id: i === state.players.findIndex(p => !p.id) ? action.payload : p.id},
           }
         })
       }

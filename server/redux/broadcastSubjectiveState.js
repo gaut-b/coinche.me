@@ -1,7 +1,16 @@
 import subjectiveState from './subjectiveState';
 
-export default function(tableId, playerId, io, store) {
-  console.log(store.getState())
-  const subjectivedState = subjectiveState(store, playerId)
-  io.in(tableId).emit('updated_state', subjectivedState)
+const broadcastSubjectiveState = (tableId, io, store) => {
+  if (!tableId) return store.getState()
+
+  io.to(tableId).clients((error, clients) => {
+    if (error) throw error;
+    console.log(clients)
+    clients.map( client => {
+      const subjectivedState = subjectiveState(store, client);
+      io.to(client).emit('updated_state', subjectivedState)
+    });
+  });
 };
+
+export default broadcastSubjectiveState;

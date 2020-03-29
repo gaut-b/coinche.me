@@ -9,9 +9,9 @@ export default function subjectiveState(store, playerId) {
 
   const updatedPlayer = state.players.map((p, i) => {
     if (i === playerIndex) p.position = SOUTH;
-    else if (i === playerIndex + 1 % 4) p.position = WEST;
-    else if (i === playerIndex + 2 % 4) p.position = NORTH;
-    else if (i === playerIndex + 3 % 4) p.position = EAST;
+    else if (i === ((playerIndex + 1) % 4)) p.position = WEST;
+    else if (i === ((playerIndex + 2) % 4)) p.position = NORTH;
+    else if (i === ((playerIndex + 3) % 4)) p.position = EAST;
     return p;
   });
 
