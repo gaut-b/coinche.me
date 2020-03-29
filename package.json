@@ -24,6 +24,7 @@
     "parcel-bundler": "^1.12.4",
     "prop-types": "^15.7.2",
     "react": ">=15",
+    "react-beforeunload": "^2.1.0",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",

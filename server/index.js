@@ -1,6 +1,7 @@
 import express from 'express';
 import { v4 as uuid } from 'uuid';
-import redisInstance from './redis';
+import getStore from './redux/store';
+import {join, leave} from './redux/actions';
 
 const app = express();
 const cors = require('cors');
@@ -9,78 +10,43 @@ const bodyParser = require('body-parser');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-const Redis = require('ioredis');
-const redisURL = "redis://redis";
-
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.static('build'));
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
-app.post('/createTable', (req, res) => {
-  const tableId = uuid();
-  const {username} = req.body;
-  redisInstance.set(tableId, [username]);
-  // res.send({tableId: tableId})
-  res.redirect(`/game/${tableId}`)
-});
-
 app.post('/join', async (req, res) => {
   const tableId = req.body.tableId || uuid();
-  // const {tableId, username} = req.body;
   res.redirect(`/game/${tableId}`)
-  // res.send({tableId: tableId})
 });
 
 app.get('/game/:tableId', async (req, res) => {
   res.sendFile('build/index.html', {root: `${__dirname}/..`});
 });
 
-// const broadcastToClients = store => next => action => {
-//   console.log(action)
-//   const returnValue = next(action)
-//   // Do the broadcast
-//   return returnValue;
-// };
+io.on('connection', async (socket) => {
+  const tableId = socket.handshake.query.tableId;
+  if (!tableId) return;
+  console.log('User joined', tableId, socket.id);
 
-// const store = createStore(rootReducer, applyMiddleware(...[storeToRedis, broadcastToClients]));
+  const store = await getStore(tableId);
+  store.dispatch(join(socket.id));
+  io.emit('updated_state', store.getState());
 
-// console.log(store.getState());
-
-// store.dispatch({
-//   type: 'RECEIVE',
-//   payload: {
-//     message: 'hello',
-//   },
-// })
-
-// console.log(store.getState());
-
-io.on('connection', (socket) => {
-  //socket.on('disconnect', reason => console.log(socket.id));
-
-  socket.on('joinTable', data => {
-    const {tableId, username} = data
-    console.log(`User ${username} joining table ${tableId}`)
-    socket.join(tableId)
+  socket.on('dispatch', action => {
+    console.log('User dispatched', tableId, socket.id, action);
+    store.dispatch(action);
+    io.emit('updated_state', store.getState());
   });
 
-  socket.on('leaveTable', data => {
-    console.log(`User ${username} leaving table ${tableId}`)
-    socket.leave(tableId);
+  socket.on('disconnect', function(){
+    console.log('User leaved', tableId, socket.id);
+    store.dispatch(leave(socket.id));
+    io.emit('updated_state', store.getState());
   });
-
-  socket.on('cardsDistributed', (data) => {
-    const {table, hands} = data
-    console.log('Broadcasting to the table', table, data);
-    socket.emit('cardsDistributed', hands);
-    socket.broadcast
-    .to(table)
-    .emit('cardsDistributed', hands);
-  });
-
 });
 
 server.listen(PORT, () => {

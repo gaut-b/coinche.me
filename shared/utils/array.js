@@ -9,3 +9,6 @@ export const shuffle = a => {
 export const random = a => {
   return a[Math.floor(Math.random() * a.length)];
 }
+
+export const first = a => a[0];
+export const last = a => a[a.length - 1];

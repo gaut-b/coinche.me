@@ -9,7 +9,7 @@ body {
     height: 100vh;
     padding-top: $navbar-height + 1rem;
 
-    ul.commands {
+    .commands {
       display: flex;
       flex-direction: column;
       justify-content: space-around;

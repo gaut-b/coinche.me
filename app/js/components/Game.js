@@ -1,57 +1,52 @@
 import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { distributeSocket, distribute } from '../redux/actions';
-import useSocket from './useSocket';
+import { useBeforeunload } from 'react-beforeunload';
+import { distribute, subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
 
+import {pluralize} from '../../../shared/utils/string';
 import {
   NORTH,
   EAST,
   SOUTH,
   WEST,
-} from '../constants/positions';
+} from '../../../shared/constants/positions';
 
 import Table from './Table.js';
 import Player from './Player.js';
-import Header from './Header.js';
 
-const Game = ({onTable, isDistributed, deck, dealerIndex, nbPlayers, players, distributeSocket, distribute, ...props}) => {
+const Game = ({onTable, deck, distribute, players, subscribeServerUpdate, unsubscribeServerUpdate, ...props}) => {
 
-  const {tableId, username} = props.match.params;
-  // const tableId = 'coinche';
-  // const username = 'tiego';
-
-  const [socket] = useSocket('http://localhost:3000');
-  socket.connect()
-
-  const handleClick = () => {
-    distributeSocket(socket, tableId, deck, dealerIndex, nbPlayers);
-  }
+  useBeforeunload(() => {
+    unsubscribeServerUpdate()
+  });
 
   useEffect(() => {
-    socket.emit('joinTable', {
-      tableId,
-      username,
-    });
-
-    socket.on('cardsDistributed', hands => {
-      distribute(JSON.parse(hands));
-    });
+    subscribeServerUpdate()
 
     return () => {
-      console.log('leaving room');
-      socket.emit('leaveTable', {tableId, username});
+      unsubscribeServerUpdate();
     }
   }, []);
+
+  const realPlayers = players.filter(p => p.id);
+  const isDistributed = players.filter(p => ((p.hand || []).length)).length;
 
   return (
     <div>
       {
         !isDistributed ? (
-          <ul className="commands">
-            <li>
-              <button onClick={handleClick} className="button is-primary is-large is-rounded">Distribuer une partie</button>
-            </li>
-          </ul>
+          <div >
+            <h2 className="title has-text-centered">{pluralize(realPlayers.length, 'joueur prêt')}:</h2>
+            {realPlayers.length ? <ul>
+              {realPlayers.map(p => <li key={p.id}>{p.id}</li>)}
+            </ul> : null}
+
+            <ul className="commands">
+              <li>
+                <button onClick={distribute} className="button is-primary is-large is-rounded">Distribuer une partie</button>
+              </li>
+            </ul>
+          </div>
         ) : (
           <div className="level-container">
             <div className="level is-mobile">
@@ -75,16 +70,14 @@ const Game = ({onTable, isDistributed, deck, dealerIndex, nbPlayers, players, di
 
 const mapStateToProps = (state) => ({
   deck: state.deck,
-  isDistributed: state.isDistributed,
-  dealerIndex: state.players.findIndex(p => p.isDealer),
-  nbPlayers: state.players.length,
   onTable: state.onTable,
   players: state.players,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  distributeSocket: (socket, table, deck, dealerIndex, nbPlayers) => dispatch(distributeSocket(socket, table, deck, dealerIndex, nbPlayers)),
-  distribute: (hands) => dispatch(distribute(hands)),
+  subscribeServerUpdate: () => dispatch(subscribeServerUpdate()),
+  unsubscribeServerUpdate: () => dispatch(unsubscribeServerUpdate()),
+  distribute: () => dispatch(distribute()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

@@ -1,49 +1,36 @@
 import actionTypes from './actions.types';
 
-export function distribute(hands) {
+export function subscribeServerUpdate() {
   return {
-    type: actionTypes.DISTRIBUTE,
-    payload: hands,
-  }
-};
-
-export function playCard(card) {
-  return {
-    type: actionTypes.PLAY_CARD,
-    payload: card,
-  }
-};
-
-export function collect(cards) {
-  return {
-    type: actionTypes.COLLECT,
-    payload: cards
-  }
-};
-
-export function distributeSocket(socket, table, deck, dealerIndex, nbPlayers) {
-  return dispatch => {
-    const hands = makeHands(deck, dealerIndex, nbPlayers);
-    console.log(hands)
-    socket.emit('cardsDistributed', {
-      table: table,
-      hands: JSON.stringify(hands),
-    });
+    event: 'updated_state',
+    handle: actionTypes.UPDATED_SERVER_STATE,
   }
 }
 
-const makeHands = (deck, dealerIndex, nbPlayers) => {
+export function unsubscribeServerUpdate() {
+  return {
+    event: 'updated_state',
+    leave: true,
+  }
+}
 
-  const hands = deck.reduce((hands, card, deckIndex) => {
-    const nextPlayerIndex = (dealerIndex + deckIndex) % nbPlayers;
-    return hands.map((hand, playerIndex) => {
-      if (nextPlayerIndex === playerIndex) {
-          return [...hand, card]
-      } else {
-        return hand;
-      }
-    })
-  }, [[], [], [], []]);
+export function distribute() {
+  return {
+    event: 'dispatch',
+    emit: true,
+    payload: {
+      type: 'DISTRIBUTE',
+    }
+  }
+}
 
-  return hands;
-};
+// // Action creator with received function:
+// export function subscribeConversation() {
+//   return dispatch => dispatch({
+//     event: 'message',
+//     handle: data => dispatch({
+//       type: actionTypes.NEW_MESSAGE,
+//       payload: data.message,
+//     }),
+//   });
+// }

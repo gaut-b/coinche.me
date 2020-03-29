@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {SOUTH, NORTH} from '../constants/positions';
-import {pluralize} from '../utils/string';
-import {random} from '../utils/array';
+import {SOUTH, NORTH} from '../../../shared/constants/positions';
+import {pluralize} from '../../../shared/utils/string';
+import {random} from '../../../shared/utils/array';
 import { playCard } from '../redux/actions';
 
 import '../../scss/components/player.scss';
