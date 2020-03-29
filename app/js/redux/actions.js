@@ -1,47 +1,61 @@
 import actionTypes from './actions.types';
 
-export function subscribeServerUpdate() {
+export function subscribeServerUpdate(tableId) {
   return {
+    type: 'server/connect',
     event: 'updated_state',
     handle: actionTypes.UPDATED_SERVER_STATE,
+    emit: 'join',
+    payload: {tableId},
   }
 }
 
-export function unsubscribeServerUpdate() {
+export function unsubscribeServerUpdate(tableId) {
   return {
+    type: 'server/disconnect',
     event: 'updated_state',
     leave: true,
+    payload: {tableId},
   }
 }
 
-export function distribute() {
+export function distribute(tableId) {
   return {
-    event: 'dispatch',
-    emit: true,
+    type: 'server/dispatch',
+    emit: 'dispatch',
     payload: {
-      type: actionTypes.DISTRIBUTE,
+      tableId,
+      action: {
+        type: actionTypes.DISTRIBUTE,
+      }
     }
   }
 }
 
-export function playCard(playerId, card) {
+export function playCard(tableId, playerId, card) {
   return {
-    event: 'dispatch',
-    emit: true,
+    type: 'server/dispatch',
+    emit: 'dispatch',
     payload: {
-      type: actionTypes.PLAY_CARD,
-      payload: {playerId, card}
+      tableId,
+      action: {
+        type: actionTypes.PLAY_CARD,
+        payload: {playerId, card}
+      }
     }
   }
 };
 
-export function collect(cards) {
+export function collect(tableId, cards) {
   return {
-    event: 'dispatch',
-    emit: true,
+    type: 'server/dispatch',
+    emit: 'dispatch',
     payload: {
-      type: actionTypes.COLLECT,
-      payload: cards
+      tableId,
+      action: {
+        type: actionTypes.COLLECT,
+        payload: cards
+      }
     }
   }
 };

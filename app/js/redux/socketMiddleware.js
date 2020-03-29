@@ -2,8 +2,7 @@ import {last} from '../../../shared/utils/array';
 import io from 'socket.io-client';
 
 export default function socketMiddleware() {
-  const tableId = last(window.location.href.split('/'));
-  const socket = io.connect('', {query: `tableId=${tableId}`});
+  const socket = io.connect('');
 
   return ({ dispatch }) => next => (action) => {
     console.log('coucou received', action)
@@ -13,23 +12,23 @@ export default function socketMiddleware() {
 
     const { event, leave, handle, emit, payload, ...rest } = action;
 
-    if (!event) {
-      return next(action);
-    }
-
     if (leave) {
       socket.removeListener(event);
     }
 
-    if (emit) {
-      socket.emit(event, payload);
-      return;
+    if (handle) {
+      const handleCallback = typeof handle === 'string' ? (result => dispatch({ type: handle, result, ...rest })) : handle
+      socket.on(event, result => {
+        console.log('received', result)
+        handleCallback(result)
+      });
     }
 
-    let handleEvent = handle;
-    if (typeof handleEvent === 'string') {
-      handleEvent = result => dispatch({ type: handle, result, ...rest });
+    if (emit) {
+      console.log('emitting', emit, payload, socket.id)
+      socket.emit(emit, payload);
     }
-    return socket.on(event, handleEvent);
+
+    return next(action);
   };
 }
