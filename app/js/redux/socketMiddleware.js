@@ -5,28 +5,24 @@ export default function socketMiddleware() {
   const socket = io.connect('');
 
   return ({ dispatch }) => next => (action) => {
-    console.log('SocketMiddleware', action)
     if (typeof action === 'function') {
       return next(action);
     }
 
-    const { event, leave, handle, emit, payload, ...rest } = action;
+    const { listenSocketEvent, stopListeningSocketEvent, dispatchOnSocketEvent, emit, payload: actionPayload } = action;
 
-    if (handle) {
-      const handleCallback = typeof handle === 'string' ? (result => {
-        dispatch({ type: handle, result })
-      }) : handle
-      socket.on(event, result => {
-        handleCallback(result)
+    if (listenSocketEvent && dispatchOnSocketEvent) {
+      socket.on(listenSocketEvent, socketPayload => {
+        dispatch({ type: dispatchOnSocketEvent, payload: socketPayload })
       });
     }
 
     if (emit) {
-      socket.emit(emit, payload);
+      socket.emit(emit, actionPayload);
     }
 
-    if (leave) {
-      socket.removeListener(event);
+    if (stopListeningSocketEvent) {
+      socket.removeListener(stopListeningSocketEvent);
     }
 
     return next(action);

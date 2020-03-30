@@ -4,8 +4,8 @@ import socketEvents from '../../../shared/constants/socketEvents';
 export function subscribeServerUpdate(tableId, username) {
   return {
     type: actionTypes.NO_LOCAL_EFFECT,
-    event: socketEvents.UPDATED_STATE,
-    handle: actionTypes.UPDATED_SERVER_STATE,
+    listenSocketEvent: socketEvents.UPDATED_STATE,
+    dispatchOnSocketEvent: actionTypes.UPDATED_SERVER_STATE,
     emit: socketEvents.JOIN,
     payload: {
       tableId,
@@ -17,9 +17,8 @@ export function subscribeServerUpdate(tableId, username) {
 export function unsubscribeServerUpdate(tableId) {
   return {
     type: actionTypes.NO_LOCAL_EFFECT,
+    stopListeningSocketEvent: socketEvents.UPDATED_STATE,
     emit: socketEvents.LEAVE,
-    event: socketEvents.UPDATED_STATE,
-    leave: true,
     payload: {tableId},
   }
 }
