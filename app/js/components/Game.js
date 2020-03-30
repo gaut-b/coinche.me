@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { useBeforeunload } from 'react-beforeunload';
 import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
 import { TableIdContext } from '../pages/GamePage.js';
+import {selectIsDistributed} from '../redux/selectors';
 import {
   NORTH,
   EAST,
@@ -14,7 +15,7 @@ import Table from './Table.js';
 import Player from './Player.js';
 import Controls from './Controls.js';
 
-const Game = ({onTable, players, subscribeServerUpdate, unsubscribeServerUpdate}) => {
+const Game = ({onTable, isDistributed, subscribeServerUpdate, unsubscribeServerUpdate}) => {
 
   const tableId = useContext(TableIdContext);
 
@@ -28,8 +29,6 @@ const Game = ({onTable, players, subscribeServerUpdate, unsubscribeServerUpdate}
       unsubscribeServerUpdate(tableId);
     }
   }, []);
-
-  const isDistributed = players.filter(p => ((p.hand || []).length)).length;
 
   return (
     <div>
@@ -59,7 +58,7 @@ const Game = ({onTable, players, subscribeServerUpdate, unsubscribeServerUpdate}
 
 const mapStateToProps = (state) => ({
   onTable: state.onTable,
-  players: state.players,
+  isDistributed: selectIsDistributed(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -3,18 +3,18 @@ import { connect } from 'react-redux';
 import { collect } from '../redux/actions';
 import PropTypes from 'prop-types';
 import {TableIdContext} from '../pages/GamePage';
-import {selectSouthPlayer} from '../redux/selectors'
+import {selectCurrentPlayer} from '../redux/selectors'
 
 import '../../scss/components/table.scss';
 import Card from './Card';
 
-const Table = ({cards, southPlayer, collect}) => {
+const Table = ({cards, currentPlayer, collect}) => {
 
   const tableId = useContext(TableIdContext);
 
   const handleClick = (e) => {
     e.stopPropagation();
-    collect(tableId, southPlayer.id, cards);
+    collect(tableId, currentPlayer.id, cards);
   };
 
   return (
@@ -35,7 +35,7 @@ Table.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  southPlayer: selectSouthPlayer(state)
+  currentPlayer: selectCurrentPlayer(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
