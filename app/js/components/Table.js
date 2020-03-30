@@ -15,7 +15,7 @@ const Table = ({cards, collect}) => {
 
   return (
     <div className="playing-table" onClick={(e) => handleClick(e)}>
-      {cards.map(({position, value}, index) => {
+      {cards.map(({position, playerName, value}, index) => {
         return (
           <div key={value} className={`table-slot is-${position}`} style={{zIndex: index}}>
             {value && <Card value={value} />}

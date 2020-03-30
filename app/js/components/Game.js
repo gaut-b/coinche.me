@@ -1,8 +1,8 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
 import { useBeforeunload } from 'react-beforeunload';
 import { distribute, subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
-
+import { TableIdContext } from '../pages/GamePage.js';
 import {pluralize} from '../../../shared/utils/string';
 import {
   NORTH,
@@ -14,7 +14,9 @@ import {
 import Table from './Table.js';
 import Player from './Player.js';
 
-const Game = ({onTable, deck, distribute, players, subscribeServerUpdate, unsubscribeServerUpdate, tableId}) => {
+const Game = ({onTable, deck, distribute, players, subscribeServerUpdate, unsubscribeServerUpdate}) => {
+
+  const tableId = useContext(TableIdContext);
 
   useBeforeunload(() => {
     unsubscribeServerUpdate(tableId)

@@ -32,7 +32,7 @@ export function distribute(tableId) {
   }
 }
 
-export function playCard(tableId, playerId, card) {
+export function playCard(tableId, card) {
   return {
     type: 'server/dispatch',
     emit: 'dispatch',
@@ -40,7 +40,7 @@ export function playCard(tableId, playerId, card) {
       tableId,
       action: {
         type: actionTypes.PLAY_CARD,
-        payload: {playerId, card}
+        payload: card
       }
     }
   }

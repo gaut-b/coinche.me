@@ -2,8 +2,9 @@ import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
 
 export default function subjectiveState(store, playerId) {
   const state = store.getState();
-  console.log(state)
-  const playerIndex = state.players.findIndex(p => p.id === playerId)
+
+  const playerIndex = state.players.findIndex(p => p.id === playerId);
+  const playerName = state.players[playerIndex].name;
 
   if (playerIndex === -1) return state;
 
@@ -15,8 +16,16 @@ export default function subjectiveState(store, playerId) {
     return p;
   });
 
+  const updatedTable = state.onTable.map(card => {
+    const playerIndex = updatedPlayer.findIndex(p => p.name === card.playerName);
+    if (updatedPlayer === -1) return;
+    card.position = updatedPlayer[playerIndex].position;
+    return card;
+  })
+
   return {
     ...state,
+    onTable: updatedTable,
     players: updatedPlayer,
   };
 };

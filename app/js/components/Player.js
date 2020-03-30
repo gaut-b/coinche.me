@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {SOUTH, NORTH} from '../../../shared/constants/positions';
 import {pluralize} from '../../../shared/utils/string';
 import {random} from '../../../shared/utils/array';
 import { playCard } from '../redux/actions';
+import {TableIdContext} from '../pages/GamePage';
 
 import '../../scss/components/player.scss';
 
@@ -12,6 +13,9 @@ import Hand from './Hand.js';
 // import Tricks from './Tricks.js';
 
 const Player = ({position, player, playRandomCard}) => {
+
+  const tableId = useContext(TableIdContext);
+
   if (!player) return null;
   const { name,
           isDealer,
@@ -21,7 +25,7 @@ const Player = ({position, player, playRandomCard}) => {
           id
         } = player;
 
-  const $name = <p onClick={e => playRandomCard(id, hand)} className={`name ${isDealer ? 'is-dealer' : ''}`}>{isVirtual ? 'BOT' : name} ({pluralize(tricks.length, 'pli')})</p>;
+  const $name = <p onClick={e => playRandomCard(tableId, hand)} className={`name ${isDealer ? 'is-dealer' : ''}`}>{isVirtual ? 'BOT' : name} ({pluralize(tricks.length, 'pli')})</p>;
 
   const isFirstPerson = (position === SOUTH) ? true : false;
 
@@ -44,7 +48,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  playRandomCard: (playerId, hand) => dispatch(playCard(playerId, random(hand))),
+  playRandomCard: (tableId, hand) => dispatch(playCard(tableId, random(hand))),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Player);

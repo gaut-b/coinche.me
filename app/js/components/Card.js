@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
+import { TableIdContext } from '../pages/GamePage';
 import { playCard } from '../redux/actions';
 import PropTypes from 'prop-types';
 
@@ -9,11 +10,12 @@ import '../../scss/components/card.scss';
 const images = require('../../images/cards/*.svg');
 
 const Card = ({value, isHidden, isSelectable, playCard}) => {
+  const tableId = useContext(TableIdContext);
   const image = isHidden ? images['BLUE_BACK'] : images[value];
 
   const handleClick = (e) => {
     if (!isSelectable) return;
-    playCard(value)
+    playCard(tableId, value)
   }
   return (
     <div className="card-wrapper">
@@ -30,7 +32,7 @@ Card.propTypes = {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  playCard: value => dispatch(playCard(value)),
+  playCard: (tableId, value) => dispatch(playCard(tableId, value)),
 })
 
 export default connect(null, mapDispatchToProps)(Card);

@@ -48,7 +48,6 @@ try {
       console.log('User dispatched', socket.id, tableId, action);
       const store = await getStore(tableId);
       store.dispatch(action);
-      // io.emit('updated_state', store.getState());
       broadcastSubjectiveState(tableId, io, store);
     });
 

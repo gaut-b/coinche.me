@@ -82,7 +82,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         const sortedClubs = player.hand.filter(c => c.includes('C')).sort();
         const sortedDiamonds = player.hand.filter(c => c.includes('D')).sort();
 
-        const sortedHand = [].concat(sortedSpades).concat(sortedHearts).concat(sortedDiamonds).concat(sortedClubs);
+        const sortedHand = [].concat(sortedSpades).concat(sortedHearts).concat(sortedClubs).concat(sortedDiamonds);
 
         return {
           ...player,
@@ -94,28 +94,43 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ...state,
         players: playerSortedHands
       };
-
     case actionTypes.PLAY_CARD: {
-      const {playerId, card} = action.payload;
+      const card = action.payload;
+
       // For now, all players doesn't have id's, but it'll be faster to check id than cards
       // const playerIndex = state.players.findIndex(p => p.id === playerId);
       const playerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
       const playerPosition = state.players[playerIndex].position;
+      const playerName = state.players[playerIndex].name;
       const playersUpdated = state.players.map((player) => {
-        return Object.assign({}, player, {
+        return {
+          ...player,
           hand: player.hand.filter(c => c !== card),
-        })
+        }
       });
-      return Object.assign({}, state, {
+
+      return {
+        ...state,
         players: playersUpdated,
-        onTable: state.onTable.filter(({position}) => position !== playerPosition).concat({
-          value: card,
-          position: playerPosition,
-        })
-      });
+        onTable: [
+          ...state.onTable,
+          {
+            value: card,
+            playerName: playerName,
+            position: playerPosition,
+          },
+        ],
+      };
     };
-
-
+    //   return {
+    //     ...state,
+    //     players: playersUpdated,
+    //     onTable: state.onTable.filter(({position}) => position !== playerPosition).concat({
+    //       value: card,
+    //       position: playerPosition,
+    //     })
+    //   });
+    // };
     case actionTypes.COLLECT: {
       const cards = action.payload; //It's not mandatory to pass cards as arguments because cards and state.onTable are equals
       if (!cards) return state;

@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, createContext } from 'react';
 import { Redirect } from "react-router-dom";
 import Layout from '../components/Layout';
 import Game from '../components/Game';
 
+export const TableIdContext = createContext('');
+
 const GamePage = ({match: {params: {tableId}}}) => {
-  if (!tableId) return (
+  const [state, setState] = useState(tableId);
+
+  if (!state) return (
     <Redirect to="/" />
   );
   return (
     <Layout>
-      <Game tableId={tableId} />
+      <TableIdContext.Provider value={state}>
+        <Game />
+      </TableIdContext.Provider>
     </Layout>
   );
 };
