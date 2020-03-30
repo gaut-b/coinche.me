@@ -1,4 +1,4 @@
-export const actionTypes = {
+const actionTypes = {
   SWITCH_TEAMS: 'SWITCH_TEAMS',
   DISTRIBUTE: 'DISTRIBUTE',
   PLAY_CARD: 'PLAY_CARD',
