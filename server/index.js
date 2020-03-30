@@ -1,7 +1,8 @@
 import express from 'express';
 import { v4 as uuid } from 'uuid';
 import getStore from './redux/store';
-import broadcastSubjectiveState from './redux/broadcastSubjectiveState';
+import subjectiveState from './redux/subjectiveState';
+import {emitEachInRoom} from '../shared/utils/sockets';
 import {join, leave} from './redux/actions';
 
 const app = express();
@@ -28,6 +29,12 @@ app.get('/game/:tableId', async (req, res) => {
   res.sendFile('build/index.html', {root: `${__dirname}/..`});
 });
 
+const dispatchActionAndBroadcastNewState = async (tableId, action) => {
+  const store = await getStore(tableId);
+  store.dispatch(action);
+  return emitEachInRoom(io, tableId, 'updated_state', clientId => subjectiveState(store.getState(), clientId));
+}
+
 try {
   io.on('connection', socket => {
     console.log('new connection', socket.id)
@@ -35,24 +42,18 @@ try {
     socket.on('join', async ({tableId, username}) => {
       console.log('User joined', tableId, socket.id, username)
       socket.join(tableId);
-      const store = await getStore(tableId);
-      store.dispatch(join({playerId: socket.id, playerName: username}));
-      broadcastSubjectiveState(io, tableId, store.getState())
+      dispatchActionAndBroadcastNewState(tableId, join({playerId: socket.id, playerName: username}))
     })
 
     socket.on('dispatch', async ({tableId, action}) => {
       console.log('User dispatched', tableId, socket.id, action);
-      const store = await getStore(tableId);
-      store.dispatch(action);
-      broadcastSubjectiveState(io, tableId, store.getState());
+      dispatchActionAndBroadcastNewState(tableId, action)
     });
 
     socket.on('leave', async ({tableId}) => {
       console.log('User leaved', tableId, socket.id);
       socket.disconnect();
-      const store = await getStore(tableId);
-      store.dispatch(leave(socket.id));
-      broadcastSubjectiveState(io, tableId, store.getState());
+      dispatchActionAndBroadcastNewState(tableId, leave(socket.id))
     });
   });
 } catch(e) {
