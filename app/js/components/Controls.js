@@ -4,6 +4,7 @@ import {pluralize} from '../../../shared/utils/string';
 import {selectHumanPlayers, selectCurrentPlayer} from '../redux/selectors';
 import { TableIdContext } from '../pages/GamePage.js';
 import {queryParamToJoin} from '../constants';
+import { distribute } from '../redux/actions';
 
 const Controls = ({humanPlayers, currentPlayer, distribute}) => {
   const tableId = useContext(TableIdContext);

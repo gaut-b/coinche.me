@@ -53,7 +53,7 @@ try {
       socket.disconnect();
       const store = await getStore(tableId);
       store.dispatch(leave(socket.id));
-      io.emit('updated_state', store.getState());
+      // io.emit('updated_state', store.getState());
       broadcastSubjectiveState(tableId, io, store);
     });
   });
