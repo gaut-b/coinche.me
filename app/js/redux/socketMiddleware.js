@@ -5,7 +5,7 @@ export default function socketMiddleware() {
   const socket = io.connect('');
 
   return ({ dispatch }) => next => (action) => {
-    console.log('coucou received', action)
+    console.log('SocketMiddleware', action)
     if (typeof action === 'function') {
       return next(action);
     }
@@ -17,9 +17,12 @@ export default function socketMiddleware() {
     }
 
     if (handle) {
-      const handleCallback = typeof handle === 'string' ? (result => dispatch({ type: handle, result, ...rest })) : handle
+      const handleCallback = typeof handle === 'string' ? (result => {
+        console.log('handleCallback', { type: handle, result })
+        dispatch({ type: handle, result })
+      }) : handle
       socket.on(event, result => {
-        console.log('received', result)
+        console.log('received from server', result)
         handleCallback(result)
       });
     }

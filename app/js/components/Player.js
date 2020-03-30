@@ -14,7 +14,6 @@ import Hand from './Hand.js';
 const Player = ({position, player, playRandomCard}) => {
   if (!player) return null;
   const { name,
-          isFirstPerson,
           isDealer,
           hand,
           tricks,
@@ -23,6 +22,8 @@ const Player = ({position, player, playRandomCard}) => {
         } = player;
 
   const $name = <p onClick={e => playRandomCard(id, hand)} className={`name ${isDealer ? 'is-dealer' : ''}`}>{isVirtual ? 'BOT' : name} ({pluralize(tricks.length, 'pli')})</p>;
+
+  const isFirstPerson = (position === SOUTH) ? true : false;
 
   return (
     <div className={`player is-${position}`}>

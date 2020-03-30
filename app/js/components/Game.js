@@ -15,12 +15,13 @@ import Table from './Table.js';
 import Player from './Player.js';
 
 const Game = ({onTable, deck, distribute, players, subscribeServerUpdate, unsubscribeServerUpdate, tableId}) => {
-  console.log('HEYYYYYYYYYYYYY', tableId)
+
   useBeforeunload(() => {
     unsubscribeServerUpdate(tableId)
   });
 
   useEffect(() => {
+    console.log('Subscribing to server update')
     subscribeServerUpdate(tableId)
 
     return () => {
