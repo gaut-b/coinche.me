@@ -4,6 +4,7 @@ import getStore from './redux/store';
 import subjectiveState from './redux/subjectiveState';
 import {emitEachInRoom} from '../shared/utils/sockets';
 import {join, leave} from './redux/actions';
+import socketEvents from '../shared/constants/socketEvents';
 
 const app = express();
 const cors = require('cors');
@@ -30,9 +31,10 @@ app.get('/game/:tableId', async (req, res) => {
 });
 
 const dispatchActionAndBroadcastNewState = async (tableId, action) => {
+  console.log(`Action on table ${tableId}`, action)
   const store = await getStore(tableId);
   store.dispatch(action);
-  return emitEachInRoom(io, tableId, 'updated_state', clientId => subjectiveState(store.getState(), clientId));
+  return emitEachInRoom(io, tableId, socketEvents.UPDATED_STATE, clientId => subjectiveState(store.getState(), clientId));
 }
 
 try {
@@ -40,18 +42,15 @@ try {
     console.log('new connection', socket.id)
 
     socket.on('join', async ({tableId, username}) => {
-      console.log('User joined', tableId, socket.id, username)
       socket.join(tableId);
       dispatchActionAndBroadcastNewState(tableId, join({playerId: socket.id, playerName: username}))
     })
 
     socket.on('dispatch', async ({tableId, action}) => {
-      console.log('User dispatched', tableId, socket.id, action);
       dispatchActionAndBroadcastNewState(tableId, action)
     });
 
     socket.on('leave', async ({tableId}) => {
-      console.log('User leaved', tableId, socket.id);
       socket.disconnect();
       dispatchActionAndBroadcastNewState(tableId, leave(socket.id))
     });

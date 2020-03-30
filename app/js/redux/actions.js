@@ -1,9 +1,10 @@
-import actionTypes from './actions.types';
+import actionTypes from './actionsTypes';
+import socketEvents from '../../../shared/constants/socketEvents';
 
 export function subscribeServerUpdate(tableId, username) {
   return {
     type: 'server/join',
-    event: 'updated_state',
+    event: socketEvents.UPDATED_STATE,
     handle: actionTypes.UPDATED_SERVER_STATE,
     emit: 'join',
     payload: {
@@ -18,7 +19,7 @@ export function unsubscribeServerUpdate(tableId) {
   return {
     type: 'server/leave',
     emit: 'leave',
-    event: 'updated_state',
+    event: socketEvents.UPDATED_STATE,
     leave: true,
     payload: {tableId},
   }

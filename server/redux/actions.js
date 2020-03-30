@@ -1,4 +1,4 @@
-import actionTypes from './actions.types';
+import actionTypes from './actionTypes';
 
 export function join(payload) {
   return {

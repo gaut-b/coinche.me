@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import actionTypes from './actions.types';
+import actionTypes from './actionTypes';
 import {DECK32, DECK52} from '../constants/decks';
 import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
 import {shuffle, switchIndexes} from '../../shared/utils/array';

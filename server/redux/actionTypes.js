@@ -1,8 +1,8 @@
-import sharedActionType from '../../../shared/constants/actions.types';
-
+import sharedActionTypes from '../../shared/constants/actionsTypes';
 export const actionTypes = {
-  ...sharedActionType,
-  UPDATED_SERVER_STATE: 'UPDATED_SERVER_STATE',
+  ...sharedActionTypes,
+  JOIN: 'JOIN',
+  LEAVE: 'LEAVE',
   // SWITCH_TEAMS: 'SWITCH_TEAMS',
   // DISTRIBUTE: 'DISTRIBUTE',
   // PLAY_CARD: 'PLAY_CARD',
