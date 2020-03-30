@@ -31,12 +31,9 @@ app.get('/game/:tableId', async (req, res) => {
 try {
   io.on('connection', socket => {
     console.log('new connection', socket.id)
-    // const tableId = socket.handshake.query.tableId;
-    // if (!tableId) return;
-    // console.log('User joined', tableId, socket.id);
 
     socket.on('join', async ({tableId, username}) => {
-      console.log('received connect', tableId, socket.id, username)
+      console.log('User joined', tableId, socket.id, username)
       socket.join(tableId);
       const store = await getStore(tableId);
       store.dispatch(join({playerId: socket.id, playerName: username}));
@@ -45,14 +42,15 @@ try {
     })
 
     socket.on('dispatch', async ({tableId, action}) => {
-      console.log('User dispatched', socket.id, tableId, action);
+      console.log('User dispatched', tableId, socket.id, action);
       const store = await getStore(tableId);
       store.dispatch(action);
       broadcastSubjectiveState(tableId, io, store);
     });
 
-    socket.on('disconnect', async ({tableId}) => {
-      console.log('User leaved', socket.id, tableId);
+    socket.on('leave', async ({tableId}) => {
+      console.log('User leaved', tableId, socket.id);
+      socket.disconnect();
       const store = await getStore(tableId);
       store.dispatch(leave(socket.id));
       io.emit('updated_state', store.getState());

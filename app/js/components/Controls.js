@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {pluralize} from '../../../shared/utils/string';
 import {selectHumanPlayers, selectCurrentPlayer} from '../redux/selectors';
 import { TableIdContext } from '../pages/GamePage.js';
+import {queryParamToJoin} from '../constants';
 
 const Controls = ({humanPlayers, currentPlayer, distribute}) => {
   const tableId = useContext(TableIdContext);
@@ -10,7 +11,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute}) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const copyUrlToClipboard = () => {
-    navigator.clipboard.writeText(document.location.href);
+    navigator.clipboard.writeText(`${document.location.origin}?${queryParamToJoin}=${tableId}`);
     setIsCopied(true);
   }
 
@@ -29,7 +30,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute}) => {
               <button onClick={() => distribute(tableId, currentPlayer.id)} className="button is-primary is-large">Distribuer une partie</button>
             </li>
             <li className="field">
-              <button className="button is-text" onClick={copyUrlToClipboard}>{isCopied ? 'Copié !' : 'Copier l\'adresse de la partie'}</button>
+              <button className="button is-text" onClick={copyUrlToClipboard}>{isCopied ? 'Copié !' : 'Copier l\'URL à partager pour rejoindre la partie'}</button>
             </li>
           </ul>
         </div>

@@ -2,7 +2,7 @@ import actionTypes from './actions.types';
 
 export function subscribeServerUpdate(tableId, username) {
   return {
-    type: 'server/connect',
+    type: 'server/join',
     event: 'updated_state',
     handle: actionTypes.UPDATED_SERVER_STATE,
     emit: 'join',
@@ -14,8 +14,10 @@ export function subscribeServerUpdate(tableId, username) {
 }
 
 export function unsubscribeServerUpdate(tableId) {
+  console.log('unsubscribeServerUpdate called', tableId)
   return {
-    type: 'server/disconnect',
+    type: 'server/leave',
+    emit: 'leave',
     event: 'updated_state',
     leave: true,
     payload: {tableId},

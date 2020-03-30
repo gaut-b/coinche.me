@@ -12,10 +12,6 @@ export default function socketMiddleware() {
 
     const { event, leave, handle, emit, payload, ...rest } = action;
 
-    if (leave) {
-      socket.removeListener(event);
-    }
-
     if (handle) {
       const handleCallback = typeof handle === 'string' ? (result => {
         dispatch({ type: handle, result })
@@ -27,6 +23,10 @@ export default function socketMiddleware() {
 
     if (emit) {
       socket.emit(emit, payload);
+    }
+
+    if (leave) {
+      socket.removeListener(event);
     }
 
     return next(action);
