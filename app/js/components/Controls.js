@@ -16,19 +16,24 @@ const Controls = ({humanPlayers, currentPlayer, distribute}) => {
 
   return (
     <div >
-      <h2 className="title has-text-centered">{pluralize(humanPlayers.length, 'joueur prêt')}:</h2>
-      {humanPlayers.length ? <ul>
-        {humanPlayers.map(p => <li key={p.id}>{p.name}</li>)}
-      </ul> : null}
-
-      <ul className="commands">
-        <li>
-          <button className="button is-primary is-large is-rounded" onClick={copyUrlToClipboard}>{isCopied ? 'Copié !' : 'Copier l\'adresse de la partie'}</button>
-        </li>
-        <li>
-          <button onClick={() => distribute(tableId, currentPlayer.id)} className="button is-primary is-large is-rounded">Distribuer une partie</button>
-        </li>
-      </ul>
+      <div className="commands">
+        <div>
+          <div className="section">
+            <h2 className="title has-text-centered is-4">{pluralize(humanPlayers.length, 'joueur prêt')}:</h2>
+            {humanPlayers.length ? <ul className="has-text-centered">
+              {humanPlayers.map(p => <li key={p.id}>{p.name}</li>)}
+            </ul> : null}
+          </div>
+          <ul className="has-text-centered">
+            <li className="field">
+              <button onClick={() => distribute(tableId, currentPlayer.id)} className="button is-primary is-large is-rounded">Distribuer une partie</button>
+            </li>
+            <li className="field">
+              <button className="button is-text" onClick={copyUrlToClipboard}>{isCopied ? 'Copié !' : 'Copier l\'adresse de la partie'}</button>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
