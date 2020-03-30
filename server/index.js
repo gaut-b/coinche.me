@@ -37,15 +37,14 @@ try {
       socket.join(tableId);
       const store = await getStore(tableId);
       store.dispatch(join({playerId: socket.id, playerName: username}));
-      // io.emit('updated_state', store.getState());
-      broadcastSubjectiveState(tableId, io, store)
+      broadcastSubjectiveState(io, tableId, store.getState())
     })
 
     socket.on('dispatch', async ({tableId, action}) => {
       console.log('User dispatched', tableId, socket.id, action);
       const store = await getStore(tableId);
       store.dispatch(action);
-      broadcastSubjectiveState(tableId, io, store);
+      broadcastSubjectiveState(io, tableId, store.getState());
     });
 
     socket.on('leave', async ({tableId}) => {
@@ -53,8 +52,7 @@ try {
       socket.disconnect();
       const store = await getStore(tableId);
       store.dispatch(leave(socket.id));
-      // io.emit('updated_state', store.getState());
-      broadcastSubjectiveState(tableId, io, store);
+      broadcastSubjectiveState(io, tableId, store.getState());
     });
   });
 } catch(e) {

@@ -1,16 +1,9 @@
 import subjectiveState from './subjectiveState';
+import {emitEachInRoom} from '../../shared/utils/sockets';
 
-const broadcastSubjectiveState = (tableId, io, store) => {
-  if (!tableId) return store.getState()
-
-  io.to(tableId).clients((error, clients) => {
-    if (error) throw error;
-
-    clients.map( client => {
-      const subjectivedState = subjectiveState(store, client);
-      io.to(client).emit('updated_state', subjectivedState)
-    });
-  });
+const broadcastSubjectiveState = (io, tableId, state) => {
+  if (!tableId) return state;
+  return emitEachInRoom(io, tableId, 'updated_state', clientId => subjectiveState(state, clientId));
 };
 
 export default broadcastSubjectiveState;

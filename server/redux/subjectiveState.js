@@ -1,7 +1,6 @@
 import {NORTH, EAST, SOUTH, WEST, POSITIONS} from '../../shared/constants/positions';
 
-export default function subjectiveState(store, playerId) {
-  const state = store.getState();
+export default function subjectiveState(state, playerId) {
   const playerIndex = state.players.findIndex(p => p.id === playerId);
 
   if (!playerId) {
