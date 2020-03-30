@@ -1,16 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
 import { collect } from '../redux/actions';
 import PropTypes from 'prop-types';
+import {TableIdContext} from '../pages/GamePage';
+import {selectSouthPlayer} from '../redux/selectors'
 
 import '../../scss/components/table.scss';
 import Card from './Card';
 
-const Table = ({cards, collect}) => {
+const Table = ({cards, southPlayer, collect}) => {
+
+  const tableId = useContext(TableIdContext);
 
   const handleClick = (e) => {
     e.stopPropagation();
-    collect(cards);
+    collect(tableId, southPlayer.id, cards);
   };
 
   return (
@@ -30,8 +34,12 @@ Table.propTypes = {
   cards: PropTypes.array.isRequired,
 }
 
+const mapStateToProps = state => ({
+  southPlayer: selectSouthPlayer(state)
+});
+
 const mapDispatchToProps = (dispatch) => ({
-  collect: (cards) => dispatch(collect(cards)),
+  collect: (tableId, playerId, cards) => dispatch(collect(tableId, playerId, cards)),
 })
 
-export default connect(null, mapDispatchToProps)(Table);
+export default connect(mapStateToProps, mapDispatchToProps)(Table);

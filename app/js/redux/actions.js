@@ -46,7 +46,7 @@ export function playCard(tableId, card) {
   }
 };
 
-export function collect(tableId, cards) {
+export function collect(tableId, playerId, cards) {
   return {
     type: 'server/dispatch',
     emit: 'dispatch',
@@ -54,7 +54,7 @@ export function collect(tableId, cards) {
       tableId,
       action: {
         type: actionTypes.COLLECT,
-        payload: cards
+        payload: {playerId, cards}
       }
     }
   }
