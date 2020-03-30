@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
+import {localstorageUsernameKey} from '../constants';
 
 const LandingPage = (props) => {
 
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(localStorage.getItem(localstorageUsernameKey) || '');
   const [tableId, setTableId] = useState('');
+
+  const setUsernameAndSave = value => {
+    setUsername(value);
+    localStorage.setItem(localstorageUsernameKey, value);
+  };
 
   const joinTable = (e) => {
     e.preventDefault();
@@ -34,7 +40,7 @@ const LandingPage = (props) => {
               <div className="field-body">
                 <div className="field">
                   <p className="control">
-                    <input className="input" type="text" placeholder="Choisis ton blase" value={username} onChange={e => setUsername(e.target.value)} />
+                    <input className="input" type="text" placeholder="Choisis ton blase" value={username} onChange={e => setUsernameAndSave(e.target.value)} />
                   </p>
                 </div>
               </div>

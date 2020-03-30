@@ -35,11 +35,11 @@ try {
     // if (!tableId) return;
     // console.log('User joined', tableId, socket.id);
 
-    socket.on('join', async ({tableId}) => {
-      console.log('received connect', tableId, socket.id)
+    socket.on('join', async ({tableId, username}) => {
+      console.log('received connect', tableId, socket.id, username)
       socket.join(tableId);
       const store = await getStore(tableId);
-      store.dispatch(join(socket.id));
+      store.dispatch(join({playerId: socket.id, playerName: username}));
       // io.emit('updated_state', store.getState());
       broadcastSubjectiveState(tableId, io, store)
     })

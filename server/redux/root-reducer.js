@@ -39,12 +39,15 @@ export const INITIAL_STATE = {
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case actionTypes.JOIN:
+      const newPlayerIndex = state.players.findIndex(p => !p.id);
+      const {playerId, playerName} = action.payload;
       return {
         ...state,
         players: state.players.map((p, i) => {
           return {
             ...p,
-            ...{id: i === state.players.findIndex(p => !p.id) ? action.payload : p.id},
+            id: i === newPlayerIndex ? playerId : p.id,
+            name: i === newPlayerIndex && playerName || p.name,
           }
         })
       }

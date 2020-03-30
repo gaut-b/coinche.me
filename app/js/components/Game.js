@@ -10,6 +10,7 @@ import {
   SOUTH,
   WEST,
 } from '../../../shared/constants/positions';
+import {localstorageUsernameKey} from '../constants';
 
 import Table from './Table.js';
 import Player from './Player.js';
@@ -24,7 +25,7 @@ const Game = ({onTable, isDistributed, subscribeServerUpdate, unsubscribeServerU
   });
 
   useEffect(() => {
-    subscribeServerUpdate(tableId)
+    subscribeServerUpdate(tableId, localStorage.getItem(localstorageUsernameKey))
     return () => {
       unsubscribeServerUpdate(tableId);
     }
@@ -62,7 +63,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  subscribeServerUpdate: (tableId) => dispatch(subscribeServerUpdate(tableId)),
+  subscribeServerUpdate: (tableId, username) => dispatch(subscribeServerUpdate(tableId, username)),
   unsubscribeServerUpdate: (tableId) => dispatch(unsubscribeServerUpdate(tableId)),
 })
 

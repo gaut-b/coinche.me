@@ -1,12 +1,15 @@
 import actionTypes from './actions.types';
 
-export function subscribeServerUpdate(tableId) {
+export function subscribeServerUpdate(tableId, username) {
   return {
     type: 'server/connect',
     event: 'updated_state',
     handle: actionTypes.UPDATED_SERVER_STATE,
     emit: 'join',
-    payload: {tableId},
+    payload: {
+      tableId,
+      username,
+    },
   }
 }
 
