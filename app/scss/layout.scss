@@ -1,3 +1,7 @@
+html {
+  overflow-x: auto;
+}
+
 body {
   background: url(../images/leather_1.png);
   // background: url(../images/geometric-leaves.png);
@@ -6,14 +10,20 @@ body {
 
 .section {
   &.is-full-screen {
-    height: 100vh;
+    @include tablet {
+      height: 100vh;
+    }
     padding-top: $navbar-height + 1rem;
 
     .commands {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
-      height: 100%;
+      margin-top: 1rem;
+      @include tablet {
+        margin-top: 0;
+        height: 100%;
+      }
       align-items: center;
     }
   }
