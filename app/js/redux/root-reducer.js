@@ -11,10 +11,8 @@ const subjectivizeState = (serverState, id) => {
 }
 
 const rootReducer = (state = INITIAL_STATE, action) => {
-  console.log('IN root reducer', action)
   switch (action.type) {
     case actionTypes.UPDATED_SERVER_STATE:
-      console.log('received in root-reducer', actionTypes.UPDATED_SERVER_STATE)
       return action.result;
     default:
       return state;

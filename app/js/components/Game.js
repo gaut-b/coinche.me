@@ -23,7 +23,6 @@ const Game = ({onTable, deck, distribute, players, subscribeServerUpdate, unsubs
   });
 
   useEffect(() => {
-    console.log('Subscribing to server update')
     subscribeServerUpdate(tableId)
 
     return () => {
