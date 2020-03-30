@@ -40,8 +40,8 @@ try {
       socket.join(tableId);
       const store = await getStore(tableId);
       store.dispatch(join(socket.id));
-      io.emit('updated_state', store.getState());
-      // broadcastSubjectiveState(tableId, io, store)
+      // io.emit('updated_state', store.getState());
+      broadcastSubjectiveState(tableId, io, store)
     })
 
     socket.on('dispatch', async ({tableId, action}) => {
