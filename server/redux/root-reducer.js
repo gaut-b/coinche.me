@@ -64,9 +64,10 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         })
       }
     case actionTypes.SWITCH_TEAMS: {
+      const switchedPlayers = switchIndexes(state.players, 1, 2);
       return {
         ...state,
-        players: switchIndexes(state.players, 0, 1),
+        players: switchedPlayers,
       }
     }
     case actionTypes.DISTRIBUTE: {

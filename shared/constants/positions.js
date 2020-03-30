@@ -1,6 +1,6 @@
-export const NORTH = 'north';
-export const EAST = 'east';
-export const SOUTH = 'south';
-export const WEST = 'west';
+export const NORTH = 'NORTH';
+export const EAST = 'EAST';
+export const SOUTH = 'SOUTH';
+export const WEST = 'WEST';
 
-export const POSITIONS = [NORTH, EAST, SOUTH, WEST];
+export const POSITIONS = [SOUTH, WEST, NORTH, EAST,];

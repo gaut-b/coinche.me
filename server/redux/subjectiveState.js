@@ -1,32 +1,35 @@
-import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
+import {NORTH, EAST, SOUTH, WEST, POSITIONS} from '../../shared/constants/positions';
 
 export default function subjectiveState(store, playerId) {
   const state = store.getState();
-
   const playerIndex = state.players.findIndex(p => p.id === playerId);
 
-  if (playerIndex === -1) return state;
+  if (!playerId) {
+    console.error('playerId missing in subjectiveState');
+    return state;
+  }
+  if (playerIndex === -1) {
+    console.error('playerId not found in players', playerId);
+    return state;
+  }
 
-  const playerName = state.players[playerIndex].name;
-
-  const updatedPlayer = state.players.map((p, i) => {
-    if (i === playerIndex) p.position = SOUTH;
-    else if (i === ((playerIndex + 1) % 4)) p.position = WEST;
-    else if (i === ((playerIndex + 2) % 4)) p.position = NORTH;
-    else if (i === ((playerIndex + 3) % 4)) p.position = EAST;
-    return p;
-  });
+  const updatedPlayers = POSITIONS.map((position, i) => {
+    return {
+      ...state.players[(playerIndex + i) % state.players.length],
+      position,
+    }
+  })
 
   const updatedTable = state.onTable.map(card => {
-    const playerIndex = updatedPlayer.findIndex(p => p.name === card.playerName);
-    if (updatedPlayer === -1) return;
-    card.position = updatedPlayer[playerIndex].position;
+    const playerIndex = updatedPlayers.findIndex(p => p.name === card.playerName);
+    if (updatedPlayers === -1) return;
+    card.position = updatedPlayers[playerIndex].position;
     return card;
   })
 
   return {
     ...state,
     onTable: updatedTable,
-    players: updatedPlayer,
+    players: updatedPlayers,
   };
 };

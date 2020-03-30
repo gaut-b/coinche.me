@@ -36,7 +36,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}
               {sortedPlayers.map((p, i) => <li key={i} className={p.id ? 'has-text-weight-bold' : ''}>{p.id ? p.name : 'En attente ...'}</li>)}
             </ul>
           ) : null}
-          {players.length > 0 && <p><button onClick={e => swichTeams()} className="button is-text">Échanger les équipes</button></p>}
+          {humanPlayers.length >= 2 && <p><button onClick={e => swichTeams(tableId)} className="button is-text">Échanger les équipes</button></p>}
         </div>
         <ul className="section is-vertical is-small actions">
           <li>
@@ -50,7 +50,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}
               <span className="is-hidden-mobile">&nbsp;une partie</span>
             </button>
           </li>
-          <li><button className="button is-text is-small" onClick={e => distribute(tableId, currentPlayer.id)}>(Forcer)</button></li>
+          {disableDistribute && <li><button className="button is-text is-small" onClick={e => distribute(tableId, currentPlayer.id)}>(Forcer)</button></li>}
           <li>
             <button className="button is-text" onClick={copyUrlToClipboard}>
               {isCopied ? 'Copié !' : <span>Copier l'URL<span className="is-hidden-mobile"> à partager pour rejoindre la partie</span></span>}
