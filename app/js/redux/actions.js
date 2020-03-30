@@ -37,6 +37,19 @@ export function distribute(tableId) {
   }
 }
 
+export function swichTeams(tableId) {
+  return {
+    type: 'server/dispatch',
+    emit: 'dispatch',
+    payload: {
+      tableId,
+      action: {
+        type: actionTypes.SWITCH_TEAMS,
+      }
+    }
+  }
+}
+
 export function playCard(tableId, card) {
   return {
     type: 'server/dispatch',

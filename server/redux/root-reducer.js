@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import actionTypes from './actions.types';
 import {DECK32, DECK52} from '../constants/decks';
 import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
-import {shuffle} from '../../shared/utils/array';
+import {shuffle, switchIndexes} from '../../shared/utils/array';
 
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
@@ -63,6 +63,12 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           }
         })
       }
+    case actionTypes.SWITCH_TEAMS: {
+      return {
+        ...state,
+        players: switchIndexes(state.players, 0, 1),
+      }
+    }
     case actionTypes.DISTRIBUTE: {
       const dealerIndex = state.players.findIndex(p => p.isDealer);
       const players = state.deck.reduce((players, card, deckIndex) => {

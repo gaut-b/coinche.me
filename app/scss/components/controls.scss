@@ -44,6 +44,9 @@ ul.players-waiting-list {
     }
     &:first-child {
       margin-bottom: 4rem;
+      @include desktop {
+        margin-bottom: 8rem;
+      }
     }
   }
 }
