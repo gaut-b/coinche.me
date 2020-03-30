@@ -40,7 +40,7 @@ const Game = ({onTable, deck, distribute, players, subscribeServerUpdate, unsubs
           <div >
             <h2 className="title has-text-centered">{pluralize(realPlayers.length, 'joueur prêt')}:</h2>
             {realPlayers.length ? <ul>
-              {realPlayers.map(p => <li key={p.id}>{p.id}</li>)}
+              {realPlayers.map(p => <li key={p.id}>{p.name}</li>)}
             </ul> : null}
 
             <ul className="commands">

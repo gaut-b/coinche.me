@@ -25,7 +25,12 @@ const Player = ({position, player, playRandomCard}) => {
           id
         } = player;
 
-  const $name = <p onClick={e => playRandomCard(tableId, hand)} className={`name ${isDealer ? 'is-dealer' : ''}`}>{isVirtual ? 'BOT' : name} ({pluralize(tricks.length, 'pli')})</p>;
+  const handleClick = (e) => {
+    if (!id) playRandomCard(tableId, hand)
+    return;
+  }
+
+  const $name = <p onClick={handleClick} className={`name ${isDealer ? 'is-dealer' : ''}`}>{!id ? 'BOT' : name} ({pluralize(tricks.length, 'pli')})</p>;
 
   const isFirstPerson = (position === SOUTH) ? true : false;
 
