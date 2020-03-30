@@ -41,7 +41,7 @@ const LandingPage = (props) => {
             </div>
             <div className="section content">
               <div className="field">
-                <button className="button is-primary" onClick={joinTable}>Créer une table</button>
+                <button className="button is-primary is-large" onClick={joinTable}>Créer une table</button>
               </div>
               <p className="has-text-centered">- OU -</p>
               <div className="field has-addons">

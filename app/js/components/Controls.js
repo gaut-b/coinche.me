@@ -26,7 +26,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute}) => {
           </div>
           <ul className="has-text-centered">
             <li className="field">
-              <button onClick={() => distribute(tableId, currentPlayer.id)} className="button is-primary is-large is-rounded">Distribuer une partie</button>
+              <button onClick={() => distribute(tableId, currentPlayer.id)} className="button is-primary is-large">Distribuer une partie</button>
             </li>
             <li className="field">
               <button className="button is-text" onClick={copyUrlToClipboard}>{isCopied ? 'Copié !' : 'Copier l\'adresse de la partie'}</button>
