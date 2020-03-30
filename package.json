@@ -12,7 +12,7 @@
     "dev": "concurrently \"yarn watch-app\" \"yarn watch-server\"",
     "build": "parcel build -d build app/index.html",
     "server": "node -r esm server/index.js",
-    "start": "yarn build && yarn server"
+    "start": "yarn install && yarn build && yarn server"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
