@@ -60,7 +60,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           }
         })
       }
-    case actionTypes.DISTRIBUTE:
+    case actionTypes.DISTRIBUTE: {
       const dealerIndex = state.players.findIndex(p => p.isDealer);
       const players = state.deck.reduce((players, card, deckIndex) => {
         const nextPlayerIndex = (dealerIndex + deckIndex) % state.players.length;
@@ -76,14 +76,8 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         })
       }, state.players);
 
-      const playerSortedHands = players.map((player) => {
-        const sortedSpades = player.hand.filter(c => c.includes('S')).sort();
-        const sortedHearts = player.hand.filter(c => c.includes('H')).sort();
-        const sortedClubs = player.hand.filter(c => c.includes('C')).sort();
-        const sortedDiamonds = player.hand.filter(c => c.includes('D')).sort();
-
-        const sortedHand = [].concat(sortedSpades).concat(sortedHearts).concat(sortedClubs).concat(sortedDiamonds);
-
+      const sortedPlayers = players.map((player) => {
+        const sortedHand = sortHand(player.hand);
         return {
           ...player,
           hand: sortedHand,
@@ -92,20 +86,32 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
-        players: playerSortedHands
+        players: sortedPlayers,
       };
+    }
     case actionTypes.PLAY_CARD: {
       const card = action.payload;
-
-      // For now, all players doesn't have id's, but it'll be faster to check id than cards
-      // const playerIndex = state.players.findIndex(p => p.id === playerId);
       const playerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
       const playerPosition = state.players[playerIndex].position;
       const playerName = state.players[playerIndex].name;
-      const playersUpdated = state.players.map((player) => {
+
+      // Checking if the user has already played a card
+      const playedCardIndex = state.onTable.findIndex(cards => cards.playerName === playerName)
+      const updatedPlayedCards = (playedCardIndex === -1) ? state.onTable : state.onTable.filter((_, index) => index !== playedCardIndex);
+      const playedCard = (playedCardIndex === -1) ? null : state.onTable[playedCardIndex];
+
+      const playersUpdated = state.players.map((player, index) => {
+        let updatedHand;
+        if ((index === playerIndex) && (playedCard)) {
+          player.hand.push(playedCard.value);
+          updatedHand = sortHand(player.hand).filter(c => c !== card);
+        } else {
+          updatedHand = player.hand.filter(c => c !== card);
+        }
+
         return {
           ...player,
-          hand: player.hand.filter(c => c !== card),
+          hand: updatedHand,
         }
       });
 
@@ -113,7 +119,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ...state,
         players: playersUpdated,
         onTable: [
-          ...state.onTable,
+          ...updatedPlayedCards,
           {
             value: card,
             playerName: playerName,
@@ -122,7 +128,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ],
       };
     };
-
     case actionTypes.COLLECT: {
       const {playerId, cards} = action.payload; //It's not mandatory to pass cards as arguments because cards and state.onTable are equals
       if (!cards) return state;
@@ -145,6 +150,15 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       return state;
   };
 };
+
+const sortHand = (hand) => {
+  const sortedSpades = hand.filter(c => c.includes('S')).sort();
+  const sortedHearts = hand.filter(c => c.includes('H')).sort();
+  const sortedClubs = hand.filter(c => c.includes('C')).sort();
+  const sortedDiamonds = hand.filter(c => c.includes('D')).sort();
+
+  return [].concat(sortedSpades).concat(sortedHearts).concat(sortedClubs).concat(sortedDiamonds);
+}
 
 export default rootReducer;
 
