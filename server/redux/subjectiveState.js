@@ -4,9 +4,10 @@ export default function subjectiveState(store, playerId) {
   const state = store.getState();
 
   const playerIndex = state.players.findIndex(p => p.id === playerId);
-  const playerName = state.players[playerIndex].name;
 
   if (playerIndex === -1) return state;
+
+  const playerName = state.players[playerIndex].name;
 
   const updatedPlayer = state.players.map((p, i) => {
     if (i === playerIndex) p.position = SOUTH;
