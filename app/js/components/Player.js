@@ -30,7 +30,7 @@ const Player = ({position, player, playRandomCard}) => {
     return;
   }
 
-  const $name = <p onClick={handleClick} className={`name ${isDealer ? 'is-dealer' : ''}`}>{!id ? 'BOT' : name} ({pluralize(tricks.length, 'pli')})</p>;
+  const $name = <p onClick={handleClick} className="name">{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(tricks.length, 'pli')})</p>;
 
   const isFirstPerson = (position === SOUTH) ? true : false;
 

@@ -8,30 +8,18 @@ export const INITIAL_STATE = {
   deck: shuffle(DECK32),
   onTable: [],
   players: [{
-    name: 'Sud',
-    position: null,
     isDealer: true,
     hand: [],
     tricks: [],
-    id: null,
   }, {
-    name: 'Ouest',
-    position: null,
     hand: [],
     tricks: [],
-    id: null,
   }, {
-    name: 'Nord',
-    position: null,
     hand: [],
     tricks: [],
-    id: null,
   }, {
-    name: 'Est',
-    position: null,
     hand: [],
     tricks: [],
-    id: null,
   }],
   score: '',
 };
@@ -71,8 +59,13 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       }
     }
     case actionTypes.DISTRIBUTE: {
-      const dealerIndex = state.players.findIndex(p => p.isDealer);
-      const players = state.deck.reduce((players, card, deckIndex) => {
+      const dealerId = action.payload.playerId;
+      const dealerIndex = state.players.findIndex(p => p.id === dealerId);
+      const playersWithDealer = state.players.map(p => ({
+        ...p,
+        isDealer: p.id === dealerId,
+      }));
+      const playersWithCards = state.deck.reduce((players, card, deckIndex) => {
         const nextPlayerIndex = (dealerIndex + deckIndex) % state.players.length;
         return players.map((player, playerIndex) => {
           if (nextPlayerIndex === playerIndex) {
@@ -84,19 +77,18 @@ const rootReducer = (state = INITIAL_STATE, action) => {
             return player;
           }
         })
-      }, state.players);
+      }, playersWithDealer);
 
-      const sortedPlayers = players.map((player) => {
-        const sortedHand = sortHand(player.hand);
+      const playersWithSortedCards = playersWithCards.map(player => {
         return {
           ...player,
-          hand: sortedHand,
+          hand: sortHand(player.hand),
         };
       });
 
       return {
         ...state,
-        players: sortedPlayers,
+        players: playersWithSortedCards,
       };
     }
     case actionTypes.PLAY_CARD: {

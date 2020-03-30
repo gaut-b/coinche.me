@@ -23,7 +23,7 @@ export function unsubscribeServerUpdate(tableId) {
   }
 }
 
-export function distribute(tableId) {
+export function distribute(tableId, playerId) {
   return {
     type: actionTypes.NO_LOCAL_EFFECT,
     emit: socketEvents.DISPATCH,
@@ -31,6 +31,7 @@ export function distribute(tableId) {
       tableId,
       action: {
         type: actionTypes.DISTRIBUTE,
+        payload: {playerId},
       }
     }
   }
