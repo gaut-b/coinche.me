@@ -3,10 +3,10 @@ import socketEvents from '../../../shared/constants/socketEvents';
 
 export function subscribeServerUpdate(tableId, username) {
   return {
-    type: 'server/join',
+    type: actionTypes.NO_LOCAL_EFFECT,
     event: socketEvents.UPDATED_STATE,
     handle: actionTypes.UPDATED_SERVER_STATE,
-    emit: 'join',
+    emit: socketEvents.JOIN,
     payload: {
       tableId,
       username,
@@ -15,10 +15,9 @@ export function subscribeServerUpdate(tableId, username) {
 }
 
 export function unsubscribeServerUpdate(tableId) {
-  console.log('unsubscribeServerUpdate called', tableId)
   return {
-    type: 'server/leave',
-    emit: 'leave',
+    type: actionTypes.NO_LOCAL_EFFECT,
+    emit: socketEvents.LEAVE,
     event: socketEvents.UPDATED_STATE,
     leave: true,
     payload: {tableId},
@@ -27,8 +26,8 @@ export function unsubscribeServerUpdate(tableId) {
 
 export function distribute(tableId) {
   return {
-    type: 'server/dispatch',
-    emit: 'dispatch',
+    type: actionTypes.NO_LOCAL_EFFECT,
+    emit: socketEvents.DISPATCH,
     payload: {
       tableId,
       action: {
@@ -40,8 +39,8 @@ export function distribute(tableId) {
 
 export function swichTeams(tableId) {
   return {
-    type: 'server/dispatch',
-    emit: 'dispatch',
+    type: actionTypes.NO_LOCAL_EFFECT,
+    emit: socketEvents.DISPATCH,
     payload: {
       tableId,
       action: {
@@ -53,8 +52,8 @@ export function swichTeams(tableId) {
 
 export function playCard(tableId, card) {
   return {
-    type: 'server/dispatch',
-    emit: 'dispatch',
+    type: actionTypes.NO_LOCAL_EFFECT,
+    emit: socketEvents.DISPATCH,
     payload: {
       tableId,
       action: {
@@ -67,8 +66,8 @@ export function playCard(tableId, card) {
 
 export function collect(tableId, playerId, cards) {
   return {
-    type: 'server/dispatch',
-    emit: 'dispatch',
+    type: actionTypes.NO_LOCAL_EFFECT,
+    emit: socketEvents.DISPATCH,
     payload: {
       tableId,
       action: {
@@ -78,15 +77,3 @@ export function collect(tableId, playerId, cards) {
     }
   }
 };
-
-
-// // Action creator with received function:
-// export function subscribeConversation() {
-//   return dispatch => dispatch({
-//     event: 'message',
-//     handle: data => dispatch({
-//       type: actionTypes.NEW_MESSAGE,
-//       payload: data.message,
-//     }),
-//   });
-// }
