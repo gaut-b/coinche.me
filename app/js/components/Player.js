@@ -21,7 +21,6 @@ const Player = ({position, player, playRandomCard}) => {
           isDealer,
           hand,
           tricks,
-          isVirtual,
           id
         } = player;
 

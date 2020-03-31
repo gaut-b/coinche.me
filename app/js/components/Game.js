@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useBeforeunload } from 'react-beforeunload';
 import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
 import { TableIdContext } from '../pages/GamePage.js';
-import {selectIsDistributed} from '../redux/selectors';
+import {selectIsDistributed, selectOnTable} from '../redux/selectors';
 import {
   NORTH,
   EAST,
@@ -58,7 +58,7 @@ const Game = ({onTable, isDistributed, subscribeServerUpdate, unsubscribeServerU
 }
 
 const mapStateToProps = (state) => ({
-  onTable: state.onTable,
+  onTable: selectOnTable(state),
   isDistributed: selectIsDistributed(state),
 });
 

@@ -19,16 +19,8 @@ export default function subjectiveState(state, playerId) {
     }
   })
 
-  const updatedTable = state.onTable.map(card => {
-    const playerIndex = updatedPlayers.findIndex(p => p.name === card.playerName);
-    if (updatedPlayers === -1) return;
-    card.position = updatedPlayers[playerIndex].position;
-    return card;
-  })
-
   return {
     ...state,
-    onTable: updatedTable,
     players: updatedPlayers,
   };
 };

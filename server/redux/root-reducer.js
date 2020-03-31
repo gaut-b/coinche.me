@@ -6,9 +6,7 @@ import {shuffle, switchIndexes} from '../../shared/utils/array';
 
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
-  onTable: [],
   players: [{
-    isDealer: true,
     hand: [],
     tricks: [],
   }, {
@@ -93,42 +91,22 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     }
     case actionTypes.PLAY_CARD: {
       const card = action.payload;
-      const playerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
-      const playerPosition = state.players[playerIndex].position;
-      const playerName = state.players[playerIndex].name;
-
-      // Checking if the user has already played a card
-      const playedCardIndex = state.onTable.findIndex(cards => cards.playerName === playerName)
-      const updatedPlayedCards = (playedCardIndex === -1) ? state.onTable : state.onTable.filter((_, index) => index !== playedCardIndex);
-      const playedCard = (playedCardIndex === -1) ? null : state.onTable[playedCardIndex];
-
-      const playersUpdated = state.players.map((player, index) => {
-        let updatedHand;
-        if ((index === playerIndex) && (playedCard)) {
-          player.hand.push(playedCard.value);
-          updatedHand = sortHand(player.hand).filter(c => c !== card);
-        } else {
-          updatedHand = player.hand.filter(c => c !== card);
-        }
-
-        return {
-          ...player,
-          hand: updatedHand,
-        }
-      });
+      const playingPlayerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
 
       return {
         ...state,
-        players: playersUpdated,
-        onTable: [
-          ...updatedPlayedCards,
-          {
-            value: card,
-            playerName: playerName,
-            position: playerPosition,
-          },
-        ],
-      };
+        players: state.players.map((p, i) => {
+          if (i === playingPlayerIndex) {
+            return {
+              ...p,
+              hand: p.hand.filter(c => c !== card),
+              onTable: card,
+            }
+          } else {
+            return p;
+          }
+        }),
+      }
     };
     case actionTypes.COLLECT: {
       const {playerId, cards} = action.payload; //It's not mandatory to pass cards as arguments because cards and state.onTable are equals

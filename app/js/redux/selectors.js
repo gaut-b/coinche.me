@@ -17,3 +17,8 @@ export const selectHumanPlayers = createSelector(
   [selectPlayers],
   players => players.filter(p => p.id)
 )
+
+export const selectOnTable = createSelector(
+  [selectPlayers],
+  players => players.map(p => ({value: p.onTable, position: p.position}))
+)
