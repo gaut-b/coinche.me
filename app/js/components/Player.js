@@ -4,15 +4,16 @@ import PropTypes from 'prop-types';
 import {SOUTH, NORTH} from '../../../shared/constants/positions';
 import {pluralize} from '../../../shared/utils/string';
 import {random} from '../../../shared/utils/array';
-import { playCard } from '../redux/actions';
+import { playCard, collect } from '../redux/actions';
 import {TableIdContext} from '../pages/GamePage';
+import {selectCanCollect} from '../redux/selectors';
 
 import '../../scss/components/player.scss';
 
 import Hand from './Hand.js';
 // import Tricks from './Tricks.js';
 
-const Player = ({position, player, playRandomCard}) => {
+const Player = ({position, player, playRandomCard, canCollect, collect}) => {
 
   const tableId = useContext(TableIdContext);
 
@@ -21,7 +22,8 @@ const Player = ({position, player, playRandomCard}) => {
           isDealer,
           hand,
           tricks,
-          id
+          id,
+          index,
         } = player;
 
   const handleClick = (e) => {
@@ -29,7 +31,13 @@ const Player = ({position, player, playRandomCard}) => {
     return;
   }
 
-  const $name = <p onClick={handleClick} className="name">{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(tricks.length, 'pli')})</p>;
+  const $name = (
+    <div className="name">
+      <span onClick={handleClick} >{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(tricks.length, 'pli')})</span>
+      &nbsp;
+      {!id && canCollect && <button className="button is-small is-text is-rounded" onClick={e => collect(tableId, index)}>Ramasser</button> }
+    </div>
+  );
 
   const isFirstPerson = (position === SOUTH) ? true : false;
 
@@ -49,10 +57,12 @@ Player.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   player: state.players.find(p => (p.position === ownProps.position)),
+  canCollect: selectCanCollect(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   playRandomCard: (tableId, hand) => dispatch(playCard(tableId, random(hand))),
+  collect: (tableId, index) => dispatch(collect(tableId, index)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Player);

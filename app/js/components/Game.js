@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useBeforeunload } from 'react-beforeunload';
 import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
 import { TableIdContext } from '../pages/GamePage.js';
-import {selectIsDistributed, selectOnTable} from '../redux/selectors';
+import {selectIsDistributed} from '../redux/selectors';
 import {
   NORTH,
   EAST,
@@ -44,7 +44,7 @@ const Game = ({onTable, isDistributed, subscribeServerUpdate, unsubscribeServerU
             <div className="level is-mobile">
               <Player position={WEST} />
               <div className="level-item">
-                <Table cards={onTable} />
+                <Table />
               </div>
               <Player position={EAST} />
             </div>
@@ -58,7 +58,6 @@ const Game = ({onTable, isDistributed, subscribeServerUpdate, unsubscribeServerU
 }
 
 const mapStateToProps = (state) => ({
-  onTable: selectOnTable(state),
   isDistributed: selectIsDistributed(state),
 });
 

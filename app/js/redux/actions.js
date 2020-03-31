@@ -64,7 +64,7 @@ export function playCard(tableId, card) {
   }
 };
 
-export function collect(tableId, playerId, cards) {
+export function collect(tableId, playerIndex) {
   return {
     type: actionTypes.NO_LOCAL_EFFECT,
     emit: socketEvents.DISPATCH,
@@ -72,7 +72,7 @@ export function collect(tableId, playerId, cards) {
       tableId,
       action: {
         type: actionTypes.COLLECT,
-        payload: {playerId, cards}
+        payload: {playerIndex}
       }
     }
   }

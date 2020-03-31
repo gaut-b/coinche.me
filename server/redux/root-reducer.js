@@ -109,20 +109,31 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       }
     };
     case actionTypes.COLLECT: {
-      const {playerId, cards} = action.payload; //It's not mandatory to pass cards as arguments because cards and state.onTable are equals
-      if (!cards) return state;
-      const playerIndex = state.players.findIndex(p => p.id === playerId);
-      const playersUpdated = state.players.map((player, index) => {
-        if (index === playerIndex) {
-          cards.reverse().forEach( c => player.tricks.unshift(c.value))
-        }
-        return player;
-      });
+      const {playerIndex} = action.payload;
+
       return {
         ...state,
-        players: playersUpdated,
-        onTable: []
-      };
+        players: state.players.map((p, i) => {
+          return {
+            ...p,
+            onTable: null,
+            tricks: i === playerIndex ? p.tricks.concat([state.players.map(_p => _p.onTable)]) : p.tricks,
+          }
+        })
+      }
+
+      // const playerIndex = state.players.findIndex(p => p.id === playerId);
+      // const playersUpdated = state.players.map((player, index) => {
+      //   if (index === playerIndex) {
+      //     cards.reverse().forEach( c => player.tricks.unshift(c.value))
+      //   }
+      //   return player;
+      // });
+      // return {
+      //   ...state,
+      //   players: playersUpdated,
+      //   onTable: []
+      // };
     };
 
     default:

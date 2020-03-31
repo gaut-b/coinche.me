@@ -12,10 +12,11 @@ export default function subjectiveState(state, playerId) {
     return state;
   }
 
-  const updatedPlayers = POSITIONS.map((position, i) => {
+  const updatedPlayers = POSITIONS.map((position, index) => {
     return {
-      ...state.players[(playerIndex + i) % state.players.length],
+      ...state.players[(playerIndex + index) % state.players.length],
       position,
+      index,
     }
   })
 

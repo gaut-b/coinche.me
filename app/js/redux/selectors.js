@@ -20,5 +20,11 @@ export const selectHumanPlayers = createSelector(
 
 export const selectOnTable = createSelector(
   [selectPlayers],
-  players => players.map(p => ({value: p.onTable, position: p.position}))
+  players => players.filter(p => p.onTable).map(p => ({value: p.onTable, position: p.position}))
+)
+
+export const selectCanCollect = createSelector(
+  [selectPlayers, selectOnTable],
+  (players, onTable) =>   onTable.length === players.length,
+
 )
