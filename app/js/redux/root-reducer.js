@@ -1,7 +1,8 @@
 import actionTypes from './actionsTypes';
 
 const INITIAL_STATE = {
-  deck: null,
+  deck: [],
+  tricks: [],
   onTable: [],
   players: [],
 }

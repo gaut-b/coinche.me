@@ -3,6 +3,7 @@ const actionTypes = {
   DISTRIBUTE: 'DISTRIBUTE',
   PLAY_CARD: 'PLAY_CARD',
   COLLECT: 'COLLECT',
+  NEW_GAME: 'NEW_GAME',
 };
 
 export default actionTypes;

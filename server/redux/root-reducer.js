@@ -1,23 +1,22 @@
 import { combineReducers } from 'redux';
 import actionTypes from './actionTypes';
 import {DECK32, DECK52} from '../constants/decks';
+import { sortHand, distribute, distributeCoinche, cutDeck } from '../utils/coinche';
 import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
 import {shuffle, switchIndexes} from '../../shared/utils/array';
 
+
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
+  tricks: [],
   players: [{
     hand: [],
-    tricks: [],
   }, {
     hand: [],
-    tricks: [],
   }, {
     hand: [],
-    tricks: [],
   }, {
     hand: [],
-    tricks: [],
   }],
   score: '',
 };
@@ -69,30 +68,13 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ...p,
         isDealer: p.id === dealerId,
       }));
-      const playersWithCards = state.deck.reduce((players, card, deckIndex) => {
-        const nextPlayerIndex = (dealerIndex + deckIndex) % state.players.length;
-        return players.map((player, playerIndex) => {
-          if (nextPlayerIndex === playerIndex) {
-            return {
-              ...player,
-              hand: player.hand.concat(card)
-            }
-          } else {
-            return player;
-          }
-        })
-      }, playersWithDealer);
 
-      const playersWithSortedCards = playersWithCards.map(player => {
-        return {
-          ...player,
-          hand: sortHand(player.hand),
-        };
-      });
+      // const playersWithCards = distribute(state.deck, playersWithDealer, dealerIndex);
+      const playersWithCards = distributeCoinche(state.deck, playersWithDealer, dealerIndex);
 
       return {
         ...state,
-        players: playersWithSortedCards,
+        players: playersWithCards
       };
     }
     case actionTypes.PLAY_CARD: {
@@ -117,16 +99,51 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.COLLECT: {
       const {playerIndex} = action.payload;
 
+      const newTrick = {
+        playerIndex,
+        cards: state.players.map(p => p.onTable),
+      };
+
       return {
         ...state,
+        tricks: [newTrick, ...state.tricks],
         players: state.players.map((p, i) => {
           return {
             ...p,
             onTable: null,
-            tricks: i === playerIndex ? p.tricks.concat([state.players.map(_p => _p.onTable)]) : p.tricks,
           }
         })
       }
+    };
+
+    case actionTypes.NEW_GAME: {
+
+      const dealerIndex = state.players.findIndex(p => p.isDealer)
+
+      // A refactorer aussi, très moche !
+      const tricks = state.players.map((p, index) => {
+        return state.tricks.filter(({playerIndex}) => index === playerIndex)
+          .reduce((tricks, trick) => tricks.concat(trick.cards), [])
+      })
+
+      // Rassemble les cartes en gardant les plis des équipes.
+      // très moche, à refactorer
+      const newDeck = [].concat(tricks[0]).concat(tricks[2]).concat(tricks[1]).concat(tricks[3]);
+      const resetedPlayers = state.players.map((p, index) => {
+        return {
+          ...p,
+          hand: [],
+          onTable: null,
+          isDealer: (index === (dealerIndex + 1) % state.players.length),
+        }
+      });
+
+      return {
+        ...state,
+        deck: cutDeck(newDeck),
+        tricks: [],
+        players: resetedPlayers,
+      };
     };
 
     default:
@@ -134,16 +151,5 @@ const rootReducer = (state = INITIAL_STATE, action) => {
   };
 };
 
-const sortHand = (hand) => {
-  const sortedSpades = hand.filter(c => c.includes('S')).sort();
-  const sortedHearts = hand.filter(c => c.includes('H')).sort();
-  const sortedClubs = hand.filter(c => c.includes('C')).sort();
-  const sortedDiamonds = hand.filter(c => c.includes('D')).sort();
-
-  return [].concat(sortedSpades).concat(sortedHearts).concat(sortedClubs).concat(sortedDiamonds);
-}
-
 export default rootReducer;
-
-
 

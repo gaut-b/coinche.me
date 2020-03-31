@@ -6,14 +6,14 @@ import {pluralize} from '../../../shared/utils/string';
 import {random} from '../../../shared/utils/array';
 import { playCard, collect } from '../redux/actions';
 import {TableIdContext} from '../pages/GamePage';
-import {selectCanCollect} from '../redux/selectors';
+import { selectCanCollect} from '../redux/selectors';
 
 import '../../scss/components/player.scss';
 
 import Hand from './Hand.js';
 // import Tricks from './Tricks.js';
 
-const Player = ({position, player, playRandomCard, canCollect, collect}) => {
+const Player = ({position, player, tricks, playRandomCard, canCollect, collect}) => {
 
   const tableId = useContext(TableIdContext);
 
@@ -21,7 +21,6 @@ const Player = ({position, player, playRandomCard, canCollect, collect}) => {
   const { name,
           isDealer,
           hand,
-          tricks,
           id,
           index,
           disconnected,
@@ -32,9 +31,11 @@ const Player = ({position, player, playRandomCard, canCollect, collect}) => {
     return;
   }
 
+  const playerTricks = tricks.filter(({playerIndex, _}) => playerIndex === index);
+
   const $name = (
     <div className={`name ${disconnected ? 'has-text-danger' : ''}`} title={disconnected ? 'Déconnecté' : ''}>
-      <span className={!id ? 'clickable' : ''} onClick={handleClick} >{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(tricks.length, 'pli')})</span>
+      <span className={!id ? 'clickable' : ''} onClick={handleClick} >{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(playerTricks.length, 'pli')})</span>
       &nbsp;
       {!id && canCollect && <button className="button is-small is-text is-rounded" onClick={e => collect(tableId, index)}>Ramasser</button> }
     </div>
@@ -58,6 +59,7 @@ Player.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   player: state.players.find(p => (p.position === ownProps.position)),
+  tricks: state.tricks,
   canCollect: selectCanCollect(state),
 });
 
