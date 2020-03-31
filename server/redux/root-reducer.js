@@ -99,7 +99,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           if (i === playingPlayerIndex) {
             return {
               ...p,
-              hand: p.hand.filter(c => c !== card),
+              hand: sortHand(p.hand.filter(c => c !== card).concat(p.onTable || [])),
               onTable: card,
             }
           } else {
@@ -121,19 +121,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           }
         })
       }
-
-      // const playerIndex = state.players.findIndex(p => p.id === playerId);
-      // const playersUpdated = state.players.map((player, index) => {
-      //   if (index === playerIndex) {
-      //     cards.reverse().forEach( c => player.tricks.unshift(c.value))
-      //   }
-      //   return player;
-      // });
-      // return {
-      //   ...state,
-      //   players: playersUpdated,
-      //   onTable: []
-      // };
     };
 
     default:
