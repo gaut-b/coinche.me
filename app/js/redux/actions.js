@@ -77,3 +77,17 @@ export function collect(tableId, playerIndex) {
     }
   }
 };
+
+export function newGame(tableId) {
+  return {
+    type: actionTypes.NO_LOCAL_EFFECT,
+    emit: socketEvents.DISPATCH,
+    payload: {
+      tableId,
+      action: {
+        type: actionTypes.NEW_GAME,
+        payload: {},
+      }
+    }
+  }
+}
