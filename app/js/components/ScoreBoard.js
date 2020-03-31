@@ -9,7 +9,6 @@ import Card from './Card';
 const ScoreBoard = ({players, tricks, newGame}) => {
 
   const tableId = useContext(TableIdContext);
-
   return (
     <div className="has-text-centered">
       {
@@ -29,7 +28,7 @@ const ScoreBoard = ({players, tricks, newGame}) => {
           );
         })
       }
-      <button className="button is-primary is-large" onClick={() => newGame(tableId)}>New game</button>
+      <button className="button is-primary is-large" onClick={() => newGame(tableId)} style={{marginTop: '2rem'}}>New game</button>
     </div>
   );
 };

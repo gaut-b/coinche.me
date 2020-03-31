@@ -35,7 +35,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
             return {
               ...p,
               id: playerId,
-              name: playerName || p.name,
+              name: playerName || p.name || `Joueur ${i+1}`,
               disconnected: false,
             }
           } else {
