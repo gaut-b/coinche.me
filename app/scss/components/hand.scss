@@ -8,10 +8,7 @@
   max-width: 9*$card_width;
   height: $card_height;
   flex-flow: row nowrap;
-  justify-content: space-between;
-  img.playing-card {
-    // margin-right: -2*$card_width;
-  }
+  justify-content: space-around;
   &.is-compact {
     max-width: 3*$card_width;
     margin: auto;
