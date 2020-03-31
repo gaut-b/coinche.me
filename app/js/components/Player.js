@@ -23,6 +23,7 @@ const Player = ({position, player, tricks, playRandomCard, canCollect, collect})
           hand,
           id,
           index,
+          disconnected,
         } = player;
 
   const handleClick = (e) => {
@@ -33,8 +34,8 @@ const Player = ({position, player, tricks, playRandomCard, canCollect, collect})
   const playerTricks = tricks.filter(({playerIndex, _}) => playerIndex === index);
 
   const $name = (
-    <div className="name">
-      <span onClick={handleClick} >{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(playerTricks.length, 'pli')})</span>
+    <div className={`name ${disconnected ? 'has-text-danger' : ''}`} title={disconnected ? 'Déconnecté' : ''}>
+      <span className={!id ? 'clickable' : ''} onClick={handleClick} >{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(tricks.length, 'pli')})</span>
       &nbsp;
       {!id && canCollect && <button className="button is-small is-text is-rounded" onClick={e => collect(tableId, index)}>Ramasser</button> }
     </div>

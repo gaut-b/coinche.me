@@ -39,7 +39,9 @@
   .name {
     text-align: center;
     margin-bottom: 1rem;
-    cursor: pointer;
+    span.clickable {
+      cursor: pointer;
+    }
 
     &.is-dealer {
       font-weight: bold;

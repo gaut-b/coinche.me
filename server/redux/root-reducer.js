@@ -24,27 +24,33 @@ export const INITIAL_STATE = {
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case actionTypes.JOIN:
-      const newPlayerIndex = state.players.findIndex(p => !p.id);
       const {playerId, playerName} = action.payload;
+      const sameNamePlayerIndex = state.players.findIndex(p => p.name === playerName);
+      const firstAvailableIndex = state.players.findIndex(p => !p.id);
+      const newPlayerIndex = sameNamePlayerIndex === -1 ? firstAvailableIndex : sameNamePlayerIndex;
       return {
         ...state,
         players: state.players.map((p, i) => {
-          return {
-            ...p,
-            id: i === newPlayerIndex ? playerId : p.id,
-            name: i === newPlayerIndex && playerName || p.name,
+          if (newPlayerIndex === i) {
+            return {
+              ...p,
+              id: playerId,
+              name: playerName || p.name,
+              disconnected: false,
+            }
+          } else {
+            return p;
           }
         })
       }
     case actionTypes.LEAVE:
+      console.log('received leave')
       return {
         ...state,
         players: state.players.map(p => {
           return {
             ...p,
-            ...{
-              id: p.id !== action.payload ? p.id : null,
-            }
+            disconnected: p.id === action.payload,
           }
         })
       }
