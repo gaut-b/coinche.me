@@ -34,7 +34,8 @@ const dispatchActionAndBroadcastNewState = async (tableId, action) => {
   console.log(`Action on table ${tableId}`, action)
   const store = await getStore(tableId);
   store.dispatch(action);
-  return emitEachInRoom(io, tableId, socketEvents.UPDATED_STATE, clientId => subjectiveState(store.getState(), clientId));
+  const state = store.getState().present;
+  return emitEachInRoom(io, tableId, socketEvents.UPDATED_STATE, clientId => subjectiveState(state, clientId));
 }
 
 try {

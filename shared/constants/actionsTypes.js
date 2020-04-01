@@ -5,6 +5,7 @@ const actionTypes = {
   CARD_BACK: 'CARD_BACK',
   COLLECT: 'COLLECT',
   NEW_GAME: 'NEW_GAME',
+  UNDO: 'UNDO',
 };
 
 export default actionTypes;
