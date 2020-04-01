@@ -96,6 +96,26 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         }),
       }
     };
+    case actionTypes.CARD_BACK: {
+      console.log("plop")
+      const card = action.payload;
+      const playingPlayerIndex = state.players.findIndex(p => p.onTable === card);
+
+      return {
+        ...state,
+        players: state.players.map((p, i) => {
+          if (i === playingPlayerIndex) {
+            return {
+              ...p,
+              hand: sortHand(p.hand.concat(card)),
+              onTable: null,
+            }
+          } else {
+            return p;
+          }
+        }),
+      }
+    };
     case actionTypes.COLLECT: {
       const {playerIndex} = action.payload;
 

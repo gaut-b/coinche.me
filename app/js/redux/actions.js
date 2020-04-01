@@ -64,6 +64,20 @@ export function playCard(tableId, card) {
   }
 };
 
+export function getCardBack(tableId, card) {
+  return {
+    type: actionTypes.NO_LOCAL_EFFECT,
+    emit: socketEvents.DISPATCH,
+    payload: {
+      tableId,
+      action: {
+        type: actionTypes.CARD_BACK,
+        payload: card
+      }
+    }
+  }
+};
+
 export function collect(tableId, playerIndex) {
   return {
     type: actionTypes.NO_LOCAL_EFFECT,
