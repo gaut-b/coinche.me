@@ -128,7 +128,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       // Rassemble les cartes en gardant les plis des équipes.
       // très moche, à refactorer
-      const newDeck = [].concat(tricks[0]).concat(tricks[2]).concat(tricks[1]).concat(tricks[3]);
+      const newDeck = cutDeck([].concat(tricks[0]).concat(tricks[2]).concat(tricks[1]).concat(tricks[3]));
       const resetedPlayers = state.players.map((p, index) => {
         return {
           ...p,
@@ -138,11 +138,14 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         }
       });
 
+      const newDealerIndex = state.players.findIndex(p => p.isDealer);
+      const playersWithCards = distributeCoinche(newDeck, resetedPlayers, newDealerIndex);
+
       return {
         ...state,
-        deck: cutDeck(newDeck),
+        deck: newDeck,
         tricks: [],
-        players: resetedPlayers,
+        players: playersWithCards,
       };
     };
 
