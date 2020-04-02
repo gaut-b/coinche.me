@@ -97,7 +97,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       }
     };
     case actionTypes.CARD_BACK: {
-      console.log("plop")
       const card = action.payload;
       const playingPlayerIndex = state.players.findIndex(p => p.onTable === card);
 

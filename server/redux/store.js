@@ -1,6 +1,13 @@
 import { createStore, applyMiddleware } from 'redux';
 import logger from 'redux-logger';
-import rootReducer, {INITIAL_STATE} from './root-reducer';
+import rootReducer from './root-reducer';
+import undoReducer from './undoReducer';
+
+const INITIAL_STATE = {
+  past: [],
+  present: [],
+  futur: [],
+}
 
 const Redis = require('ioredis');
 const redisURL = "redis://redis";
@@ -21,8 +28,9 @@ const getStore = async redisKey => {
 
   const redisStateString = await redisInstance.get(redisKey);
   const redisState = JSON.parse(redisStateString);
-  const initialStoreState = checkRedisStateCorrectness(redisState) || INITIAL_STATE;
-  return createStore(rootReducer, initialStoreState, applyMiddleware(...middlewares));
+  const initialStoreState = checkRedisStateCorrectness(redisState) || null;
+  if (!initialStoreState) return createStore(undoReducer(rootReducer), applyMiddleware(...middlewares));
+  return createStore(undoReducer(rootReducer), initialStoreState, applyMiddleware(...middlewares));
 }
 
 export default getStore;

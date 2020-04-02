@@ -1,7 +1,8 @@
 import React, {useContext, useState} from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import {pluralize} from '../../../shared/utils/string';
-import {selectHumanPlayers, selectCurrentPlayer} from '../redux/selectors';
+import {selectHumanPlayers, selectCurrentPlayer, selectPlayers} from '../redux/selectors';
 import { TableIdContext } from '../pages/GamePage.js';
 import {queryParamToJoin} from '../constants';
 import { distribute, swichTeams } from '../redux/actions';
@@ -63,10 +64,10 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}
   );
 }
 
-const mapStateToProps = state => ({
-  currentPlayer: selectCurrentPlayer(state),
-  humanPlayers: selectHumanPlayers(state),
-  players: state.players,
+const mapStateToProps = createStructuredSelector({
+  currentPlayer: selectCurrentPlayer,
+  humanPlayers: selectHumanPlayers,
+  players: selectPlayers,
 });
 
 const mapDispatchToProps = dispatch => ({
