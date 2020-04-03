@@ -2,7 +2,7 @@ import React, { Component, useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
 import { useBeforeunload } from 'react-beforeunload';
 import { createStructuredSelector } from 'reselect';
-import { subscribeServerUpdate, unsubscribeServerUpdate, undo } from '../redux/actions';
+import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
 import { TableIdContext } from '../pages/GamePage.js';
 import {selectIsDistributed, selectIsLastTrick, selectTricks} from '../redux/selectors';
 import {
@@ -18,7 +18,7 @@ import Player from './Player.js';
 import Controls from './Controls.js';
 import ScoreBoard from './ScoreBoard.js';
 
-const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsubscribeServerUpdate, undo, tricks}) => {
+const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsubscribeServerUpdate, tricks}) => {
   const tableId = useContext(TableIdContext);
 
   useBeforeunload(() => {
@@ -51,7 +51,6 @@ const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsub
         <div className="level is-mobile">
           <Player position={SOUTH} />
         </div>
-        <button className="button is-primary" onClick={() => undo(tableId)} style={{marginTop: '2rem'}}>Undo</button>
       </div>
 
   }
@@ -68,7 +67,6 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => ({
   subscribeServerUpdate: (tableId, username) => dispatch(subscribeServerUpdate(tableId, username)),
   unsubscribeServerUpdate: (tableId) => dispatch(unsubscribeServerUpdate(tableId)),
-  undo: (tableId) => dispatch(undo(tableId)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
