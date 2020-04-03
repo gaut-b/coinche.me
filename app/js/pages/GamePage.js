@@ -12,11 +12,11 @@ const GamePage = ({match: {params: {tableId}}}) => {
     <Redirect to="/" />
   );
   return (
-    <Layout>
-      <TableIdContext.Provider value={state}>
+    <TableIdContext.Provider value={state}>
+      <Layout>
         <Game />
-      </TableIdContext.Provider>
-    </Layout>
+      </Layout>
+    </TableIdContext.Provider>
   );
 };
 
