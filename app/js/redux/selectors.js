@@ -37,5 +37,5 @@ export const selectCanCollect = createSelector(
 
 export const selectLastTrick = createSelector(
   [selectTricks],
-  (tricks) => tricks[tricks.length - 1],
+  (tricks) => tricks[0],
 );
