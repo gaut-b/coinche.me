@@ -29,46 +29,40 @@ const LandingPage = (props) => {
   };
 
   return (
-    <Layout>
-      <div className="container">
-        <div className="columns">
-          <div className="column is-6 is-offset-3 is-4-widescreen is-offset-4-widescreen">
-            <form className="section is-vertical has-text-centered" action="/join" method="post" onSubmit={e => joinTable(e)}>
-              <h1 className="title is-1">Bienvenue</h1>
-              <p className="subtitle">Ici les cartes ont pas le COVID</p>
-              <div className="section is-vertical">
-                <div className="field">
-                  <p className="control">
-                    <input className="input" type="text" placeholder="Choisis ton pseudo" value={username} onChange={e => setUsernameAndSave(e.target.value)} required />
-                  </p>
-                </div>
-              </div>
-              <div className="section is-vertical">
-                { !isJoiningTableId ? (
-                  <div>
-                    <div className="field">
-                      <button className="button is-primary is-large">Créer une table</button>
-                    </div>
-                    <p className="section has-text-centered">- OU -</p>
-                  </div>
-                ) : (
-                  <p className="field">On t'attend pour jouer sur cette table :</p>
-                )}
-                <div className="field has-addons">
-                  <div className="control is-expanded">
-                    <input className="input" type="text" placeholder="Entrez un nom de table ..." value={tableId} onChange={(e) => setTableId(e.target.value)} />
-                  </div>
-                  <div className="control">
-                    <button className="button is-primary">
-                      Rejoindre
-                    </button>
-                  </div>
-              </div>
-              </div>
-            </form>
+    <Layout mode="container">
+      <form className="section is-vertical has-text-centered" action="/join" method="post" onSubmit={e => joinTable(e)}>
+        <h1 className="title is-1">Bienvenue</h1>
+        <p className="subtitle">Ici les cartes ont pas le COVID</p>
+        <div className="section is-vertical">
+          <div className="field">
+            <p className="control">
+              <input className="input" type="text" placeholder="Choisis ton pseudo" maxLength="20" value={username} onChange={e => setUsernameAndSave(e.target.value)} required />
+            </p>
           </div>
         </div>
-      </div>
+        <div className="section is-vertical">
+          { !isJoiningTableId ? (
+            <div>
+              <div className="field">
+                <button className="button is-primary is-large">Créer une table</button>
+              </div>
+              <p className="section has-text-centered">- OU -</p>
+            </div>
+          ) : (
+            <p className="field">On t'attend pour jouer sur cette table :</p>
+          )}
+          <div className="field has-addons">
+            <div className="control is-expanded">
+              <input className="input" type="text" placeholder="Entrez un nom de table ..." value={tableId} onChange={(e) => setTableId(e.target.value)} />
+            </div>
+            <div className="control">
+              <button className="button is-primary">
+                Rejoindre
+              </button>
+            </div>
+        </div>
+        </div>
+      </form>
     </Layout>
   );
 };

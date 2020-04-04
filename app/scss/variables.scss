@@ -23,6 +23,8 @@ $navbar-breakpoint: 10000px;
 $navbar-item-color: $white;
 $navbar-item-hover-color: darken($white, 10%);
 $radius: 2rem;
+$easing: ease-in-out;
+$duration: .4s;
 
 @import '~bulma/bulma';
 @import 'sections';

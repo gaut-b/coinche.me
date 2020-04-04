@@ -4,8 +4,50 @@ html {
 
 body {
   background: url(../images/leather_1.png);
-  // background: url(../images/geometric-leaves.png);
   background-color: $background;
+}
+
+.navbar-menu {
+  background-color: rgba($color: #000000, $alpha: 0.2);
+  background: rgba(white, 0.8) !important;
+  a {
+    color: $black;
+    &:hover {
+      background-color: white !important;
+      color: $black !important;
+    }
+  }
+
+  @include from($tablet) {
+    display: block;
+    opacity: 0;
+
+    position: absolute;   /* or float: left; width: 100%;*/
+    left: 0;
+    right: 0;
+
+    transform: translateY(-50%);
+    transition: all $duration $easing;
+    pointer-events: none;
+
+    &.is-active {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+  }
+
+  @include mobile {
+    position: absolute;
+    display: block !important;
+    height: 100vh;
+    right: 100%;
+    width: 100%;
+    transition: right $duration $easing;
+    &.is-active {
+      right: 0;
+    }
+  }
 }
 
 .section {
