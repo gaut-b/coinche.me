@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { TableIdContext } from '../pages/GamePage.js';
 import '../../scss/components/header.scss';
 import { undo, distribute } from '../redux/actions';
 import {isArray, isFunction} from '../../../shared/utils/boolean';
+import {selectCurrentPlayer} from '../redux/selectors'
 
-const Header = () => {
+const Header = ({currentPlayer, distribute, undo}) => {
   const [menuShown, showMenu] = useState(false);
   const tableId = useContext(TableIdContext);
 
@@ -22,13 +24,13 @@ const Header = () => {
     }, {
       label: 'Redistribuer',
       onClick: e => {
-        if (window.confirm('Voulez-vous vraiment redistribuer une nouvelle partie ?')) {
-          distribute(tableId)
+        if (window.confirm('Voulez-vous vraiment redistribuer une nouvelle partie et annuler celle en cours ?')) {
+          distribute(tableId, currentPlayer.id)
         }
       },
     }, {
-      label: 'Voir le dernier pli',
-      onClick: e => showLastFold(),
+      label: 'Revoir le dernier pli',
+      onClick: e => console.log('Not yet implemented'),
     }]
   }] : [])
 
@@ -38,11 +40,11 @@ const Header = () => {
     if (entry.to)
       return <Link key={entry.label} className="navbar-item" to={entry.to}>{entry.label}</Link>;
     if (isFunction(entry.onClick))
-      return <a key={entry.label} className="navbar-item" onClick={e => (toggleMenu() && entry.onClick())}>{entry.label}</a>;
+      return <a key={entry.label} className="navbar-item" onClick={e => (entry.onClick() && toggleMenu())}>{entry.label}</a>;
     if (isArray(entry.dropdown)) {
       return (
         <div key={entry.label} className="navbar-item has-dropdown is-active">
-          <a className="navbar-link">
+          <a className="navbar-link is-arrowless">
             {entry.label}
           </a>
           <div className="navbar-dropdown">
@@ -75,4 +77,13 @@ const Header = () => {
   )
 }
 
-export default Header;
+const mapStateToProps = state => ({
+  currentPlayer: selectCurrentPlayer(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  distribute: (tableId, playerId) => dispatch(distribute(tableId, playerId)),
+  undo: (tableId) => dispatch(undo(tableId)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
