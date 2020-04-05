@@ -5,11 +5,11 @@ import { LocalStateContext } from '../pages/GamePage.js';
 import '../../scss/components/header.scss';
 import { undo, distribute } from '../redux/actions';
 import {isArray, isFunction} from '../../../shared/utils/boolean';
-import {selectCurrentPlayer} from '../redux/selectors'
+import {selectCurrentPlayer, selectNbPlayers} from '../redux/selectors'
 
 import LastTrick from './LastTrick';
 
-const Header = ({currentPlayer, distribute, undo, toggleLastTrick}) => {
+const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) => {
   const [menuShown, showMenu] = useState(false);
   // const [isLastTrickVisible, toggleLastTrick] = useState(false);
 
@@ -86,6 +86,7 @@ const Header = ({currentPlayer, distribute, undo, toggleLastTrick}) => {
 
 const mapStateToProps = state => ({
   currentPlayer: selectCurrentPlayer(state),
+  nbPlayers: selectNbPlayers(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

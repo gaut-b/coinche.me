@@ -36,7 +36,7 @@ const LandingPage = (props) => {
         <div className="section is-vertical">
           <div className="field">
             <p className="control">
-              <input className="input" type="text" placeholder="Choisis ton pseudo" maxLength="20" value={username} onChange={e => setUsernameAndSave(e.target.value)} required />
+              <input className="input" type="text" placeholder="Choisissez votre pseudo" maxLength="20" value={username} onChange={e => setUsernameAndSave(e.target.value)} required />
             </p>
           </div>
         </div>

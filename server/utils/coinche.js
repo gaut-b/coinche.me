@@ -12,9 +12,10 @@ export const sortHand = (hand) => {
 export const distributeCoinche = (deck, players, dealerIndex) => {
   if (deck.length !== 32) return players;
 
-  let playersWithCards = distribute(deck.slice(0, 12), players, dealerIndex, 3);
-  playersWithCards = distribute(deck.slice(12, 20), playersWithCards, dealerIndex, 2);
-  playersWithCards = distribute(deck.slice(20, 32), playersWithCards, dealerIndex, 3);
+  const newDeck = cutDeck(deck);
+  let playersWithCards = distribute(newDeck.slice(0, 12), players, dealerIndex, 3);
+  playersWithCards = distribute(newDeck.slice(12, 20), playersWithCards, dealerIndex, 2);
+  playersWithCards = distribute(newDeck.slice(20, 32), playersWithCards, dealerIndex, 3);
 
   return playersWithCards;
 };

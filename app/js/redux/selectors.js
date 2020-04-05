@@ -5,6 +5,12 @@ export const selectPlayers = state => state.players;
 export const selectTricks = state => state.tricks;
 export const selectDeck = state => state.deck;
 
+export const selectNbPlayers = createSelector(
+  [selectPlayers],
+  (players) => players.length,
+);
+
+
 export const selectCurrentPlayer = createSelector(
   [selectPlayers],
   (players) => players.find(player => player.position === SOUTH)
