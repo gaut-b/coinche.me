@@ -6,24 +6,24 @@ import Card from './Card';
 
 import '../../scss/components/lastTrick.scss';
 
-const LasTrick = ({toggleLastTrick,  lastTrick}) => {
+const LastTrick = ({toggleLastTrick,  lastTrick}) => {
 
-    const {isLastTrickVisible} = useContext(LocalStateContext);
+  const {isLastTrickVisible} = useContext(LocalStateContext);
 
-    return (
-        <div className={`overlay ${isLastTrickVisible ? 'isVisible' : ''}`} onClick={toggleLastTrick} >
-            <div className="overlay-content hand is-normal">
-                { (lastTrick) ?
-                    lastTrick.cards.map( c => <Card key={c} value={c} /> ) :
-                    "Aucun plis n'a été joué pour le moment"
-                }
-            </div>
-        </div>
+  return (
+    <div className={`overlay ${isLastTrickVisible ? 'isVisible' : ''}`} onClick={toggleLastTrick} >
+    <div className="overlay-content hand is-normal">
+    { (lastTrick) ?
+      lastTrick.cards.map( c => <Card key={c} value={c} /> ) :
+      "Aucun plis n'a été joué pour le moment"
+    }
+    </div>
+    </div>
     );
-};
+  };
 
-const mapStateToProps = (state) => ({
+  const mapStateToProps = (state) => ({
     lastTrick: selectLastTrick(state),
-});
+  });
 
-export default connect(mapStateToProps)(LasTrick);
+  export default connect(mapStateToProps)(LastTrick);

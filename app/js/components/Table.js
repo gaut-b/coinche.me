@@ -20,7 +20,6 @@ const Table = ({onTable, currentPlayer, collect, undo, canCollect}) => {
   return (
     <div className="playing-table">
       {canCollect && <button onClick={(e) => handleClick(e)} className="button is-primary is-collect">Ramasser</button>}
-      <button className={`button is-primary ${!canCollect ? 'is-alone' : 'is-not-alone'}`} onClick={() => undo(tableId)} style={{marginTop: '2rem'}}>Undo</button>
       {onTable.map(({position, value}, index) => {
         return (
           <div key={value} className={`table-slot is-${position}`} style={{zIndex: index}}>

@@ -18,8 +18,6 @@ const GamePage = ({match: {params: {tableId}}}) => {
     })
   };
 
-  console.log(localState);
-
   if (!tableId) return (
     <Redirect to="/" />
   );
