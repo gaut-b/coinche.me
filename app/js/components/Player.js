@@ -5,7 +5,7 @@ import {SOUTH, NORTH} from '../../../shared/constants/positions';
 import {pluralize} from '../../../shared/utils/string';
 import {random} from '../../../shared/utils/array';
 import { playCard, collect } from '../redux/actions';
-import {TableIdContext} from '../pages/GamePage';
+import {LocalStateContext} from '../pages/GamePage';
 import { selectCanCollect} from '../redux/selectors';
 
 import '../../scss/components/player.scss';
@@ -15,7 +15,7 @@ import Hand from './Hand.js';
 
 const Player = ({position, player, tricks, playRandomCard, canCollect, collect}) => {
 
-  const tableId = useContext(TableIdContext);
+  const {tableId} = useContext(LocalStateContext);
 
   if (!player) return null;
   const { name,

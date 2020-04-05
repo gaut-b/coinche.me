@@ -2,13 +2,13 @@ import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import {selectTricks, selectPlayers} from '../redux/selectors';
 import {newGame} from '../redux/actions';
-import { TableIdContext } from '../pages/GamePage.js';
+import { LocalStateContext } from '../pages/GamePage.js';
 
 import Card from './Card';
 
 const ScoreBoard = ({players, tricks, newGame}) => {
 
-  const tableId = useContext(TableIdContext);
+  const {tableId} = useContext(LocalStateContext);
   return (
     <div className="has-text-centered">
       {

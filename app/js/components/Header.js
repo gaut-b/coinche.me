@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { TableIdContext } from '../pages/GamePage.js';
+import { LocalStateContext } from '../pages/GamePage.js';
 import '../../scss/components/header.scss';
 import { undo, distribute } from '../redux/actions';
 import {isArray, isFunction} from '../../../shared/utils/boolean';
@@ -9,11 +9,11 @@ import {selectCurrentPlayer} from '../redux/selectors'
 
 import LastTrick from './LastTrick';
 
-const Header = ({currentPlayer, distribute, undo}) => {
+const Header = ({currentPlayer, distribute, undo, toggleLastTrick}) => {
   const [menuShown, showMenu] = useState(false);
-  const [isLastTrickVisible, toggleLastTrick] = useState(false);
+  // const [isLastTrickVisible, toggleLastTrick] = useState(false);
 
-  const tableId = useContext(TableIdContext);
+  const {tableId, isLastTrickVisible} = useContext(LocalStateContext);
 
   const toggleMenu = e => showMenu(!menuShown);
 
@@ -36,7 +36,7 @@ const Header = ({currentPlayer, distribute, undo}) => {
       label: 'Revoir le dernier pli',
       onClick: e => {
         toggleMenu();
-        toggleLastTrick(!isLastTrickVisible);
+        toggleLastTrick();
       },
     }]
   }] : [])
@@ -80,7 +80,6 @@ const Header = ({currentPlayer, distribute, undo}) => {
           {menu.map(renderMenuEntry)}
         </div>
       </div>
-      <LastTrick isVisible={isLastTrickVisible} toggleLastTrick={() => toggleLastTrick(!isLastTrickVisible)} />
     </nav>
   )
 }

@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import { selectLastTrick } from '../redux/selectors';
-
+import { LocalStateContext } from '../pages/GamePage'
 import Card from './Card';
 
 import '../../scss/components/lastTrick.scss';
 
-const LasTrick = ({isVisible, toggleLastTrick,  lastTrick}) => {
+const LasTrick = ({toggleLastTrick,  lastTrick}) => {
 
-    console.log(isVisible)
+    const {isLastTrickVisible} = useContext(LocalStateContext);
 
     return (
-        <div className={`overlay ${isVisible ? 'isVisible' : ''}`} onClick={toggleLastTrick} >
+        <div className={`overlay ${isLastTrickVisible ? 'isVisible' : ''}`} onClick={toggleLastTrick} >
             <div className="overlay-content hand is-normal">
                 { (lastTrick) ?
                     lastTrick.cards.map( c => <Card key={c} value={c} /> ) :

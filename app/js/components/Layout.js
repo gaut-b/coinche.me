@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
+import LastTrick from './LastTrick';
 
-const Layout = ({mode, children}) => {
+const Layout = ({mode, children, toggleLastTrick}) => {
   const wrappedChildren = mode === 'container' ? (
     <div className="container">
       <div className="columns">
@@ -14,7 +15,8 @@ const Layout = ({mode, children}) => {
 
   return (
     <div>
-      <Header />
+      <Header toggleLastTrick={toggleLastTrick}/>
+      <LastTrick toggleLastTrick={toggleLastTrick} />
       <div className="section is-full-screen">
         {wrappedChildren}
       </div>

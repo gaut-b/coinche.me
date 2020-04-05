@@ -1,6 +1,6 @@
 import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
-import { TableIdContext } from '../pages/GamePage';
+import { LocalStateContext } from '../pages/GamePage';
 import { playCard, getCardBack } from '../redux/actions';
 import { selectOnTable } from '../redux/selectors';
 import PropTypes from 'prop-types';
@@ -11,7 +11,7 @@ import '../../scss/components/card.scss';
 const images = require('../../images/cards/*.svg');
 
 const Card = ({value, onTable, isHidden, isSelectable, playCard, getCardBack}) => {
-  const tableId = useContext(TableIdContext);
+  const {tableId} = useContext(LocalStateContext);
   const image = isHidden ? images['BLUE_BACK'] : images[value];
 
   const handleClick = (e) => {

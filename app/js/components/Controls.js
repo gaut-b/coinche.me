@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {pluralize} from '../../../shared/utils/string';
 import {selectHumanPlayers, selectCurrentPlayer, selectPlayers} from '../redux/selectors';
-import { TableIdContext } from '../pages/GamePage.js';
+import { LocalStateContext } from '../pages/GamePage.js';
 import {queryParamToJoin} from '../constants';
 import { distribute, swichTeams } from '../redux/actions';
 import '../../scss/components/controls.scss';
@@ -15,7 +15,7 @@ import {
 } from '../../../shared/constants/positions';
 
 const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}) => {
-  const tableId = useContext(TableIdContext);
+  const {tableId} = useContext(LocalStateContext);
 
   const [isCopied, setIsCopied] = useState(false);
 
