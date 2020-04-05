@@ -64,8 +64,11 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.DISTRIBUTE: {
       const dealerId = action.payload.playerId;
       const dealerIndex = state.players.findIndex(p => p.id === dealerId);
+      console.log(dealerIndex)
       const playersWithDealer = state.players.map(p => ({
         ...p,
+        hand: (p.hand.length) ? [] : p.hand,
+        onTable: null,
         isDealer: p.id === dealerId,
       }));
 
@@ -74,6 +77,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
+        tricks: [],
         players: playersWithCards
       };
     }
@@ -134,7 +138,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         })
       }
     };
-
     case actionTypes.NEW_GAME: {
 
       const dealerIndex = state.players.findIndex(p => p.isDealer)
@@ -147,7 +150,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       // Rassemble les cartes en gardant les plis des équipes.
       // très moche, à refactorer
-      const newDeck = cutDeck([].concat(tricks[0]).concat(tricks[2]).concat(tricks[1]).concat(tricks[3]));
+      const newDeck = [].concat(tricks[0]).concat(tricks[2]).concat(tricks[1]).concat(tricks[3]);
       const resetedPlayers = state.players.map((p, index) => {
         return {
           ...p,

@@ -2,7 +2,7 @@ import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
 import { collect, undo } from '../redux/actions';
 import PropTypes from 'prop-types';
-import {TableIdContext} from '../pages/GamePage';
+import {LocalStateContext} from '../pages/GamePage';
 import {selectCurrentPlayer, selectCanCollect, selectOnTable} from '../redux/selectors'
 
 import '../../scss/components/table.scss';
@@ -10,7 +10,7 @@ import Card from './Card';
 
 const Table = ({onTable, currentPlayer, collect, undo, canCollect}) => {
 
-  const tableId = useContext(TableIdContext);
+  const {tableId} = useContext(LocalStateContext);
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -20,7 +20,6 @@ const Table = ({onTable, currentPlayer, collect, undo, canCollect}) => {
   return (
     <div className="playing-table">
       {canCollect && <button onClick={(e) => handleClick(e)} className="button is-primary is-collect">Ramasser</button>}
-      <button className={`button is-primary ${!canCollect ? 'is-alone' : 'is-not-alone'}`} onClick={() => undo(tableId)} style={{marginTop: '2rem'}}>Undo</button>
       {onTable.map(({position, value}, index) => {
         return (
           <div key={value} className={`table-slot is-${position}`} style={{zIndex: index}}>

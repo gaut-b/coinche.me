@@ -1,15 +1,19 @@
 import React, { useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { TableIdContext } from '../pages/GamePage.js';
+import { LocalStateContext } from '../pages/GamePage.js';
 import '../../scss/components/header.scss';
 import { undo, distribute } from '../redux/actions';
 import {isArray, isFunction} from '../../../shared/utils/boolean';
-import {selectCurrentPlayer} from '../redux/selectors'
+import {selectCurrentPlayer, selectNbPlayers} from '../redux/selectors'
 
-const Header = ({currentPlayer, distribute, undo}) => {
+import LastTrick from './LastTrick';
+
+const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) => {
   const [menuShown, showMenu] = useState(false);
-  const tableId = useContext(TableIdContext);
+  // const [isLastTrickVisible, toggleLastTrick] = useState(false);
+
+  const {tableId, isLastTrickVisible} = useContext(LocalStateContext);
 
   const toggleMenu = e => showMenu(!menuShown);
 
@@ -30,7 +34,10 @@ const Header = ({currentPlayer, distribute, undo}) => {
       },
     }, {
       label: 'Revoir le dernier pli',
-      onClick: e => console.log('Not yet implemented'),
+      onClick: e => {
+        toggleMenu();
+        toggleLastTrick();
+      },
     }]
   }] : [])
 
@@ -79,6 +86,7 @@ const Header = ({currentPlayer, distribute, undo}) => {
 
 const mapStateToProps = state => ({
   currentPlayer: selectCurrentPlayer(state),
+  nbPlayers: selectNbPlayers(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

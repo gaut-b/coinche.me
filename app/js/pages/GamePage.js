@@ -3,22 +3,30 @@ import { Redirect } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Game from '../components/Game';
 
-export const TableIdContext = createContext('');
+export const LocalStateContext = createContext('');
 
 const GamePage = ({match: {params: {tableId}}}) => {
-  // const [state, setState] = useState(tableId);
+  const [localState, setLocalState] = useState({
+    tableId,
+    isLastTrickVisible: false,
+  });
 
-  console.log(tableId);
+  const toggleLastTrick = () => {
+    setLocalState({
+      ...localState,
+      isLastTrickVisible: !localState.isLastTrickVisible,
+    })
+  };
 
   if (!tableId) return (
     <Redirect to="/" />
   );
   return (
-    <TableIdContext.Provider value={tableId}>
-      <Layout>
+    <LocalStateContext.Provider value={localState}>
+      <Layout toggleLastTrick={toggleLastTrick}>
         <Game />
       </Layout>
-    </TableIdContext.Provider>
+    </LocalStateContext.Provider>
   );
 };
 

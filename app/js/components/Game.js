@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useBeforeunload } from 'react-beforeunload';
 import { createStructuredSelector } from 'reselect';
 import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
-import { TableIdContext } from '../pages/GamePage.js';
+import { LocalStateContext } from '../pages/GamePage.js';
 import {selectIsDistributed, selectIsLastTrick, selectTricks} from '../redux/selectors';
 import {
   NORTH,
@@ -19,7 +19,7 @@ import Controls from './Controls.js';
 import ScoreBoard from './ScoreBoard.js';
 
 const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsubscribeServerUpdate, tricks}) => {
-  const tableId = useContext(TableIdContext);
+  const {tableId} = useContext(LocalStateContext);
 
   useBeforeunload(() => {
     unsubscribeServerUpdate(tableId)
