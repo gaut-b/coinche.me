@@ -45,3 +45,8 @@ export const selectLastTrick = createSelector(
   [selectTricks],
   (tricks) => tricks[0],
 );
+
+export const selectIsActivePlayer = createSelector(
+  [selectCurrentPlayer],
+  (player) => player.isActivePlayer,
+);

@@ -2,7 +2,7 @@ import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
 import { LocalStateContext } from '../pages/GamePage';
 import { playCard, getCardBack } from '../redux/actions';
-import { selectOnTable } from '../redux/selectors';
+import { selectOnTable, selectIsActivePlayer } from '../redux/selectors';
 import PropTypes from 'prop-types';
 
 import '../../scss/components/card.scss';
@@ -10,12 +10,17 @@ import '../../scss/components/card.scss';
 // Can't use import, require needed :(
 const images = require('../../images/cards/*.svg');
 
-const Card = ({value, onTable, isHidden, isSelectable, playCard, getCardBack}) => {
+const Card = ({value, onTable, isActivePlayer, isHidden, isSelectable, playCard, getCardBack}) => {
   const {tableId} = useContext(LocalStateContext);
   const image = isHidden ? images['BLUE_BACK'] : images[value];
 
   const handleClick = (e) => {
     const cardValue = value;
+    console.log(isActivePlayer)
+    if (!isActivePlayer) {
+      window.alert("It's not your turn !")
+      return;
+    };
     (onTable.find(({value}) => value === cardValue)) ? getCardBack(tableId, value) : playCard(tableId, value);
   }
 
@@ -35,6 +40,7 @@ Card.propTypes = {
 
 const mapStateToProps = (state) => ({
   onTable: selectOnTable(state),
+  isActivePlayer: selectIsActivePlayer(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({

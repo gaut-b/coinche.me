@@ -65,11 +65,12 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       const dealerId = action.payload.playerId;
       const dealerIndex = state.players.findIndex(p => p.id === dealerId);
       console.log(dealerIndex)
-      const playersWithDealer = state.players.map(p => ({
+      const playersWithDealer = state.players.map((p, index) => ({
         ...p,
         hand: (p.hand.length) ? [] : p.hand,
         onTable: null,
         isDealer: p.id === dealerId,
+        isActivePlayer: index === ((dealerIndex + 1) % state.players.length),
       }));
 
       // const playersWithCards = distribute(state.deck, playersWithDealer, dealerIndex);
@@ -93,9 +94,13 @@ const rootReducer = (state = INITIAL_STATE, action) => {
               ...p,
               hand: sortHand(p.hand.filter(c => c !== card).concat(p.onTable || [])),
               onTable: card,
+              isActivePlayer: false,
             }
           } else {
-            return p;
+            return {
+              ...p,
+              isActivePlayer: i === ((playingPlayerIndex + 1) % state.players.length),
+            }
           }
         }),
       }
@@ -133,6 +138,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         players: state.players.map((p, i) => {
           return {
             ...p,
+            isActivePlayer: i === playerIndex,
             onTable: null,
           }
         })
