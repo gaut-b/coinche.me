@@ -6,6 +6,8 @@ const actionTypes = {
   COLLECT: 'COLLECT',
   NEW_GAME: 'NEW_GAME',
   UNDO: 'UNDO',
+  DECLARE: 'DECLARE',
+  LAUNCH_GAME: 'LAUNCH_GAME',
 };
 
 export default actionTypes;

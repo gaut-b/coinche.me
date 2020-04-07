@@ -4,12 +4,14 @@ import {SOUTH} from '../../../shared/constants/positions';
 export const selectPlayers = state => state.players;
 export const selectTricks = state => state.tricks;
 export const selectDeck = state => state.deck;
+export const selectCurrentDeclaration = state => state.currentDeclaration;
+export const selectDeclarationsHistory = state => state.declarationsHistory;
+export const selectIsGameStarted = state => state.isGameStarted;
 
 export const selectNbPlayers = createSelector(
   [selectPlayers],
   (players) => players.length,
 );
-
 
 export const selectCurrentPlayer = createSelector(
   [selectPlayers],

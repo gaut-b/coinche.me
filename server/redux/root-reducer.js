@@ -8,6 +8,7 @@ import {shuffle, switchIndexes} from '../../shared/utils/array';
 
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
+  isGameStarted: false,
   tricks: [],
   players: [{
     hand: [],
@@ -60,7 +61,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ...state,
         players: switchedPlayers,
       }
-    }
+    };
     case actionTypes.DISTRIBUTE: {
       const dealerId = action.payload.playerId;
       const dealerIndex = state.players.findIndex(p => p.id === dealerId);
@@ -81,7 +82,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         tricks: [],
         players: playersWithCards
       };
-    }
+    };
     case actionTypes.PLAY_CARD: {
       const card = action.payload;
       const playingPlayerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
@@ -171,12 +172,59 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
+        isGameStarted: false,
         deck: newDeck,
         tricks: [],
         players: playersWithCards,
       };
     };
+    case actionTypes.DECLARE: {
+      const {playerId, declaration} = action.payload;
+      const playerIndex = state.players.findIndex(p => p.id === playerId);
 
+      const playersUpdated = state.players.map((p, i) => {
+        return {
+          ...p,
+          isActivePlayer: (i === (playerIndex + 1) % state.players.length),
+        }
+      })
+
+      if (declaration.type === 'PASS') {
+        return {
+          ...state,
+          players: playersUpdated,
+          declarationsHistory: (state.declarationsHistory || []).concat({playerId, content: {}}),
+        };
+      } else if (declaration.type === 'DECLARE') {
+        return {
+          ...state,
+          players: playersUpdated,
+          declarationsHistory: (state.declarationsHistory || []).concat({playerId, content: declaration.content}),
+          currentDeclaration: {
+            playerId,
+            content: declaration.content,
+          }
+        };
+      };
+
+      return state;
+    };
+    case actionTypes.LAUNCH_GAME: {
+
+      const dealerIndex = state.players.findIndex(p => p.isDealer);
+      const playersUpdated = state.players.map((p,i) => {
+        return {
+          ...p,
+          isActivePlayer: (i === (dealerIndex + 1) % state.players.length),
+        }
+      })
+
+      return {
+        ...state,
+        players: playersUpdated,
+        isGameStarted: true,
+      }
+    };
     default:
       return state;
   };

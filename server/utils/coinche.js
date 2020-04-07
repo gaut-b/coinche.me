@@ -1,5 +1,60 @@
 import { DECK32 } from '../constants/decks';
 
+const ORDINARY = 'ORDINARY';
+const ALL_TRUMP = 'ALL_TRUMP';
+const NO_TRUMP = 'NO_TRUMP';
+
+const trumpScore = {
+  "J": 20,
+  "9": 14,
+  "A": 9,
+  "10": 10,
+  "K": 4,
+  "Q": 3,
+  "8": 0,
+  "7": 0,
+};
+
+const ordinaryScore = {
+  "A": 11,
+  "10": 10,
+  "K": 4,
+  "Q": 3,
+  "J": 2,
+  "9": 0,
+  "8": 0,
+  "7": 0,
+};
+
+const allTrumpScore = {
+  "J": 14,
+  "9": 9,
+  "A": 6,
+  "10": 10,
+  "K": 3,
+  "Q": 2,
+  "8": 0,
+  "7": 0,
+};
+
+const noTrumpScore = {
+  "A": 19,
+  "10": 10,
+  "K": 4,
+  "Q": 3,
+  "J": 2,
+  "9": 0,
+  "8": 0,
+  "7": 0,
+};
+
+const gameScore = {
+  ordinaryScore,
+  trumpScore,
+  allTrumpScore,
+  noTrumpScore,
+};
+
 export const sortHand = (hand) => {
   const sortedSpades = hand.filter(c => c.includes('S')).sort();
   const sortedHearts = hand.filter(c => c.includes('H')).sort();
@@ -54,3 +109,9 @@ export const cutDeck = (deck) => {
   const copiedDeck = [...deck];
   return [...deck.slice(indexToCut + 1, deck.length), ...deck.slice(0, indexToCut + 1)];
 };
+
+// export const sortColor = (color, trumpColor=[], gameScores) = {
+//   if (!trumpColor.length) {
+    
+//   }
+// };

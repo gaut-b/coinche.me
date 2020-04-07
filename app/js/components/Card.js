@@ -16,9 +16,8 @@ const Card = ({value, onTable, isActivePlayer, isHidden, isSelectable, playCard,
 
   const handleClick = (e) => {
     const cardValue = value;
-    console.log(isActivePlayer)
     if (!isActivePlayer) {
-      window.alert("It's not your turn !")
+      window.alert("Ce n'est pas votre tour !")
       return;
     };
     (onTable.find(({value}) => value === cardValue)) ? getCardBack(tableId, value) : playCard(tableId, value);

@@ -4,7 +4,7 @@ import { useBeforeunload } from 'react-beforeunload';
 import { createStructuredSelector } from 'reselect';
 import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
 import { LocalStateContext } from '../pages/GamePage.js';
-import {selectIsDistributed, selectIsLastTrick, selectTricks} from '../redux/selectors';
+import {selectIsDistributed, selectIsLastTrick, selectTricks, selectIsGameStarted} from '../redux/selectors';
 import {
   NORTH,
   EAST,
@@ -17,8 +17,9 @@ import Table from './Table.js';
 import Player from './Player.js';
 import Controls from './Controls.js';
 import ScoreBoard from './ScoreBoard.js';
+import Declaration from './Declaration.js';
 
-const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsubscribeServerUpdate, tricks}) => {
+const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsubscribeServerUpdate, isGameStarted, tricks}) => {
   const {tableId} = useContext(LocalStateContext);
 
   useBeforeunload(() => {
@@ -32,12 +33,10 @@ const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsub
     }
   }, []);
 
-  const GameComponent = () => {
-    if (!isDistributed && !tricks.length) return <Controls />
-
-    return (isLastTrick) ?
-      <ScoreBoard /> :
+  const GameTable = () => {
+    return (
       <div className="level-container">
+        {!isGameStarted ? <Declaration isVisible={!isGameStarted}/> : null}
         <div className="level is-mobile">
           <Player position={NORTH} />
         </div>
@@ -52,7 +51,13 @@ const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsub
           <Player position={SOUTH} />
         </div>
       </div>
+    );
+  }
 
+  const GameComponent = () => {
+    if (!isDistributed && !tricks.length) return <Controls />;
+
+    return (isLastTrick) ? <ScoreBoard /> : <GameTable />;
   }
 
   return GameComponent();
@@ -62,6 +67,7 @@ const mapStateToProps = createStructuredSelector({
   isDistributed: selectIsDistributed,
   isLastTrick: selectIsLastTrick,
   tricks: selectTricks,
+  isGameStarted: selectIsGameStarted,
 });
 
 const mapDispatchToProps = (dispatch) => ({
