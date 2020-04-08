@@ -24,7 +24,7 @@ import '../../scss/components/declaration.scss';
 const INITIAL_STATE = {
   objectif: 80,
   gameType: gameTypes.STANDARD,
-  selectedColor: null,
+  selectedTrump: null,
 };
 
 const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer}) => {
@@ -33,6 +33,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
   const [state, setState] = useState(INITIAL_STATE);
 
   useEffect(() => {
+
     if (currentDeclaration) {
            
       // If currentPlayer made a declaration and everybody else passed OR somebody coinched
@@ -56,7 +57,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
         setState({
           ...state,
           gameType: content.gameType,
-          selectedColor: content.selectedColor,
+          selectedTrump: content.selectedTrump,
           objectif: newObjectif,
         });
       }
@@ -96,7 +97,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
 
   const isDeclareDisabled = state.gameType === gameTypes.CAPOT;
   const isTrumpDisabled = state.gameType === gameTypes.ALL_TRUMP || state.gameType === gameTypes.NO_TRUMP;
-
+  
   return (
     <div className="declaration box modal is-active" >
       <div className="modal-content media">
@@ -109,106 +110,101 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
             </div>
           </div>
 
-          <div className="field is-grouped is-grouped-multiline is-grouped-centered">
-            <label className="control radio" onChange={e => handleChange(e)}>
+          <div className="field is-grouped is-grouped-multiline is-grouped-centered level">
+            <label className="control radio level-item" onChange={e => handleChange(e)}>
               <input
-                className="input"
+                className="form-check-input"
                 type="radio"
                 name="gameType"
                 value={gameTypes.STANDARD}
                 checked={state.gameType === gameTypes.STANDARD}
                 onChange={e => handleChange(e)}
-                className="form-check-input"
               />
               Standard
             </label>
-            <label className="control radio" onChange={e => handleChange(e)}>
+            <label className="control radio level-item" onChange={e => handleChange(e)}>
               <input
-                className="input"
+                className="form-check-input"
                 type="radio"
                 name="gameType"
                 value={gameTypes.ALL_TRUMP}
                 checked={state.gameType === gameTypes.ALL_TRUMP}
                 onChange={e => handleChange(e)}
-                className="form-check-input"
               />
               Tout atout
             </label>
-            <label className="control radio" onChange={e => handleChange(e)}>
+            <label className="control radio level-item" onChange={e => handleChange(e)}>
               <input
-                className="input"
+                className="form-check-input"
                 type="radio"
                 name="gameType"
                 value={gameTypes.NO_TRUMP}
                 checked={state.gameType === gameTypes.NO_TRUMP}
                 onChange={e => handleChange(e)}
-                className="form-check-input"
               />
               Sans atouts
             </label>
-            <label className="control radio" onChange={e => handleChange(e)}>
+            <label className="control radio level-item" onChange={e => handleChange(e)}>
               <input
-                className="input"
+                className="form-check-input"
                 type="radio"
                 name="gameType"
                 value={gameTypes.CAPOT}
                 onChange={e => handleChange(e)}
                 checked={state.gameType === gameTypes.CAPOT}
-                className="form-check-input"
               />
               Capot
             </label>
           </div>
 
-          <div className="field is-grouped is-grouped-multiline is-grouped-centered" >
+          <div className="field is-grouped is-grouped-multiline is-grouped-centered level" >
             <label className="control radio" onChange={e => handleChange(e)}>
               <input
-                className="input"
+                className="form-check-input"
                 type="radio"
-                name="selectedColor"
+                name="selectedTrump"
                 value="H"
                 disabled={isTrumpDisabled}
                 onChange={e => handleChange(e)}
-                checked={state.selectedColor === "H"}
-                className="form-check-input"
+                checked={state.selectedTrump === "H"}
               />
-              <span className="icon is-medium is-center"><img src={symbols['H']} alt="HeartSymbol"/></span>
+              <span className="icon is-medium is-center level-item"><img src={symbols['H']} alt="HeartSymbol"/></span>
             </label>
             <label className="control radio" onChange={e => handleChange(e)}>
               <input
+                className="form-check-input"
                 type="radio"
-                name="selectedColor"
+                name="selectedTrump"
                 value="S"
-                checked={state.selectedColor === "S"}
+                checked={state.selectedTrump === "S"}
                 disabled={isTrumpDisabled}
                 onChange={e => handleChange(e)}
-                className="form-check-input"
               />
-              <span className="icon is-medium is-center"><img src={symbols['S']} alt="SpadesSymbol"/></span>
+              <span className="icon is-medium is-center level-item"><img src={symbols['S']} alt="SpadesSymbol"/></span>
             </label>
             <label className="control radio" onChange={e => handleChange(e)}>
               <input
+                className="form-check-input"
                 type="radio"
-                name="selectedColor"
+                name="selectedTrump"
                 value="D"
-                checked={state.selectedColor === "D"}
+                checked={state.selectedTrump === "D"}
                 disabled={isTrumpDisabled}
                 onChange={e => handleChange(e)}
-                className="form-check-input"
               />
-              <span className="icon is-medium is-center"><img src={symbols['D']} alt="DiamondSymbol" /></span>
+              <span className="icon is-medium is-center level-item"><img src={symbols['D']} alt="DiamondSymbol" /></span>
             </label>
             <label className="control radio" onChange={e => handleChange(e)}>
               <input
+                className="form-check-input"
                 type="radio"
-                name="selectedColor"
+                name="selectedTrump"
                 value="C"
-                checked={state.selectedColor === "C"}
+                checked={state.selectedTrump === "C"}
                 disabled={isTrumpDisabled}
                 onChange={e => handleChange(e)}
-                className="form-check-input"
               />
-              <span className="icon is-medium is-center"><img src={symbols['C']} alt="ClubSymbol" /></span>
+              <span className="icon is-medium is-center level-item"><img src={symbols['C']} alt="ClubSymbol" /></span>
             </label>
           </div>
 
@@ -221,11 +217,11 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
             </p>
           </div>
         </div>
-        <div className="content media-right has-text-centered">
+        <div className="content media-right is-centered">
           <DeclarationHistory />
-          <p className="control">
+          <div className="buttons is-centered">
             <button className="button is-primary" name="coinche" onClick={handleClick}>Coincher</button>
-          </p>
+          </div>
         </div>
       </div>
     </div>

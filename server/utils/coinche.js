@@ -1,59 +1,7 @@
 import { DECK32 } from '../constants/decks';
+import gameTypes from '../../shared/constants/gameType';
+import gameScore from '../constants/gameScore';
 
-const ORDINARY = 'ORDINARY';
-const ALL_TRUMP = 'ALL_TRUMP';
-const NO_TRUMP = 'NO_TRUMP';
-
-const trumpScore = {
-  "J": 20,
-  "9": 14,
-  "A": 9,
-  "10": 10,
-  "K": 4,
-  "Q": 3,
-  "8": 0,
-  "7": 0,
-};
-
-const ordinaryScore = {
-  "A": 11,
-  "10": 10,
-  "K": 4,
-  "Q": 3,
-  "J": 2,
-  "9": 0,
-  "8": 0,
-  "7": 0,
-};
-
-const allTrumpScore = {
-  "J": 14,
-  "9": 9,
-  "A": 6,
-  "10": 10,
-  "K": 3,
-  "Q": 2,
-  "8": 0,
-  "7": 0,
-};
-
-const noTrumpScore = {
-  "A": 19,
-  "10": 10,
-  "K": 4,
-  "Q": 3,
-  "J": 2,
-  "9": 0,
-  "8": 0,
-  "7": 0,
-};
-
-const gameScore = {
-  ordinaryScore,
-  trumpScore,
-  allTrumpScore,
-  noTrumpScore,
-};
 
 export const sortHand = (hand) => {
   const sortedSpades = hand.filter(c => c.includes('S')).sort();
@@ -110,8 +58,15 @@ export const cutDeck = (deck) => {
   return [...deck.slice(indexToCut + 1, deck.length), ...deck.slice(0, indexToCut + 1)];
 };
 
-// export const sortColor = (color, trumpColor=[], gameScores) = {
-//   if (!trumpColor.length) {
-    
-//   }
-// };
+
+export const countTrick = (trick, gameType, selectedTrump) => {
+  return tricks.reduce((score, card) => {
+    const [value, color] = [...card, card[card.length - 1];
+    if (gameType !== gameTypes.STANDARD) {
+      return score += gameScore[gameType][value];
+    } else {
+      const scoreType = (color === selectedTrump) ? 'trumpScore' : 'standardScore' ;
+      return score += gameScore[gameType][scoreType][value]
+    }
+  }, 0)
+};
