@@ -157,7 +157,10 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       // Rassemble les cartes en gardant les plis des équipes.
       // très moche, à refactorer
-      const newDeck = [].concat(tricks[0]).concat(tricks[2]).concat(tricks[1]).concat(tricks[3]);
+      const newDeck = (tricks.length)
+        ? [].concat(tricks[0]).concat(tricks[2]).concat(tricks[1]).concat(tricks[3])
+        : state.deck;
+
       const resetedPlayers = state.players.map((p, index) => {
         return {
           ...p,
@@ -187,27 +190,31 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           ...p,
           isActivePlayer: (i === (playerIndex + 1) % state.players.length),
         }
-      })
+      });
 
-      if (declaration.type === 'PASS') {
-        return {
-          ...state,
-          players: playersUpdated,
-          declarationsHistory: (state.declarationsHistory || []).concat({playerId, content: {}}),
-        };
-      } else if (declaration.type === 'DECLARE') {
-        return {
-          ...state,
-          players: playersUpdated,
-          declarationsHistory: (state.declarationsHistory || []).concat({playerId, content: declaration.content}),
-          currentDeclaration: {
-            playerId,
-            content: declaration.content,
-          }
-        };
+      const declarationsHistory = (state.declarationsHistory || []).concat({playerId, content: declaration.content});
+      let currentDeclaration = (state.currentDeclaration) 
+      ? {...state.currentDeclaration} 
+      : {
+        playerId: undefined,
+        content: {},
+      }
+
+      if (declaration.type === 'DECLARE') {
+        currentDeclaration = {
+          playerId: playerId,
+          content: declaration.content,
+        }
+      } else if (declaration.type === 'COINCHE') {
+        currentDeclaration.isCoinched = true
       };
 
-      return state;
+      return {
+        ...state,
+        players: playersUpdated,
+        declarationsHistory,
+        currentDeclaration,
+      };
     };
     case actionTypes.LAUNCH_GAME: {
 
