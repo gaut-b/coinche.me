@@ -8,7 +8,7 @@ const LandingPage = (props) => {
   const isJoiningTableId = new URLSearchParams(props.location.search).get(queryParamToJoin);
 
   const [username, setUsername] = useState(localStorage.getItem(localstorageUsernameKey) || '');
-  const [mayNeedHelp, _setMayNeedHelp] = useState(!localStorage.getItem(localstorageUsernameKey));
+  const [mayNeedHelp, _setMayNeedHelp] = useState(!localStorage.getItem(localstorageUsernameKey) && !isJoiningTableId);
   const [tableId, setTableId] = useState(isJoiningTableId || '');
 
   const setUsernameAndSave = value => {

@@ -55,7 +55,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}
             <button
               onClick={() => distribute(tableId, currentPlayer.id)}
               className="button is-primary is-large"
-              title={humanPlayers.length < 4 ? 'Il faut 4 joueurs pour démarrer une partie' : ''}
+              title={disableDistribute ? 'Il faut 4 joueurs pour démarrer une partie' : ''}
               disabled={disableDistribute}
             >
               <span>Distribuer</span>
@@ -64,7 +64,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}
           </li>
           {isDevelopment && disableDistribute && <li><button className="button is-text is-small" onClick={e => distribute(tableId, currentPlayer.id)}>(Forcer)</button></li>}
           <li>
-            <button className="button is-text" onClick={copyUrlToClipboard}>
+            <button className={`button ${disableDistribute ? 'is-primary' : 'is-text'}`} onClick={copyUrlToClipboard}>
               {isCopied ? 'Copié !' : <span>Copier l'URL<span className="is-hidden-mobile"> à partager pour rejoindre la partie</span></span>}
             </button>
             <p className="is-hidden-tablet">à partager pour rejoindre la partie</p>
