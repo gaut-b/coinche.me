@@ -27,6 +27,8 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}
   const disableDistribute = humanPlayers.length !== players.length;
   const sortedPlayers = [NORTH, WEST, EAST, SOUTH].map(pos => players.find(p => p.position === pos));
 
+  const isDevelopment = process.env.NODE_ENV !== 'production';
+
   return (
     <div className="commands has-text-centered">
       <div className="wrapper">
@@ -51,7 +53,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}
               <span className="is-hidden-mobile">&nbsp;une partie</span>
             </button>
           </li>
-          {disableDistribute && <li><button className="button is-text is-small" onClick={e => distribute(tableId, currentPlayer.id)}>(Forcer)</button></li>}
+          {isDevelopment && disableDistribute && <li><button className="button is-text is-small" onClick={e => distribute(tableId, currentPlayer.id)}>(Forcer)</button></li>}
           <li>
             <button className="button is-text" onClick={copyUrlToClipboard}>
               {isCopied ? 'Copié !' : <span>Copier l'URL<span className="is-hidden-mobile"> à partager pour rejoindre la partie</span></span>}
