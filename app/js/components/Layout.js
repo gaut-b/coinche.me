@@ -18,7 +18,7 @@ const Layout = ({mode, children, toggleLastTrick}) => {
     <div>
       <Header toggleLastTrick={toggleLastTrick}/>
       <LastTrick toggleLastTrick={toggleLastTrick} />
-      <div className={`section ${containerMode ? '' : 'is-full-screen'}`}>
+      <div className={`section is-main ${containerMode ? '' : 'is-full-screen'}`}>
         {wrappedChildren}
       </div>
     </div>

@@ -59,12 +59,15 @@ body {
 }
 
 .section {
+  &.is-main {
+    min-height: 100vh;
+    padding-top: $navbar-height + 1rem;
+  }
+
   &.is-full-screen {
-    @include tablet {
-      min-height: 100vh;
-    }
+    height: 100vh;
     padding: 1rem;
-    // padding-top: $navbar-height + 1rem;
+    padding-top: $navbar-height + 1.5rem;
 
     .commands {
       display: flex;
