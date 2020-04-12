@@ -18,6 +18,9 @@ const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) =
   const toggleMenu = e => showMenu(!menuShown);
 
   const menu = [{
+    label: 'Comment ça marche ?',
+    to: '/help'
+  }, {
     label: 'Paramètres',
     to: '/config'
   }].concat(tableId ? [{
