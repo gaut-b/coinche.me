@@ -126,7 +126,9 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         playerIndex,
         cards: state.players.map(p => p.onTable),
       };
-
+      if (newTrick.cards.length < state.players.length) {
+        return state;
+      }
       return {
         ...state,
         tricks: [newTrick, ...state.tricks],
