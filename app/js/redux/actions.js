@@ -37,7 +37,7 @@ export function distribute(tableId, playerId) {
   }
 }
 
-export function swichTeams(tableId) {
+export function swichTeams(tableId, indexes) {
   return {
     type: actionTypes.NO_LOCAL_EFFECT,
     emit: socketEvents.DISPATCH,
@@ -45,6 +45,7 @@ export function swichTeams(tableId) {
       tableId,
       action: {
         type: actionTypes.SWITCH_TEAMS,
+        payload: {indexes}
       }
     }
   }

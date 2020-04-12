@@ -9,14 +9,18 @@ $tablet: 600px;
 
 $white: white;
 $black: black;
-$red: d40000;
+$red: #d40000;
 $green: #02731E;
+$blue: #131f67;
 
 $text: $white;
 $text-strong: darken($text, 5%);
 $background: $green;
 $primary: $red;
 $input-color: $black;
+$link: darken($white, 20%);
+$link-hover: $blue;
+
 $box-background-color: $green;
 $modal-content-width: 100%;
 

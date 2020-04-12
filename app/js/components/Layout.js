@@ -3,10 +3,11 @@ import Header from '../components/Header';
 import LastTrick from './LastTrick';
 
 const Layout = ({mode, children, toggleLastTrick}) => {
-  const wrappedChildren = mode === 'container' ? (
+  const containerMode = mode === 'container';
+  const wrappedChildren = containerMode ? (
     <div className="container">
-      <div className="columns">
-        <div className="column is-6 is-offset-3 is-4-widescreen is-offset-4-widescreen">
+      <div className="columns is-centered">
+        <div className="column is-10 is-8-desktop is-7-widescreen is-6-fullhd">
           {children}
         </div>
       </div>
@@ -17,7 +18,7 @@ const Layout = ({mode, children, toggleLastTrick}) => {
     <div>
       <Header toggleLastTrick={toggleLastTrick}/>
       <LastTrick toggleLastTrick={toggleLastTrick} />
-      <div className="section is-full-screen">
+      <div className={`section is-main ${containerMode ? '' : 'is-full-screen'}`}>
         {wrappedChildren}
       </div>
     </div>

@@ -17,11 +17,16 @@ img.playing-card {
 	vertical-align: initial;
   box-sizing: initial;
   transition: ease 0.1s transform;
-  &.selectable {
+  &.is-selectable {
     cursor: pointer;
     &:hover {
       z-index: 1;
-      transform: translateY(-$card_space);
+      .hand & {
+        transform: translateY(-$card_space);
+      }
+      .table-slot & {
+        transform: translateY($card_space/2);
+      }
     }
   }
 }

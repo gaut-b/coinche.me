@@ -26,7 +26,7 @@ app.post('/join', async (req, res) => {
   res.redirect(`/game/${tableId}`)
 });
 
-app.get('/game/:tableId', async (req, res) => {
+app.get('/*', async (req, res) => {
   res.sendFile('build/index.html', {root: `${__dirname}/..`});
 });
 
