@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {pluralize} from '../../../shared/utils/string';
+import {last} from '../../../shared/utils/array';
 import {selectHumanPlayers, selectCurrentPlayer, selectPlayers} from '../redux/selectors';
 import { LocalStateContext } from '../pages/GamePage.js';
 import {queryParamToJoin} from '../constants';
@@ -26,7 +27,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}
 
   const disableDistribute = humanPlayers.length !== players.length;
   const sortedPlayers = [NORTH, WEST, EAST, SOUTH].map(pos => players.find(p => p.position === pos));
-
+  const southPlayer = last(sortedPlayers);
   const isDevelopment = process.env.NODE_ENV !== 'production';
 
   return (
@@ -36,10 +37,18 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players}
           <h2 className="title is-4">{pluralize(humanPlayers.length, 'joueur prêt')}:</h2>
           {players.length ? (
             <ul className="players-waiting-list">
-              {sortedPlayers.map((p, i) => <li key={i} className={p.id ? 'has-text-weight-bold' : ''}>{p.id ? p.name : 'En attente ...'}</li>)}
+              {sortedPlayers.map((p, i) => (
+                <li key={i}>
+                  { p.id ? (
+                      <button className="button is-text" onClick={e => swichTeams(tableId, [southPlayer.index, p.index])}>{p.name}</button>
+                    ) : <span>En attente ...</span>
+                  }
+                </li>
+              )
+            )}
             </ul>
           ) : null}
-          {humanPlayers.length >= 2 && <p><button onClick={e => swichTeams(tableId)} className="button is-text">Échanger les équipes</button></p>}
+          {humanPlayers.length >= 2 && <p><small>Cliquez sur le nom d'un autre joueur pour rejoindre son équipe, et sur le votre pour échanger les places des joueurs adverses.</small></p>}
         </div>
         <ul className="section is-vertical is-small actions">
           <li>
@@ -74,7 +83,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   distribute: (tableId, playerId) => dispatch(distribute(tableId, playerId)),
-  swichTeams: (tableId) => dispatch(swichTeams(tableId)),
+  swichTeams: (tableId, indexes) => dispatch(swichTeams(tableId, indexes)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Controls);

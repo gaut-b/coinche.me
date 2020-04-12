@@ -44,7 +44,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         })
       }
     case actionTypes.LEAVE:
-      console.log('received leave')
       return {
         ...state,
         players: state.players.map(p => {
@@ -55,10 +54,13 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         })
       }
     case actionTypes.SWITCH_TEAMS: {
-      const switchedPlayers = switchIndexes(state.players, 1, 2);
+      const [i1, i2] = action.payload.indexes;
+      const i1PartnerIndex = state.players.findIndex((p, i) => {
+        return i !== i1 && (i % 2) === (i1 % 2);
+      });
       return {
         ...state,
-        players: switchedPlayers,
+        players: switchIndexes(state.players, i1PartnerIndex, i2),
       }
     }
     case actionTypes.DISTRIBUTE: {
