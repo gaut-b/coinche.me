@@ -1,14 +1,15 @@
 import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
-import { collect, undo } from '../redux/actions';
+import { collect } from '../redux/actions';
 import PropTypes from 'prop-types';
 import {LocalStateContext} from '../pages/GamePage';
 import {selectCurrentPlayer, selectCanCollect, selectOnTable} from '../redux/selectors'
+import {SOUTH} from '../../../shared/constants/positions';
 
 import '../../scss/components/table.scss';
 import Card from './Card';
 
-const Table = ({onTable, currentPlayer, collect, undo, canCollect}) => {
+const Table = ({onTable, currentPlayer, collect, canCollect}) => {
 
   const {tableId} = useContext(LocalStateContext);
 
@@ -23,7 +24,7 @@ const Table = ({onTable, currentPlayer, collect, undo, canCollect}) => {
       {onTable.map(({position, value}, index) => {
         return (
           <div key={value} className={`table-slot is-${position}`} style={{zIndex: index}}>
-            {value && <Card value={value} />}
+            {value && <Card value={value} isSelectable={position === SOUTH} />}
           </div>
         );
       })}

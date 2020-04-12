@@ -15,13 +15,14 @@ const Card = ({value, onTable, isHidden, isSelectable, playCard, getCardBack}) =
   const image = isHidden ? images['BLUE_BACK'] : images[value];
 
   const handleClick = (e) => {
+    if (!isSelectable) return;
     const cardValue = value;
     (onTable.find(({value}) => value === cardValue)) ? getCardBack(tableId, value) : playCard(tableId, value);
   }
 
   return (
     <div className="card-wrapper">
-      {image ? <img onClick={e => handleClick(event)} className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>}
+      {image ? <img onClick={e => handleClick(event)} className={`playing-card ${isSelectable ? 'is-selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>}
     </div>
   )
 }
