@@ -5,7 +5,8 @@ import { createStructuredSelector } from 'reselect';
 import { selectPlayers, selectCurrentPlayer, selectCurrentDeclaration, selectIsActivePlayer, selectDeclarationsHistory } from '../redux/selectors';
 import { LocalStateContext } from '../pages/GamePage';
 import DeclarationHistory from './DeclarationHistory';
-import gameTypes from '../../../shared/constants/gameTypes';
+import trumpTypes from '../../../shared/constants/trumpTypes';
+import declarationTypes from '../../../shared/constants/declarationTypes';
 
 const HeartSymbol = require('../../images/heart.svg');
 const SpadesSymbol = require('../../images/spades.svg');
@@ -22,9 +23,8 @@ const symbols = {
 import '../../scss/components/declaration.scss';
 
 const INITIAL_STATE = {
-  objectif: 80,
-  gameType: gameTypes.STANDARD,
-  selectedTrump: null,
+  goal: 80,
+  trumpType: null,
 };
 
 const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer}) => {
@@ -33,9 +33,8 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
   const [state, setState] = useState(INITIAL_STATE);
 
   useEffect(() => {
-
     if (currentDeclaration) {
-           
+      
       // If currentPlayer made a declaration and everybody else passed OR somebody coinched
       // launch the game
       if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (currentDeclaration.isCoinched)) {
@@ -52,175 +51,178 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
 
       if (Object.entries(currentDeclaration.content).length) {
         const content = currentDeclaration.content;
-        const prevObjectif = parseInt(content.objectif);
-        const newObjectif = (prevObjectif < 160) ? prevObjectif + 10 : prevObjectif;
+        const prevGoal = parseInt(content.goal);
+        const newGoal = (prevGoal < 160) ? prevGoal + 10 : prevGoal;
         setState({
           ...state,
-          gameType: content.gameType,
-          selectedTrump: content.selectedTrump,
-          objectif: newObjectif,
+          goal: newGoal,
         });
       }
     }
   }, [currentDeclaration]);
 
   const handleChange = (event) => {
-
     const target = event.target;
-
     setState({
       ...state,
-      [target.name]: target.value
+      [target.name]: target.value,
     })
   };
 
-  const handleClick = (event) => {
+  const toggleCapot = (event) => {
+    if (state.goal === 250) {
+      let prevGoal = 80;
 
-    const name = event.target.name;
-    let content = {};
-    let type = '';
-
-    if (name === 'declare') {
-      content = {
-        ...state,
-        objectif: (state.gameType === gameTypes.CAPOT) ? 250 : state.objectif
+      if (currentDeclaration) {
+        prevGoal = parseInt(currentDeclaration.content.goal) + 10
       };
-      type = 'DECLARE';
-    } else if (name === 'pass') {
-      type = 'PASS';
-    } else if (name === 'coinche') {
-      type = 'COINCHE';
+      setState({
+        ...state,
+        goal: prevGoal,
+      });
+      return;
+    }
+
+    setState({
+      ...state,
+      goal: parseInt(250),
+    })
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(event)
+    let type = event.target.name;
+    console.log(type)
+    let content = {}
+    if (type !== trumpTypes.PASS) {
+      content = {...state}
     }
 
     declare(tableId, currentPlayer.id, {type, content})
   };
 
-  const isDeclareDisabled = state.gameType === gameTypes.CAPOT;
-  const isTrumpDisabled = state.gameType === gameTypes.ALL_TRUMP || state.gameType === gameTypes.NO_TRUMP;
-  
+  let isDisabled = false;
+  if (!state.gameType) {
+    isDisabled = false;
+  } else if (currentDeclaration) {
+    isDisabled = currentDeclaration.content.goal === 250;
+  };
+
   return (
     <div className="declaration box modal is-active" >
       <div className="modal-content media">
         <div className={`content media-left ${(isActivePlayer) ? null : 'is-disabled'}`}>
-          <div className="field">
-            <label className="label">Annonce</label>
-            <div className="control">
-              <input
-                className="input" type="number" disabled={isDeclareDisabled} name="objectif" min={state.objectif} step="10" max="160" value={state.objectif} onChange={e => handleChange(e)}/>
+          <form onSubmit={handleSubmit}>
+            <div className="field is-grouped level">
+              <label className="control number">Annonce</label>
+              <div className="control level-item">
+                <input
+                  className="input" 
+                  type="number"
+                  disabled={state.goal === 250}
+                  name="goal"
+                  min={state.goal}
+                  step="10"
+                  max="160"
+                  value={state.goal}
+                  onChange={handleChange}
+                />
+              </div>
+              <label className="control checkbox level-item" onChange={toggleCapot}>
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  name="goal"
+                  onChange={toggleCapot}
+                  checked={state.goal === 250}
+                />
+                Capot
+              </label>
             </div>
-          </div>
-
-          <div className="field is-grouped is-grouped-multiline is-grouped-centered level">
-            <label className="control radio level-item" onChange={e => handleChange(e)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="gameType"
-                value={gameTypes.STANDARD}
-                checked={state.gameType === gameTypes.STANDARD}
-                onChange={e => handleChange(e)}
-              />
-              Standard
-            </label>
-            <label className="control radio level-item" onChange={e => handleChange(e)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="gameType"
-                value={gameTypes.ALL_TRUMP}
-                checked={state.gameType === gameTypes.ALL_TRUMP}
-                onChange={e => handleChange(e)}
-              />
-              Tout atout
-            </label>
-            <label className="control radio level-item" onChange={e => handleChange(e)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="gameType"
-                value={gameTypes.NO_TRUMP}
-                checked={state.gameType === gameTypes.NO_TRUMP}
-                onChange={e => handleChange(e)}
-              />
-              Sans atouts
-            </label>
-            <label className="control radio level-item" onChange={e => handleChange(e)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="gameType"
-                value={gameTypes.CAPOT}
-                onChange={e => handleChange(e)}
-                checked={state.gameType === gameTypes.CAPOT}
-              />
-              Capot
-            </label>
-          </div>
-
-          <div className="field is-grouped is-grouped-multiline is-grouped-centered level" >
-            <label className="control radio" onChange={e => handleChange(e)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="selectedTrump"
-                value="H"
-                disabled={isTrumpDisabled}
-                onChange={e => handleChange(e)}
-                checked={state.selectedTrump === "H"}
-              />
-              <span className="icon is-medium is-center level-item"><img src={symbols['H']} alt="HeartSymbol"/></span>
-            </label>
-            <label className="control radio" onChange={e => handleChange(e)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="selectedTrump"
-                value="S"
-                checked={state.selectedTrump === "S"}
-                disabled={isTrumpDisabled}
-                onChange={e => handleChange(e)}
-              />
-              <span className="icon is-medium is-center level-item"><img src={symbols['S']} alt="SpadesSymbol"/></span>
-            </label>
-            <label className="control radio" onChange={e => handleChange(e)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="selectedTrump"
-                value="D"
-                checked={state.selectedTrump === "D"}
-                disabled={isTrumpDisabled}
-                onChange={e => handleChange(e)}
-              />
-              <span className="icon is-medium is-center level-item"><img src={symbols['D']} alt="DiamondSymbol" /></span>
-            </label>
-            <label className="control radio" onChange={e => handleChange(e)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="selectedTrump"
-                value="C"
-                checked={state.selectedTrump === "C"}
-                disabled={isTrumpDisabled}
-                onChange={e => handleChange(e)}
-              />
-              <span className="icon is-medium is-center level-item"><img src={symbols['C']} alt="ClubSymbol" /></span>
-            </label>
-          </div>
-
-          <div className="field is-grouped is-grouped-centered">
-            <p className="control">
-              <button className="button is-primary" name="declare" onClick={handleClick}>Annoncer</button>
-            </p>
-            <p className="control">
-              <button className="button is-primary" name="pass" onClick={handleClick}>Passer</button>
-            </p>
-          </div>
+            <div className="field is-grouped level">
+              <label className="control level-item" onChange={handleChange}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="trumpType"
+                  value={trumpTypes.S}
+                  checked={state.trumpType === trumpTypes.S}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="icon is-medium is-center"><img src={symbols['S']} alt="SpadesSymbol"/></span>
+              </label>
+              <label className="control level-item" onChange={handleChange}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="trumpType"
+                  value={trumpTypes.H}
+                  onChange={handleChange}
+                  checked={state.trumpType === trumpTypes.H}
+                />
+                <span className="icon is-medium is-center"><img src={symbols['H']} alt="HeartSymbol"/></span>
+              </label>
+              <label className="control level-item" onChange={handleChange}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="trumpType"
+                  value={trumpTypes.D}
+                  checked={state.trumpType === trumpTypes.D}
+                  onChange={handleChange}
+                />
+                <span className="icon is-medium is-center"><img src={symbols['D']} alt="DiamondSymbol" /></span>
+              </label>
+              <label className="control radio level-item" onChange={handleChange}>
+                <input
+                  className="form-check-input is-danger"
+                  type="radio"
+                  name="trumpType"
+                  value={trumpTypes.C}
+                  checked={state.trumpType === trumpTypes.C}
+                  onChange={e => handleChange(e)}
+                />
+                <span className="icon is-medium is-center"><img src={symbols['C']} alt="ClubsSymbol"/></span>
+              </label>
+              <label className="control level-item" onChange={handleChange}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="trumpType"
+                  value={trumpTypes.ALL_TRUMP}
+                  checked={state.trumpType === trumpTypes.ALL_TRUMP}
+                  onChange={handleChange}
+                />
+                Tout atout
+              </label>
+              <label className="control level-item" onChange={handleChange}>
+                <input
+                  className="form-check-input is-danger"
+                  type="radio"
+                  name="trumpType"
+                  value={trumpTypes.NO_TRUMP}
+                  checked={state.trumpType === trumpTypes.NO_TRUMP}
+                  onChange={handleChange}
+                />
+                Sans atouts
+              </label>
+            </div>
+            <div className="field is-grouped is-grouped-centered">
+              <p className="control">
+                <input className="button is-primary" type="submit" value={declarationTypes.DECLARE} placeholder="Annoncer" />
+              </p>
+              <p className="control">
+                <input className="button is-primary" type="submit" value={declarationTypes.PASS} placeholder="Passer" />
+              </p>
+            </div>
+          </form>
         </div>
         <div className="content media-right is-centered">
           <DeclarationHistory />
           <div className="buttons is-centered">
-            <button className="button is-primary" name="coinche" onClick={handleClick}>Coincher</button>
+            <button className="button is-primary" name={declarationTypes.COINCHE} >Coincher</button>
           </div>
         </div>
       </div>
@@ -243,3 +245,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Declaration);
+
+

@@ -1,5 +1,5 @@
 import { DECK32 } from '../constants/decks';
-import gameTypes from '../../shared/constants/gameType';
+import trumpTypes from '../../shared/constants/trumpTypes';
 import gameScore from '../constants/gameScore';
 
 
@@ -58,15 +58,28 @@ export const cutDeck = (deck) => {
   return [...deck.slice(indexToCut + 1, deck.length), ...deck.slice(0, indexToCut + 1)];
 };
 
-
-export const countTrick = (trick, gameType, selectedTrump) => {
-  return tricks.reduce((score, card) => {
-    const [value, color] = [...card, card[card.length - 1];
-    if (gameType !== gameTypes.STANDARD) {
-      return score += gameScore[gameType][value];
+export const countTrick = (trick, trumpType) => {
+  return trick.reduce((score, card) => {
+    const color = card.slice(card.length - 1)
+    const value = card.substring(0, card.length - 1);
+    if (trumpType === trumpTypes.ALL_TRUMP) {
+      return score += gameScore.allTrumpScore[value];
+    } else if (trumpType === trumpTypes.NO_TRUMP) {
+      return score += gameScore.noTrumpScore[value];
     } else {
-      const scoreType = (color === selectedTrump) ? 'trumpScore' : 'standardScore' ;
-      return score += gameScore[gameType][scoreType][value]
+      const scoreType = (color === trumpType) ? 'trumpScore' : 'defaultScore' ;
+      return score += gameScore[scoreType][value];
     }
   }, 0)
+};
+
+export const countPlayerScore = (tricks, lastDeclaration={}) => {
+  if (!lastDeclaration.content) return {};
+  const {goal, trumpType} = lastDeclaration.content;
+
+  return tricks.reduce((scoreList, trick) => {
+    const currentScore = scoreList[trick.playerIndex] || 0;
+    scoreList[trick.playerIndex] = currentScore + countTrick(trick.cards, trumpType);
+    return scoreList;
+  }, {});
 };

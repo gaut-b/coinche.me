@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import gameTypes from '../../../shared/constants/gameTypes';
+import trumpTypes from '../../../shared/constants/trumpTypes';
 import { selectPlayers, selectCurrentPlayer, selectDeclarationsHistory } from '../redux/selectors';
 
 const HeartSymbol = require('../../images/heart.svg');
@@ -22,35 +22,29 @@ const DeclarationHistory = ({declarations, players, playerId}) => {
         <ul>
           {
             declarations.map(({playerId, content}, index) => {
-              switch (content.gameType) {
-                case gameTypes.STANDARD:
+              switch (content.trumpType) {
+                case trumpTypes.S:
+                case trumpTypes.H:
+                case trumpTypes.D: 
+                case trumpTypes.C:
                   return (
                     <li key={index}>
-                      { `${players.find(p => p.id === playerId).name || 'BOT'} a annoncé ${content.objectif}  `}
+                      {`${players.find(p => p.id === playerId).name || 'BOT'} a annoncé ${(content.goal !== 250) ? content.goal : 'capot'}  `}
                       <span className="icon is-small">
-                        <img src={symbols[content.selectedColor]}/>
+                        <img src={symbols[content.trumpType]}/>
                       </span>
                     </li>
                   );
-                case gameTypes.NO_TRUMP:
+                case trumpTypes.NO_TRUMP:
                   return (
                     <li key={index}>
-                      {`${players.find(p => p.id === playerId).name || 'BOT'} a annoncé ${content.objectif} sans atouts`}
+                      {`${players.find(p => p.id === playerId).name || 'BOT'} a annoncé ${content.goal} sans atouts`}
                     </li>
                   );
-                case gameTypes.ALL_TRUMP:
+                case trumpTypes.ALL_TRUMP:
                   return (
                     <li key={index}>
-                      {`${players.find(p => p.id === playerId).name || 'BOT'} a annoncé ${content.objectif} tout atout`}
-                    </li>
-                  );
-                case gameTypes.CAPOT:
-                  return (
-                    <li key={index}>
-                      {`${players.find(p => p.id === playerId).name || 'BOT'} a annoncé capot  `}
-                      <span className="icon is-small">
-                        <img src={symbols[content.selectedColor]}/>
-                      </span>
+                      {`${players.find(p => p.id === playerId).name || 'BOT'} a annoncé ${content.goal} tout atout`}
                     </li>
                   );
                 default:
@@ -59,7 +53,7 @@ const DeclarationHistory = ({declarations, players, playerId}) => {
                       {`${players.find(p => p.id === playerId).name || 'BOT'} a passé`}
                     </li>
                   );
-              }
+                }
             })
           }
         </ul> :

@@ -36,7 +36,7 @@ const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsub
   const GameTable = () => {
     return (
       <div className="level-container">
-        {!isGameStarted ? <Declaration isVisible={!isGameStarted}/> : null}
+        {!isGameStarted ? <Declaration /> : null}
         <div className="level is-mobile">
           <Player position={NORTH} />
         </div>
