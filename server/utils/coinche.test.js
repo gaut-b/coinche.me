@@ -1,10 +1,9 @@
-import { countTrick, countPlayerScore } from './coinche';
+import { countTrick, countPlayerScore, sortHand, sortByType } from './coinche';
 import { DECK32 } from '../constants/decks';
 import trumpTypes from '../../shared/constants/trumpTypes';
 
 it('is counting a trick correctly', () => {
 	const trick = ['JH', '9C', '10D', 'AS'];
-	// console.log(DECK32)
 	expect(countTrick(trick, trumpTypes.H)).toEqual(41);
 	expect(countTrick(trick, trumpTypes.C)).toEqual(37);
 	expect(countTrick(trick, trumpTypes.D)).toEqual(countTrick(trick, trumpTypes.S));
@@ -36,4 +35,15 @@ it('is counting players score correctly', () => {
 		2: 17,
 		3: 17,
 	});
+});
+
+it('is sorting corretcly', () => {
+	const hand = ['8H', '9S', 'QC', '9C', 'AH', 'JC', 'AD', '7H'];
+	expect(sortHand(hand)).toEqual(['9S', '7H', '8H', 'AH', '9C', 'JC', 'QC', 'AD']);
+	expect(sortHand(hand, sortByType, 'H')).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
+	expect(sortHand(hand, sortByType, 'C')).toEqual(['9S', 'AH', '8H', '7H', 'JC', '9C', 'QC', 'AD']);
+	expect(sortHand(hand, sortByType, 'D')).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
+	expect(sortHand(hand, sortByType, 'S')).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
+	expect(sortHand(hand, sortByType, trumpTypes.NO_TRUMP)).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
+	expect(sortHand(hand, sortByType, trumpTypes.ALL_TRUMP)).toEqual(['9S', 'AH', '8H', '7H', 'JC', '9C', 'QC', 'AD']);
 });

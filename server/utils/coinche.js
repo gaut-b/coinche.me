@@ -3,11 +3,14 @@ import trumpTypes from '../../shared/constants/trumpTypes';
 import gameScore from '../constants/gameScore';
 
 
-export const sortHand = (hand) => {
-  const sortedSpades = hand.filter(c => c.includes('S')).sort();
-  const sortedHearts = hand.filter(c => c.includes('H')).sort();
-  const sortedClubs = hand.filter(c => c.includes('C')).sort();
-  const sortedDiamonds = hand.filter(c => c.includes('D')).sort();
+export const sortHand = (hand, sortByType, trumpType) => {
+
+  const sortingFunction = (sortByType) ? sortByType(trumpType) : undefined;
+
+  const sortedSpades = hand.filter(c => c.includes('S')).sort(sortingFunction);
+  const sortedHearts = hand.filter(c => c.includes('H')).sort(sortingFunction);
+  const sortedClubs = hand.filter(c => c.includes('C')).sort(sortingFunction);
+  const sortedDiamonds = hand.filter(c => c.includes('D')).sort(sortingFunction);
 
   return [].concat(sortedSpades).concat(sortedHearts).concat(sortedClubs).concat(sortedDiamonds);
 }
@@ -67,7 +70,7 @@ export const countTrick = (trick, trumpType) => {
     } else if (trumpType === trumpTypes.NO_TRUMP) {
       return score += gameScore.noTrumpScore[value];
     } else {
-      const scoreType = (color === trumpType) ? 'trumpScore' : 'defaultScore' ;
+      const scoreType = (color === trumpType) ? 'trumpScore' : 'defaultScore';
       return score += gameScore[scoreType][value];
     }
   }, 0)
@@ -83,3 +86,22 @@ export const countPlayerScore = (tricks, lastDeclaration={}) => {
     return scoreList;
   }, {});
 };
+
+export const sortByType = (trumpType) => {
+  return (firstCard, secondCard) => {
+    const firstCardColor = firstCard.slice(firstCard.length - 1)
+    const firstCardValue = firstCard.substring(0, firstCard.length - 1);
+    const secondCardColor = secondCard.slice(secondCard.length - 1)
+    const secondCardValue = secondCard.substring(0, secondCard.length - 1);
+
+    if (trumpType === trumpTypes.ALL_TRUMP) {
+      return  gameScore.allTrumpScore[secondCardValue] - gameScore.allTrumpScore[firstCardValue];
+    } else if (trumpType === trumpTypes.NO_TRUMP) {
+      return gameScore.noTrumpScore[secondCardValue] - gameScore.noTrumpScore[firstCardValue];
+    } else {
+      const firstCardScoreType = (firstCardColor === trumpType) ? 'trumpScore' : 'defaultScore';
+      const secondCardScoreType = (secondCardColor === trumpType) ? 'trumpScore' : 'defaultScore';
+      return gameScore[secondCardScoreType][secondCardValue] - gameScore[firstCardScoreType][firstCardValue] ;
+    }
+  }
+}

@@ -67,7 +67,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.DISTRIBUTE: {
       const dealerId = action.payload.playerId;
       const dealerIndex = state.players.findIndex(p => p.id === dealerId);
-      console.log(dealerIndex)
       const playersWithDealer = state.players.map((p, index) => ({
         ...p,
         hand: (p.hand.length) ? [] : p.hand,
