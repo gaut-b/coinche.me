@@ -40,10 +40,10 @@ it('is counting players score correctly', () => {
 it('is sorting corretcly', () => {
 	const hand = ['8H', '9S', 'QC', '9C', 'AH', 'JC', 'AD', '7H'];
 	expect(sortHand(hand)).toEqual(['9S', '7H', '8H', 'AH', '9C', 'JC', 'QC', 'AD']);
-	expect(sortHand(hand, sortByType, 'H')).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
-	expect(sortHand(hand, sortByType, 'C')).toEqual(['9S', 'AH', '8H', '7H', 'JC', '9C', 'QC', 'AD']);
-	expect(sortHand(hand, sortByType, 'D')).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
-	expect(sortHand(hand, sortByType, 'S')).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
-	expect(sortHand(hand, sortByType, trumpTypes.NO_TRUMP)).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
-	expect(sortHand(hand, sortByType, trumpTypes.ALL_TRUMP)).toEqual(['9S', 'AH', '8H', '7H', 'JC', '9C', 'QC', 'AD']);
+	expect(sortHand(hand, 'H')).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
+	expect(sortHand(hand, 'C')).toEqual(['9S', 'AH', '8H', '7H', 'JC', '9C', 'QC', 'AD']);
+	expect(sortHand(hand, 'D')).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
+	expect(sortHand(hand, 'S')).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
+	expect(sortHand(hand, trumpTypes.NO_TRUMP)).toEqual(['9S', 'AH', '8H', '7H', 'QC', 'JC', '9C', 'AD']);
+	expect(sortHand(hand, trumpTypes.ALL_TRUMP)).toEqual(['9S', 'AH', '8H', '7H', 'JC', '9C', 'QC', 'AD']);
 });

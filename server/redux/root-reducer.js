@@ -87,14 +87,14 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.PLAY_CARD: {
       const card = action.payload;
       const playingPlayerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
-
+      const trumpType = state.currentDeclaration.content.trumpType;
       return {
         ...state,
         players: state.players.map((p, i) => {
           if (i === playingPlayerIndex) {
             return {
               ...p,
-              hand: sortHand(p.hand.filter(c => c !== card).concat(p.onTable || [])),
+              hand: sortHand(p.hand.filter(c => c !== card).concat(p.onTable || []), trumpType),
               onTable: card,
               isActivePlayer: false,
             }
@@ -110,14 +110,15 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.CARD_BACK: {
       const card = action.payload;
       const playingPlayerIndex = state.players.findIndex(p => p.onTable === card);
-
+      const trumpType = state.currentDeclaration.content.trumpType;
+      
       return {
         ...state,
         players: state.players.map((p, i) => {
           if (i === playingPlayerIndex) {
             return {
               ...p,
-              hand: sortHand(p.hand.concat(card)),
+              hand: sortHand(p.hand.concat(card), trumpType),
               onTable: null,
             }
           } else {
@@ -222,9 +223,11 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.LAUNCH_GAME: {
 
       const dealerIndex = state.players.findIndex(p => p.isDealer);
+      const trumpType = state.currentDeclaration.content.trumpType;
       const playersUpdated = state.players.map((p,i) => {
         return {
           ...p,
+          hand: sortHand(p.hand, trumpType),
           isActivePlayer: (i === (dealerIndex + 1) % state.players.length),
         }
       })

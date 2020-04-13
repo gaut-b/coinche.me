@@ -25,7 +25,6 @@ import '../../scss/components/declaration.scss';
 const INITIAL_STATE = {
   goal: 80,
   trumpType: null,
-  declarationType: null,
 };
 
 const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer}) => {

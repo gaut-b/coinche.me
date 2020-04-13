@@ -3,9 +3,9 @@ import trumpTypes from '../../shared/constants/trumpTypes';
 import gameScore from '../constants/gameScore';
 
 
-export const sortHand = (hand, sortByType, trumpType) => {
+export const sortHand = (hand, trumpType) => {
 
-  const sortingFunction = (sortByType) ? sortByType(trumpType) : undefined;
+  const sortingFunction = (trumpType) ? sortByType(trumpType) : undefined;
 
   const sortedSpades = hand.filter(c => c.includes('S')).sort(sortingFunction);
   const sortedHearts = hand.filter(c => c.includes('H')).sort(sortingFunction);
