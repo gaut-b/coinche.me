@@ -7,6 +7,14 @@ body {
   background-color: $background;
 }
 
+.content {
+  a {
+    // font-weight: bold;
+    text-decoration: underline;
+  }
+}
+
+
 .navbar-menu {
   background-color: rgba($color: #000000, $alpha: 0.2);
   background: rgba(white, 0.8) !important;
@@ -51,21 +59,22 @@ body {
 }
 
 .section {
-  &.is-full-screen {
-    @include tablet {
-      height: 100vh;
-    }
+  &.is-main {
+    min-height: 100vh;
     padding-top: $navbar-height + 1rem;
+  }
+
+  &.is-full-screen {
+    height: 100vh;
+    padding: 1rem;
+    padding-top: $navbar-height + 1.5rem;
 
     .commands {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
-      margin-top: 1rem;
-      @include tablet {
-        margin-top: 0;
-        height: 100%;
-      }
+      height: 100%;
+      margin-top: 0;
       align-items: center;
     }
   }

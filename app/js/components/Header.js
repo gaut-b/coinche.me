@@ -18,6 +18,9 @@ const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) =
   const toggleMenu = e => showMenu(!menuShown);
 
   const menu = [{
+    label: 'Comment ça marche ?',
+    to: '/help'
+  }, {
     label: 'Paramètres',
     to: '/config'
   }].concat(tableId ? [{
@@ -63,7 +66,7 @@ const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) =
   }
 
   return (
-    <nav className="navbar is-spaced" role="navigation" aria-label="main navigation">
+    <nav className="navbar is-fixed-top is-spaced" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
         <Link to="/" className="navbar-item">
           <h1>Coinche.me</h1>

@@ -15,6 +15,7 @@ const Card = ({value, onTable, isActivePlayer, isHidden, isSelectable, playCard,
   const image = isHidden ? images['BLUE_BACK'] : images[value];
 
   const handleClick = (e) => {
+    if (!isSelectable) return;
     const cardValue = value;
     if (!isActivePlayer) {
       if (!window.confirm("Ce n'est pas votre tour !")) 
@@ -25,7 +26,7 @@ const Card = ({value, onTable, isActivePlayer, isHidden, isSelectable, playCard,
 
   return (
     <div className="card-wrapper">
-      {image ? <img onClick={e => handleClick(event)} className={`playing-card ${isSelectable ? 'selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>}
+      {image ? <img onClick={e => handleClick(event)} className={`playing-card ${isSelectable ? 'is-selectable' : ''}`} src={image} /> : <p>Carte inconnue</p>}
     </div>
   )
 }

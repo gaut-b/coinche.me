@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import {localstorageUsernameKey, queryParamToJoin} from '../constants';
 
@@ -7,6 +8,7 @@ const LandingPage = (props) => {
   const isJoiningTableId = new URLSearchParams(props.location.search).get(queryParamToJoin);
 
   const [username, setUsername] = useState(localStorage.getItem(localstorageUsernameKey) || '');
+  const [mayNeedHelp, _setMayNeedHelp] = useState(!localStorage.getItem(localstorageUsernameKey) && !isJoiningTableId);
   const [tableId, setTableId] = useState(isJoiningTableId || '');
 
   const setUsernameAndSave = value => {
@@ -33,11 +35,14 @@ const LandingPage = (props) => {
       <form className="section is-vertical has-text-centered" action="/join" method="post" onSubmit={e => joinTable(e)}>
         <h1 className="title is-1">Bienvenue</h1>
         <p className="subtitle">Ici les cartes ont pas le COVID</p>
+        {mayNeedHelp && (
+          <p>
+            <Link className="button is-primary" to="/help">Comment ça marche ?</Link>
+          </p>
+        )}
         <div className="section is-vertical">
           <div className="field">
-            <p className="control">
-              <input className="input" type="text" placeholder="Choisissez votre pseudo" maxLength="20" value={username} onChange={e => setUsernameAndSave(e.target.value)} required />
-            </p>
+            <input style={{maxWidth: '300px'}} className="input is-large" type="text" placeholder="Choisissez votre pseudo" maxLength="20" value={username} onChange={e => setUsernameAndSave(e.target.value)} required />
           </div>
         </div>
         <div className="section is-vertical">

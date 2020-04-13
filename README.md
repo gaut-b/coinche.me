@@ -1,12 +1,16 @@
-# Coincheur confiné
+# Coinche.ms
 
-Jouer aux cartes en ligne entre amis sans création de compte
+Jouer aux cartes en ligne entre amis sans création de compte.
 
-## Setup environment
+## Comment jouer ?
 
-`docker-compose up` et c'est parti.
+Toutes les informations sont sur la [page d'aide dédiée](./js/content/help.md).
 
-Mais pour développer, il est recommandé de faire 
+## Comment contribuer ?
+
+Installez docker, docker-compose, `docker-compose up` et c'est parti.
+
+Mais pour développer, il est recommandé de faire
 
 ```
 docker-compose run --service-ports --rm app bash
