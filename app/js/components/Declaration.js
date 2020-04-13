@@ -25,6 +25,7 @@ import '../../scss/components/declaration.scss';
 const INITIAL_STATE = {
   goal: 80,
   trumpType: null,
+  declarationType: null,
 };
 
 const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer}) => {
@@ -89,17 +90,28 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
     })
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(event)
-    let type = event.target.name;
-    console.log(type)
+  const handleClick = (event) => {
+    
+    const type = event.target.name;
     let content = {}
     if (type !== trumpTypes.PASS) {
-      content = {...state}
+      content = {
+        trumpType: state.trumpType,
+        goal: state.goal,
+      }
     }
+    declare(tableId, currentPlayer.id, {type, content});
+  };
 
-    declare(tableId, currentPlayer.id, {type, content})
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const content = {
+      trumpType: state.trumpType,
+      goal: state.goal,
+    };
+    
+    declare(tableId, currentPlayer.id, {type: declarationTypes.DECLARE, content})
   };
 
   let isDisabled = false;
@@ -211,10 +223,10 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
             </div>
             <div className="field is-grouped is-grouped-centered">
               <p className="control">
-                <input className="button is-primary" type="submit" value={declarationTypes.DECLARE} placeholder="Annoncer" />
+                <button className="button is-primary" type="submit" name={declarationTypes.DECLARE}>Annoncer</button>
               </p>
               <p className="control">
-                <input className="button is-primary" type="submit" value={declarationTypes.PASS} placeholder="Passer" />
+                <button className="button is-primary" type="submit" name={declarationTypes.PASS} onClick={handleClick}>Passer</button>
               </p>
             </div>
           </form>
@@ -222,7 +234,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
         <div className="content media-right is-centered">
           <DeclarationHistory />
           <div className="buttons is-centered">
-            <button className="button is-primary" name={declarationTypes.COINCHE} >Coincher</button>
+            <button className="button is-primary" name={declarationTypes.COINCHE} onClick={handleClick}>Coincher</button>
           </div>
         </div>
       </div>

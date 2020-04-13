@@ -45,6 +45,7 @@
     "babel-plugin-wildcard": "^6.0.0",
     "concurrently": "^5.1.0",
     "jest": "^25.3.0",
+    "marked": "^0.8.2",
     "nodemon": "^2.0.2",
     "sass": "^1.26.3"
   }
