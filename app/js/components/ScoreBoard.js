@@ -4,6 +4,7 @@ import {selectTricks, selectPlayers} from '../redux/selectors';
 import {newGame} from '../redux/actions';
 import { LocalStateContext } from '../pages/GamePage.js';
 
+import Score from './Score';
 import Card from './Card';
 
 const ScoreBoard = ({players, tricks, newGame}) => {
@@ -11,6 +12,7 @@ const ScoreBoard = ({players, tricks, newGame}) => {
   const {tableId} = useContext(LocalStateContext);
   return (
     <div className="has-text-centered">
+      <Score />
       {
         players.map(p => {
           const playerTricks = tricks.filter(({playerIndex}) => p.index === playerIndex)

@@ -7,6 +7,7 @@ import { LocalStateContext } from '../pages/GamePage';
 import DeclarationHistory from './DeclarationHistory';
 import trumpTypes from '../../../shared/constants/trumpTypes';
 import declarationTypes from '../../../shared/constants/declarationTypes';
+import { last } from '../../../shared/utils/array';
 
 const HeartSymbol = require('../../images/heart.svg');
 const SpadesSymbol = require('../../images/spades.svg');
@@ -34,7 +35,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
 
   useEffect(() => {
     if (currentDeclaration) {
-      
+
       // If currentPlayer made a declaration and everybody else passed OR somebody coinched
       // launch the game
       if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (currentDeclaration.isCoinched)) {
@@ -90,7 +91,6 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
   };
 
   const handleClick = (event) => {
-    
     const type = event.target.name;
     let content = {}
     if (type !== trumpTypes.PASS) {
@@ -109,10 +109,12 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
       trumpType: state.trumpType,
       goal: state.goal,
     };
-    
     declare(tableId, currentPlayer.id, {type: declarationTypes.DECLARE, content})
   };
 
+  const isCoincheDisabled = false;
+  // const isCoincheDisabled = (currentDeclaration.content === last(declarationsHistory).content);
+  console.log(currentDeclaration, declarationsHistory);
   let isDisabled = false;
   if (!state.gameType) {
     isDisabled = false;
@@ -129,7 +131,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
               <label className="control number">Annonce</label>
               <div className="control level-item">
                 <input
-                  className="input" 
+                  className="input"
                   type="number"
                   disabled={state.goal === 250}
                   name="goal"
@@ -233,7 +235,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
         <div className="content media-right is-centered">
           <DeclarationHistory />
           <div className="buttons is-centered">
-            <button className="button is-primary" name={declarationTypes.COINCHE} onClick={handleClick}>Coincher</button>
+            <button className="button is-primary" name={declarationTypes.COINCHE} onClick={handleClick} disable={isCoincheDisabled}>Coincher</button>
           </div>
         </div>
       </div>

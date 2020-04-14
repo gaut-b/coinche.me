@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import actionTypes from './actionTypes';
 import {DECK32, DECK52} from '../constants/decks';
-import { sortHand, distribute, distributeCoinche, cutDeck } from '../utils/coinche';
+import { sortHand, distribute, distributeCoinche, cutDeck, countPlayerScore, hasBelote } from '../utils/coinche';
 import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
 import {shuffle, switchIndexes} from '../../shared/utils/array';
 
@@ -19,7 +19,7 @@ export const INITIAL_STATE = {
   }, {
     hand: [],
   }],
-  score: '',
+  score: null,
 };
 
 const rootReducer = (state = INITIAL_STATE, action) => {
@@ -111,7 +111,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       const card = action.payload;
       const playingPlayerIndex = state.players.findIndex(p => p.onTable === card);
       const trumpType = state.currentDeclaration.content.trumpType;
-      
+
       return {
         ...state,
         players: state.players.map((p, i) => {
@@ -228,6 +228,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         return {
           ...p,
           hand: sortHand(p.hand, trumpType),
+          hasBelote: hasBelote(p.hand, trumpType),
           isActivePlayer: (i === (dealerIndex + 1) % state.players.length),
         }
       })
@@ -236,6 +237,12 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ...state,
         players: playersUpdated,
         isGameStarted: true,
+      }
+    };
+    case actionTypes.GET_SCORE: {
+      return {
+        ...state,
+        score: countPlayerScore(state.tricks, state.currentDeclaration),
       }
     };
     default:

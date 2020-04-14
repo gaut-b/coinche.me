@@ -7,6 +7,8 @@ export const selectDeck = state => state.deck;
 export const selectCurrentDeclaration = state => state.currentDeclaration;
 export const selectDeclarationsHistory = state => state.declarationsHistory;
 export const selectIsGameStarted = state => state.isGameStarted;
+export const selectScore = state => state.score;
+export const selectIsCoinched = state => state.isCoinched;
 
 export const selectNbPlayers = createSelector(
   [selectPlayers],
@@ -51,4 +53,9 @@ export const selectLastTrick = createSelector(
 export const selectIsActivePlayer = createSelector(
   [selectCurrentPlayer],
   (player) => player.isActivePlayer,
+);
+
+export const selectLastMasterIndex = createSelector(
+  [selectLastTrick],
+  lastTrick => lastTrick.playerIndex,
 );

@@ -13,7 +13,7 @@ export const sortHand = (hand, trumpType) => {
   const sortedDiamonds = hand.filter(c => c.includes('D')).sort(sortingFunction);
 
   return [].concat(sortedSpades).concat(sortedHearts).concat(sortedClubs).concat(sortedDiamonds);
-}
+};
 
 export const distributeCoinche = (deck, players, dealerIndex) => {
   if (deck.length !== 32) return players;
@@ -76,9 +76,9 @@ export const countTrick = (trick, trumpType) => {
   }, 0)
 };
 
-export const countPlayerScore = (tricks, lastDeclaration={}) => {
-  if (!lastDeclaration.content) return {};
-  const {goal, trumpType} = lastDeclaration.content;
+export const countPlayerScore = (tricks, currentDeclaration={}) => {
+  if (!currentDeclaration.content) return {};
+  const {goal, trumpType} = currentDeclaration.content;
 
   return tricks.reduce((scoreList, trick) => {
     const currentScore = scoreList[trick.playerIndex] || 0;
@@ -104,4 +104,12 @@ export const sortByType = (trumpType) => {
       return gameScore[secondCardScoreType][secondCardValue] - gameScore[firstCardScoreType][firstCardValue] ;
     }
   }
-}
+};
+
+export const hasBelote = (hand=[], trumpType='') => {
+  if ((trumpType === trumpTypes.NO_TRUMP) || (trumpType === trumpTypes.ALL_TRUMP)) return false;
+
+  const king = "K" + trumpType;
+  const queen = "Q" + trumpType;
+  return hand.includes(king) && queen.includes(queen);
+};

@@ -32,5 +32,9 @@ $radius: 2rem;
 $easing: ease-in-out;
 $duration: .4s;
 
+$table-color: hsl(0, 0%, 21%);
+$table-background-color: $background;
+$table-striped-row-even-background-color: hsl(0, 0%, 98%);
+
 @import '~bulma/bulma';
 @import 'sections';

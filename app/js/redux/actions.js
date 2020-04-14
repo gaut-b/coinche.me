@@ -148,3 +148,17 @@ export function launchGame(tableId) {
     }
   }
 }
+
+export function getScore(tableId) {
+  return {
+    type: actionTypes.NO_LOCAL_EFFECT,
+    emit: socketEvents.DISPATCH,
+    payload: {
+      tableId,
+      action: {
+        type: actionTypes.GET_SCORE,
+        payload: {},
+      }
+    }
+  }
+}

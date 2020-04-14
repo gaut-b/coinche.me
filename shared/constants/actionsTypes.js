@@ -8,6 +8,7 @@ const actionTypes = {
   UNDO: 'UNDO',
   DECLARE: 'DECLARE',
   LAUNCH_GAME: 'LAUNCH_GAME',
+  GET_SCORE: 'GET_SCORE',
 };
 
 export default actionTypes;
