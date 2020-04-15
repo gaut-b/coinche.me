@@ -1,13 +1,13 @@
 @import '../variables';
 
 .declaration {
-  border: 2px solid black;
-  width: 50%;
-  height: 50%;
-  margin: 10% 25%;
+	border: 2px solid black;
+	width: 50%;
+	height: 50%;
+	margin: 10% 25%;
+	& .is-disabled {
+		pointer-events: none;
+		opacity: 0.4;
+	}
 }
 
-.is-disabled {
-  pointer-events: none;
-  opacity: 0.4;
-}

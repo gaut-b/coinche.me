@@ -53,7 +53,18 @@ export const selectLastTrick = createSelector(
 
 export const selectIsActivePlayer = createSelector(
   [selectCurrentPlayer],
-  (player) => player.isActivePlayer,
+  (player) => {
+    if (!player) return false;
+    return player.isActivePlayer;
+  },
+);
+
+export const selectActivePlayerName = createSelector(
+  [selectPlayers],
+  (players) => {
+    const activePlayer = players.find(p => p.isActivePlayer)
+    if (activePlayer) return activePlayer.name;
+  },
 );
 
 export const selectLastMasterIndex = createSelector(
