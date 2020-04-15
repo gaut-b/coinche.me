@@ -2,24 +2,18 @@ import React, { useState, useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
 import { declare, launchGame, newGame } from '../redux/actions';
 import { createStructuredSelector } from 'reselect';
-import { selectPlayers, selectCurrentPlayer, selectCurrentDeclaration, selectIsActivePlayer, selectDeclarationsHistory } from '../redux/selectors';
 import { LocalStateContext } from '../pages/GamePage';
 import DeclarationHistory from './DeclarationHistory';
 import trumpTypes from '../../../shared/constants/trumpTypes';
 import declarationTypes from '../../../shared/constants/declarationTypes';
 import { last } from '../../../shared/utils/array';
-
-const HeartSymbol = require('../../images/heart.svg');
-const SpadesSymbol = require('../../images/spades.svg');
-const DiamondSymbol = require('../../images/diamonds.svg');
-const ClubSymbol = require('../../images/clubs.svg');
-
-const symbols = {
-  'H': HeartSymbol,
-  'S': SpadesSymbol,
-  'D': DiamondSymbol,
-  'C': ClubSymbol,
-};
+import cardSymbols from '../../images/symbols';
+import {selectPlayers,
+        selectCurrentPlayer,
+        selectCurrentDeclaration,
+        selectIsActivePlayer,
+        selectDeclarationsHistory,
+        selectPartnerId } from '../redux/selectors';
 
 import '../../scss/components/declaration.scss';
 
@@ -28,7 +22,7 @@ const INITIAL_STATE = {
   trumpType: null,
 };
 
-const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer}) => {
+const Declaration = ({ players, currentPlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer, partnerId }) => {
 
   const {tableId} = useContext(LocalStateContext);
   const [state, setState] = useState(INITIAL_STATE);
@@ -36,16 +30,15 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
   useEffect(() => {
     if (currentDeclaration) {
 
-      // If currentPlayer made a declaration and everybody else passed OR somebody coinched
-      // launch the game
-      if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (currentDeclaration.isCoinched)) {
+      // If currentPlayer made a declaration and everybody else passed OR someone has surcoinched 
+      //  => launch the game
+      if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (currentDeclaration.isCoinched === 4)) {
         launchGame(tableId);
         return;
       };
 
-      // If everybody passed, create a new game
+      // If everybody passed => create a new game
       if ((declarationsHistory.length === 4) && (!Object.entries(currentDeclaration.content).length)) {
-        console.log('new game')
         newGame(tableId);
         return;
       };
@@ -112,18 +105,19 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
     declare(tableId, currentPlayer.id, {type: declarationTypes.DECLARE, content})
   };
 
-  const isCoincheDisabled = false;
-  // const isCoincheDisabled = (currentDeclaration.content === last(declarationsHistory).content);
-  console.log(currentDeclaration, declarationsHistory);
-  let isDisabled = false;
-  if (!state.gameType) {
-    isDisabled = false;
-  } else if (currentDeclaration) {
-    isDisabled = currentDeclaration.content.goal === 250;
-  };
+  let isCoincheVisible = false;
+  let isDeclareDisabled = false;
+  let isCoinched = false;
+
+  if (currentDeclaration) {
+    const lastBidder = last(declarationsHistory).playerId;
+    isCoinched = (currentDeclaration.isCoinched);
+    isCoincheVisible = (partnerId !== lastBidder) && (currentPlayer.id !== lastBidder);
+    isDeclareDisabled = (currentDeclaration.content.goal === 250) || isCoinched;
+  }
 
   return (
-    <div className="declaration box modal is-active" >
+    <div className="declaration box modal is-active">
       <div className="modal-content media">
         <div className={`content media-left ${(isActivePlayer) ? null : 'is-disabled'}`}>
           <form onSubmit={handleSubmit}>
@@ -164,7 +158,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
                   onChange={handleChange}
                   required
                 />
-                <span className="icon is-medium is-center"><img src={symbols['S']} alt="SpadesSymbol"/></span>
+                <span className="icon is-medium is-center"><img src={cardSymbols['S']} alt="SpadesSymbol"/></span>
               </label>
               <label className="control level-item" onChange={handleChange}>
                 <input
@@ -175,7 +169,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
                   onChange={handleChange}
                   checked={state.trumpType === trumpTypes.H}
                 />
-                <span className="icon is-medium is-center"><img src={symbols['H']} alt="HeartSymbol"/></span>
+                <span className="icon is-medium is-center"><img src={cardSymbols['H']} alt="HeartSymbol"/></span>
               </label>
               <label className="control level-item" onChange={handleChange}>
                 <input
@@ -186,7 +180,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
                   checked={state.trumpType === trumpTypes.D}
                   onChange={handleChange}
                 />
-                <span className="icon is-medium is-center"><img src={symbols['D']} alt="DiamondSymbol" /></span>
+                <span className="icon is-medium is-center"><img src={cardSymbols['D']} alt="DiamondSymbol" /></span>
               </label>
               <label className="control radio level-item" onChange={handleChange}>
                 <input
@@ -197,7 +191,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
                   checked={state.trumpType === trumpTypes.C}
                   onChange={e => handleChange(e)}
                 />
-                <span className="icon is-medium is-center"><img src={symbols['C']} alt="ClubsSymbol"/></span>
+                <span className="icon is-medium is-center"><img src={cardSymbols['C']} alt="ClubsSymbol"/></span>
               </label>
               <label className="control level-item" onChange={handleChange}>
                 <input
@@ -224,7 +218,7 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
             </div>
             <div className="field is-grouped is-grouped-centered">
               <p className="control">
-                <button className="button is-primary" type="submit" name={declarationTypes.DECLARE}>Annoncer</button>
+                <button className="button is-primary" type="submit" name={declarationTypes.DECLARE} disabled={isDeclareDisabled}>Annoncer</button>
               </p>
               <p className="control">
                 <button className="button is-primary" type="submit" name={declarationTypes.PASS} onClick={handleClick}>Passer</button>
@@ -235,7 +229,13 @@ const Declaration = ({players, currentPlayer, currentDeclaration, declarationsHi
         <div className="content media-right is-centered">
           <DeclarationHistory />
           <div className="buttons is-centered">
-            <button className="button is-primary" name={declarationTypes.COINCHE} onClick={handleClick} disable={isCoincheDisabled}>Coincher</button>
+            <button
+              className={`button is-primary ${!isCoincheVisible ? 'is-hidden' : ''}`}
+              name={declarationTypes.COINCHE}
+              onClick={handleClick}
+             >
+              {`${!isCoinched ? 'Coincher' : 'Surcoincher'}`}
+             </button>
           </div>
         </div>
       </div>
@@ -249,6 +249,7 @@ const mapStateToProps = createStructuredSelector({
   currentDeclaration: selectCurrentDeclaration,
   declarationsHistory: selectDeclarationsHistory,
   isActivePlayer: selectIsActivePlayer,
+  partnerId: selectPartnerId,
 });
 
 const mapDispatchToProps = (dispatch) => ({

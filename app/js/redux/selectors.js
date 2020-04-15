@@ -9,6 +9,7 @@ export const selectDeclarationsHistory = state => state.declarationsHistory;
 export const selectIsGameStarted = state => state.isGameStarted;
 export const selectScore = state => state.score;
 export const selectIsCoinched = state => state.isCoinched;
+export const selectTeams = state => state.teams;
 
 export const selectNbPlayers = createSelector(
   [selectPlayers],
@@ -58,4 +59,12 @@ export const selectIsActivePlayer = createSelector(
 export const selectLastMasterIndex = createSelector(
   [selectLastTrick],
   lastTrick => lastTrick.playerIndex,
+);
+
+export const selectPartnerId = createSelector(
+  [selectCurrentPlayer, selectTeams],
+  (currentPlayer, teams) => {
+    const team = teams.find(team => team.players.includes(currentPlayer.id))
+    return team.players.find(playerId => playerId !== currentPlayer.id)
+  },
 );

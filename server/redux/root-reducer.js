@@ -9,6 +9,9 @@ import {shuffle, switchIndexes} from '../../shared/utils/array';
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
   isGameStarted: false,
+  currentDeclaration: null,
+  declarationsHistory: null,
+  teams: null,
   tricks: [],
   players: [{
     hand: [],
@@ -75,12 +78,21 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         isActivePlayer: index === ((dealerIndex + 1) % state.players.length),
       }));
 
+      const teams = (state.teams) || state.players.reduce((teams, p, index) => {
+        console.log(p)
+        teams[index % 2] = teams[index % 2] || {};
+        teams[index % 2].players = teams[index % 2].players || [];
+        teams[index % 2].players.push(p.id)
+        return teams;
+      }, [])
+
       // const playersWithCards = distribute(state.deck, playersWithDealer, dealerIndex);
       const playersWithCards = distributeCoinche(state.deck, playersWithDealer, dealerIndex);
 
       return {
         ...state,
         tricks: [],
+        teams,
         players: playersWithCards
       };
     };
@@ -197,8 +209,8 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       });
 
       const declarationsHistory = (state.declarationsHistory || []).concat({playerId, content: declaration.content});
-      let currentDeclaration = (state.currentDeclaration) 
-      ? {...state.currentDeclaration} 
+      let currentDeclaration = (state.currentDeclaration)
+      ? {...state.currentDeclaration}
       : {
         playerId: undefined,
         content: {},
@@ -210,7 +222,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           content: declaration.content,
         }
       } else if (declaration.type === 'COINCHE') {
-        currentDeclaration.isCoinched = true
+        currentDeclaration.isCoinched = (currentDeclaration.isCoinched || 0) + 2;
       };
 
       return {
