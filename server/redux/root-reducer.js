@@ -145,7 +145,9 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       const newTrick = {
         playerIndex,
-        cards: state.players.map(p => p.onTable),
+        cards: state.players.map((_, index) => {
+          return state.players[(playerIndex + index) % state.players.length].onTable;
+        });
       };
       if (newTrick.cards.length < state.players.length) {
         return state;
@@ -192,7 +194,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         team.totalScore += (team.currentGame.gameTotal || 0);
         team.currentGame = null;
         return team;
-      })
+      });
 
       const newDealerIndex = state.players.findIndex(p => p.isDealer);
       const playersWithCards = distributeCoinche(newDeck, resetedPlayers, newDealerIndex);
