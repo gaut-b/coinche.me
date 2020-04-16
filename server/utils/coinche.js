@@ -1,7 +1,7 @@
 import { DECK32 } from '../constants/decks';
 import trumpTypes from '../../shared/constants/trumpTypes';
 import gameScore from '../constants/gameScore';
-
+import { next } from '../../shared/utils/array';
 
 export const sortHand = (hand, trumpType) => {
 
