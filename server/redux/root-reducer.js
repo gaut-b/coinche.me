@@ -3,7 +3,7 @@ import actionTypes from './actionTypes';
 import {DECK32, DECK52} from '../constants/decks';
 import { sortHand, distribute, distributeCoinche, cutDeck, countPlayerScore, hasBelote } from '../utils/coinche';
 import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
-import {shuffle, switchIndexes} from '../../shared/utils/array';
+import {shuffle, last, switchIndexes} from '../../shared/utils/array';
 
 
 export const INITIAL_STATE = {
@@ -11,7 +11,7 @@ export const INITIAL_STATE = {
   isGameStarted: false,
   currentDeclaration: null,
   declarationsHistory: null,
-  teams: null,
+  teams: [],
   tricks: [],
   players: [{
     hand: [],
@@ -78,13 +78,14 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         isActivePlayer: index === ((dealerIndex + 1) % state.players.length),
       }));
 
-      const teams = (state.teams) || state.players.reduce((teams, p, index) => {
-        console.log(p)
-        teams[index % 2] = teams[index % 2] || {};
-        teams[index % 2].players = teams[index % 2].players || [];
-        teams[index % 2].players.push(p.id)
-        return teams;
-      }, [])
+      const teams = (state.teams.length)
+      ? (state.teams)
+      : state.players.reduce((teams, p, index) => {
+          teams[index % 2] = teams[index % 2] || {};
+          teams[index % 2].players = teams[index % 2].players || [];
+          teams[index % 2].players.push(p.id)
+          return teams;
+        }, [])
 
       // const playersWithCards = distribute(state.deck, playersWithDealer, dealerIndex);
       const playersWithCards = distributeCoinche(state.deck, playersWithDealer, dealerIndex);
@@ -186,11 +187,19 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         }
       });
 
+      const updatedTeams = state.teams.map(team => {
+        if (!team.currentGame) return team;
+        team.totalScore += (team.currentGame.gameTotal || 0);
+        team.currentGame = null;
+        return team;
+      })
+
       const newDealerIndex = state.players.findIndex(p => p.isDealer);
       const playersWithCards = distributeCoinche(newDeck, resetedPlayers, newDealerIndex);
 
       return {
         ...state,
+        teams: updatedTeams,
         isGameStarted: false,
         deck: newDeck,
         tricks: [],
@@ -252,9 +261,43 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       }
     };
     case actionTypes.GET_SCORE: {
+      const currentDeclaration = state.currentDeclaration
+      const allPlayerScore = countPlayerScore(state.tricks, state.currentDeclaration);
+
+      const updatedTeams = state.teams.map( team => {
+        team.currentGame = team.players.reduce((currentGame, playerId) => {
+          const playerIndex = state.players.findIndex(p => p.id === playerId)
+          const hasLastTen = (last(state.tricks).playerIndex === playerIndex);
+          const playerScore = allPlayerScore[playerIndex] || 0;
+
+          currentGame.gameScore = (currentGame.gameScore || 0) + playerScore;
+          currentGame.hasBelote = (currentGame.hasBelote) || state.players[playerIndex].hasBelote;
+          currentGame.hasLastTen = (currentGame.hasLastTen) || hasLastTen;
+          currentGame.isBidderTeam = (currentGame.isBidderTeam) || (currentDeclaration.playerId === playerId);
+          return currentGame;
+        }, {});
+
+        const lastTen = team.currentGame.hasLastTen ? 10 : 0;
+        const belote = team.currentGame.hasBelote ? 20 : 0;
+        const coef = (!currentDeclaration.isCoinched) ? 1 : currentDeclaration.isCoinched;
+        const preTotal = team.currentGame.gameScore + lastTen;
+        if ((currentDeclaration.content.goal === 250) && (preTotal === 162)) {
+          team.currentGame.gameTotal = 250 * coef + belote;
+        } else if ((team.currentGame.isBidderTeam) && (preTotal >= currentDeclaration.content.goal)) {
+          team.currentGame.gameTotal = currentDeclaration.content.goal * coef + belote;
+        } else if ((team.currentGame.isBidderTeam) && (preTotal < currentDeclaration.content.goal)) {
+          team.currentGame.gameTotal = belote;
+        } else if ((!team.currentGame.isBidderTeam) && (preTotal > (162 - currentDeclaration.content.goal))) {
+          team.currentGame.gameTotal = 162 * coef + belote;
+        } else if ((!team.currentGame.isBidderTeam) && (preTotal <= (162 - currentDeclaration.content.goal))) {
+          team.currentGame.gameTotal = preTotal + belote;
+        };
+        return team;
+      });
+
       return {
         ...state,
-        score: countPlayerScore(state.tricks, state.currentDeclaration),
+        teams: updatedTeams,
       }
     };
     default:

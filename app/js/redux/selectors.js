@@ -8,7 +8,6 @@ export const selectCurrentDeclaration = state => state.currentDeclaration;
 export const selectDeclarationsHistory = state => state.declarationsHistory;
 export const selectIsGameStarted = state => state.isGameStarted;
 export const selectScore = state => state.score;
-export const selectIsCoinched = state => state.isCoinched;
 export const selectTeams = state => state.teams;
 
 export const selectNbPlayers = createSelector(
