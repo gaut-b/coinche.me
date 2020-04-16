@@ -146,8 +146,8 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       const newTrick = {
         playerIndex,
         cards: state.players.map((_, index) => {
-          return state.players[(playerIndex + index) % state.players.length].onTable;
-        });
+          return state.players[(playerIndex + index) % state.players.length].onTable
+        }),
       };
       if (newTrick.cards.length < state.players.length) {
         return state;
@@ -191,7 +191,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       const updatedTeams = state.teams.map(team => {
         if (!team.currentGame) return team;
-        team.totalScore += (team.currentGame.gameTotal || 0);
+        team.totalScore = (team.totalScore || 0) + team.currentGame.gameTotal;
         team.currentGame = null;
         return team;
       });
@@ -200,7 +200,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       const playersWithCards = distributeCoinche(newDeck, resetedPlayers, newDealerIndex);
 
       return {
-        ...state,
+        ...INITIAL_STATE,
         teams: updatedTeams,
         isGameStarted: false,
         deck: newDeck,
@@ -283,17 +283,27 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         const belote = team.currentGame.hasBelote ? 20 : 0;
         const coef = (!currentDeclaration.isCoinched) ? 1 : currentDeclaration.isCoinched;
         const preTotal = team.currentGame.gameScore + lastTen;
-        if ((currentDeclaration.content.goal === 250) && (preTotal === 162)) {
-          team.currentGame.gameTotal = 250 * coef + belote;
-        } else if ((team.currentGame.isBidderTeam) && (preTotal >= currentDeclaration.content.goal)) {
-          team.currentGame.gameTotal = currentDeclaration.content.goal * coef + belote;
-        } else if ((team.currentGame.isBidderTeam) && (preTotal < currentDeclaration.content.goal)) {
-          team.currentGame.gameTotal = belote;
-        } else if ((!team.currentGame.isBidderTeam) && (preTotal > (162 - currentDeclaration.content.goal))) {
-          team.currentGame.gameTotal = 162 * coef + belote;
-        } else if ((!team.currentGame.isBidderTeam) && (preTotal <= (162 - currentDeclaration.content.goal))) {
-          team.currentGame.gameTotal = preTotal + belote;
-        };
+
+        if (team.currentGame.isBidderTeam) {
+          if (preTotal < 82) {
+            team.currentGame.gameTotal = belote;
+          } else if ((currentDeclaration.content.goal === 250) && (preTotal === 162)) {
+            team.currentGame.gameTotal = 250 * coef + belote;
+          } else if ((preTotal + belote) >= currentDeclaration.content.goal) {
+            team.currentGame.gameTotal = currentDeclaration.content.goal * coef + belote;
+          } else if ((preTotal + belote) < currentDeclaration.content.goal) {
+            team.currentGame.gameTotal =  belote;
+          }
+        } else {
+          if (currentDeclaration.content.goal === 250) {
+            if (preTotal !== 0) team.currentGame.gameTotal = 162 * coef + belote;
+            else team.currentGame.gameTotal = belote;
+          } else if (preTotal <= (162 - currentDeclaration.content.goal)) {
+            team.currentGame.gameTotal = preTotal + belote;
+          } else {
+            team.currentGame.gameTotal = 162 * coef + belote;
+          }
+        }
         return team;
       });
 
