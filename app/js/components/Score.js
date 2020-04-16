@@ -30,8 +30,8 @@ const Score = ({ getScore, score, players, currentPlayer, lastMasterIndex, curre
 							<tr>Points</tr>
 							<tr>Dix de der</tr>
 							<tr>Belote</tr>
-							<tr>total de la partie</tr>
-							<tr>Total du jeu</tr>
+							<tr>Total</tr>
+							<tr>Total de la partie</tr>
 						</tbody>
 					</table>
 				</td>

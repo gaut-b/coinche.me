@@ -18,6 +18,8 @@ import Player from './Player.js';
 import Controls from './Controls.js';
 import ScoreBoard from './ScoreBoard.js';
 import Declaration from './Declaration.js';
+import ScoreReminder from './ScoreReminder.js';
+import DeclarationReminder from './DeclarationReminder';
 
 const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsubscribeServerUpdate, isGameStarted, tricks}) => {
   const {tableId} = useContext(LocalStateContext);
@@ -39,6 +41,7 @@ const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsub
         {!isGameStarted ? <Declaration /> : null}
         <div className="level is-mobile">
           <Player position={NORTH} />
+          {isGameStarted ? <DeclarationReminder /> : null}
         </div>
         <div className="level is-mobile">
           <Player position={WEST} />
@@ -49,6 +52,7 @@ const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsub
         </div>
         <div className="level is-mobile">
           <Player position={SOUTH} />
+          <ScoreReminder />
         </div>
       </div>
     );
