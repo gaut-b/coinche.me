@@ -22,6 +22,7 @@ export const INITIAL_STATE = {
   }, {
     hand: [],
   }],
+  preferences: {},
   score: null,
 };
 
