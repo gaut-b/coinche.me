@@ -110,9 +110,10 @@ const Declaration = ({ players, currentPlayer, currentDeclaration, declarationsH
   let isCoinched = false;
 
   if (currentDeclaration) {
-    const lastBidder = last(declarationsHistory).playerId;
+    const lastBid = last(declarationsHistory);
+    console.log('currentPlayerId', currentPlayer.id, 'lastBidId', lastBid.playerId, 'partnerId', partnerId, 'currentDeclaration.playerId', currentDeclaration.playerId);
     isCoinched = (currentDeclaration.isCoinched);
-    isCoincheVisible = (partnerId !== lastBidder) && (currentPlayer.id !== lastBidder);
+    isCoincheVisible = (currentPlayer.id !== lastBid.playerId) && (partnerId !== lastBid.playerId) && (currentDeclaration.playerId === lastBid.playerId);
     isDeclareDisabled = (currentDeclaration.content.goal === 250) || isCoinched;
   }
 
