@@ -16,7 +16,7 @@ import {localstorageUsernameKey} from '../constants';
 import Table from './Table.js';
 import Player from './Player.js';
 import Controls from './Controls.js';
-import ScoreBoard from './ScoreBoard.js';
+import Score from './Score.js';
 import Declaration from './Declaration.js';
 import ScoreReminder from './ScoreReminder.js';
 import DeclarationReminder from './DeclarationReminder';
@@ -61,7 +61,7 @@ const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsub
   const GameComponent = () => {
     if (!isDistributed && !tricks.length) return <Controls />;
 
-    return (isLastTrick) ? <ScoreBoard /> : <GameTable />;
+    return (isLastTrick) ? <Score /> : <GameTable />;
   }
 
   return GameComponent();

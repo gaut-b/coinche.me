@@ -1,76 +1,60 @@
-import React, { useEffect, useContext } from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { getScore } from '../redux/actions';
+import React, {useContext} from 'react';
+import {connect} from 'react-redux';
+import {selectTricks, selectPlayers, selectTeams} from '../redux/selectors';
+import {newGame} from '../redux/actions';
 import { LocalStateContext } from '../pages/GamePage.js';
-import {selectScore,
-				selectPlayers,
-				selectLastMasterIndex,
-				selectCurrentPlayer,
-				selectCurrentDeclaration,
-				selectTeams,
-				selectPartnerId } from '../redux/selectors';
 
-const Score = ({ getScore, score, players, currentPlayer, lastMasterIndex, currentDeclaration, teams, partnerId }) => {
+import ScoreBoard from './ScoreBoard';
+import Card from './Card';
 
-	const {tableId} = useContext(LocalStateContext);
+const Score = ({players, tricks, teams, newGame}) => {
 
-	useEffect(() => {
-	  getScore(tableId)
-	}, []);
+  const {tableId} = useContext(LocalStateContext);
 
-	return (
-		<div className="table-container">
-			<table className="table is-fullwidth">
-			<tr>
-				<td>
-					<table className="table is-fullwidth">
-						<thead><tr><td>&nbsp;</td></tr></thead>
-						<tbody>
-							<tr>Points</tr>
-							<tr>Dix de der</tr>
-							<tr>Belote</tr>
-							<tr>Total</tr>
-							<tr>Total de la partie</tr>
-						</tbody>
-					</table>
-				</td>
-				{
-					teams.map( (team) => {
-						return (!team.currentGame) ?
-							null :
-							<td key={team.name}>
-								<table className="table is-fullwidth">
-									<thead><tr><td>{team.name}</td></tr></thead>
-									<tbody>
-										<tr>{team.currentGame.gameScore}</tr>
-										<tr>{(team.currentGame.hasLastTen) ? 10 : 0}</tr>
-										<tr>{(team.currentGame.hasBelote) ? 20 : 0}</tr>
-										<tr>{team.currentGame.gameTotal}</tr>
-										<tr>{(team.totalScore || 0) + team.currentGame.gameTotal}</tr>
-									</tbody>
-								</table>
-							</td>
-					})
-				}
-			</tr>
-			</table>
-		</div>
-	);
+  const teamTricks = teams.reduce((teamTricks, team) => {
+
+    const playersTricks = team.players.reduce((playerTricks, playerId) => {
+      const pIndex = players.findIndex(p => p.id === playerId);
+      const cards =  tricks.find(({playerIndex}) => playerIndex === pIndex)
+        ? tricks.find(({playerIndex}) => playerIndex === pIndex).cards
+        : [];
+      return [...playerTricks, ...cards];
+    }, []);
+
+    teamTricks[team.name] = playersTricks;
+    return teamTricks;
+  }, {});
+
+  return (
+    <div className="has-text-centered">
+      <ScoreBoard />
+      {
+        Object.entries(teamTricks).map(([name, tricks]) => {
+          return (
+            <div key={name}>
+              <h2>{name}</h2>
+              <div className="hand">
+              {
+                tricks.length ? tricks.map(c => <Card key={c} value={c} />) : <div>Vous n'avez fait aucun plis</div>
+              }
+              </div>
+            </div>
+          );
+        })
+      }
+      <button className="button is-primary is-large" onClick={() => newGame(tableId)} style={{marginTop: '2rem'}}>New game</button>
+    </div>
+  );
 };
 
 const mapDispatchToProps = (dispatch) => ({
-	getScore: (tableId) => dispatch(getScore(tableId)),
+  newGame: (tableId) => dispatch(newGame(tableId)),
 });
 
-const mapStateToProps = createStructuredSelector({
-	score: selectScore,
-	players: selectPlayers,
-	lastMasterIndex: selectLastMasterIndex,
-	currentPlayer: selectCurrentPlayer,
-	currentDeclaration: selectCurrentDeclaration,
-	teams: selectTeams,
-	partnerId: selectPartnerId
-});
+const mapStateToProps = (state) => ({
+  players: selectPlayers(state),
+  tricks: selectTricks(state),
+  teams: selectTeams(state),
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Score);
