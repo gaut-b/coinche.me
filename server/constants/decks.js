@@ -1,10 +1,9 @@
-const numberRange = (from, to) => {
-  return [...Array(to - from + 1).keys()].map(i => `${i+from}`)
-}
+import {range} from '../../shared/utils/array';
+
 const colorLetters = ['C', 'D', 'H', 'S'];
 const headsLetters = ['J', 'Q', 'K', 'A'];
-const numbers52 = numberRange(2, 10).concat(headsLetters);
-const numbers32 = numberRange(7, 10).concat(headsLetters);
+const numbers52 = range(2, 10).concat(headsLetters);
+const numbers32 = range(7, 10).concat(headsLetters);
 
 const buildDeck = (numbers, letters) => {
   return numbers.reduce((result, nb) => {

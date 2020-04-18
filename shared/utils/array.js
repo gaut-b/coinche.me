@@ -17,3 +17,26 @@ export const next = (a, i) => a[(i+1) % a.length];
 export const switchIndexes = (a, index1, index2) => {
   return Object.assign([], a, {[index1]: a[index2], [index2]: a[index1]});
 };
+
+export const range = (from, to) => {
+  return [...Array(to - from + 1).keys()].map(i => `${i+from}`)
+}
+
+export const groupBy = (array, mapFunc) => {
+  return array.reduce((result, elem, i) => {
+    const key = mapFunc(elem, i, result);
+    return {
+      ...result,
+      [key]: (result[key] || []).concat(elem),
+    }
+  }, {});
+};
+
+export const partition = (array, mapFunc) => {
+  return array.reduce((result, elem, i) => {
+    const key = mapFunc(elem, i, result);
+    result[key] = (result[key] || []).concat(elem);
+    return result
+  }, []);
+};
+

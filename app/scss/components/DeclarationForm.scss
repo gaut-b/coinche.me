@@ -1,0 +1,15 @@
+@import '../variables';
+
+.declaration {
+	@include table-space();
+	margin-bottom: 0;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	&.is-disabled .form {
+		pointer-events: none;
+		opacity: 0.4;
+	}
+}
+

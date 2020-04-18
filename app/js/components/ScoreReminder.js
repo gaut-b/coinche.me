@@ -11,14 +11,14 @@ const ScoreReminder = ({ teams }) => {
 				<thead>
 					<tr>
 						{teams.map( team =>
-							<td>{team.name}</td>
+							<td key={team.name}>{team.name}</td>
 						)}
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						{teams.map( team =>
-							<td>{team.totalScore || 0}</td>
+							<td key={team.name}>{team.totalScore || 0}</td>
 						)}
 					</tr>
 				</tbody>

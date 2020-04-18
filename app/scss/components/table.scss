@@ -1,20 +1,11 @@
 @import '../variables';
 
-// $card_ratio: 1.39375;
-// $card_width: 8rem;
-// $card_height: $card_width * $card_ratio;
-// $card_height: 12rem;
-// $card_width: $card_height / $card_ratio;
-// $card_space: $card_width / 4;
-
-
 .playing-table {
-  position: relative;
-  height: 2 * ($card_height + $card_space);
-  // max-height: $card_height;
-  // width: 2 * ($card_width + $card_space);
-  width: 100%;
-  margin-bottom: 4rem;
+  @include table-space();
+  // position: relative;
+  // height: 2 * ($card_height + $card_space);
+  // width: 100%;
+  // margin-bottom: 4rem;
 
   button.is-collect {
     position: absolute;

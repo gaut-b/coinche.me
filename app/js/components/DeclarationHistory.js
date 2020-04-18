@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import trumpTypes from '../../../shared/constants/trumpTypes';
 import { selectPlayers, selectCurrentPlayer, selectCurrentDeclaration, selectDeclarationsHistory } from '../redux/selectors';
 import cardSymbols from '../../images/symbols';
-
+import {name} from '../../../shared/utils/player';
 
 const DeclarationHistory = ({declarations, currentDeclaration, players, playerId}) => {
 
@@ -13,6 +13,7 @@ const DeclarationHistory = ({declarations, currentDeclaration, players, playerId
         <ul>
           {
             declarations.map(({playerId, content}, index) => {
+              const player = players.find(p => p.id === playerId);
               switch (content.trumpType) {
                 case trumpTypes.S:
                 case trumpTypes.H:
@@ -20,7 +21,7 @@ const DeclarationHistory = ({declarations, currentDeclaration, players, playerId
                 case trumpTypes.C:
                   return (
                     <li key={index}>
-                      {`${players.find(p => p.id === playerId).name || 'BOT'} a annoncé ${(content.goal !== 250) ? content.goal : 'capot'}  `}
+                      {`${name(player)} a annoncé ${(content.goal !== 250) ? content.goal : 'capot'}  `}
                       <span className="icon is-small">
                         <img src={cardSymbols[content.trumpType]}/>
                       </span>
@@ -29,19 +30,19 @@ const DeclarationHistory = ({declarations, currentDeclaration, players, playerId
                 case trumpTypes.NO_TRUMP:
                   return (
                     <li key={index}>
-                      {`${players.find(p => p.id === playerId).name || 'BOT'} a annoncé ${content.goal} sans atouts`}
+                      {`${name(player)} a annoncé ${content.goal} sans atouts`}
                     </li>
                   );
                 case trumpTypes.ALL_TRUMP:
                   return (
                     <li key={index}>
-                      {`${players.find(p => p.id === playerId).name || 'BOT'} a annoncé ${content.goal} tout atout`}
+                      {`${name(player)} a annoncé ${content.goal} tout atout`}
                     </li>
                   );
                 default:
                   return (
                     <li key={index}>
-                      {`${players.find(p => p.id === playerId).name || 'BOT'} a ${currentDeclaration.isCoinched ? 'coinché' : 'passé'}`}
+                      {`${name(player)} a ${currentDeclaration.isCoinched ? 'coinché' : 'passé'}`}
                     </li>
                   );
                 }

@@ -14,7 +14,7 @@ import Table from './Table.js';
 import Player from './Player.js';
 import Controls from './Controls.js';
 import Score from './Score.js';
-import Declaration from './Declaration.js';
+import DeclarationForm from './DeclarationForm.js';
 import ScoreReminder from './ScoreReminder.js';
 import DeclarationReminder from './DeclarationReminder';
 
@@ -32,7 +32,7 @@ const Game = ({onTable, isDistributed, isLastTrick, isGameStarted, tricks}) => {
           <div className="level is-mobile">
             <Player position={WEST} />
             <div className="level-item">
-            {!isGameStarted ? <Declaration /> : <Table />}
+            {!isGameStarted ? <DeclarationForm /> : <Table />}
             </div>
             <Player position={EAST} />
           </div>

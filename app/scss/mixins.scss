@@ -2,3 +2,10 @@
   background: url(../images/leather_1.png);
   background-color: $background;
 }
+
+@mixin table-space() {
+  position: relative;
+  height: 2 * ($card_height + $card_space);
+  width: 100%;
+  margin-bottom: 4rem;
+}

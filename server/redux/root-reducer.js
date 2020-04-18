@@ -3,14 +3,14 @@ import actionTypes from './actionTypes';
 import {DECK32, DECK52} from '../constants/decks';
 import { sortHand, distribute, distributeCoinche, cutDeck, countPlayerScore, hasBelote } from '../utils/coinche';
 import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
-import {shuffle, first, next, last, switchIndexes} from '../../shared/utils/array';
-
+import {shuffle, first, next, last, switchIndexes, partition} from '../../shared/utils/array';
+import declarationTypes from '../../shared/constants/declarationTypes';
 
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
   isGameStarted: false,
   currentDeclaration: null,
-  declarationsHistory: null,
+  declarationsHistory: [],
   teams: [],
   tricks: [],
   players: Array(4).fill({
@@ -85,14 +85,10 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       const teams = (state.teams.length)
       ? (state.teams)
-      : state.players.reduce((teams, p, index) => {
-          teams[index % 2] = teams[index % 2] || {};
-          teams[index % 2].players = teams[index % 2].players || [];
-          teams[index % 2].players.push(p.id)
-          return teams;
-        }, [])
+      : partition(state.players.map(p => p.id), (p, i) => i%2).map(players => ({
+        players,
+      }))
 
-      // const playersWithCards = distribute(state.deck, playersWithDealer, dealerIndex);
       const playersWithCards = distributeCoinche(state.deck, playersWithDealer, dealerIndex);
 
       return {
@@ -234,12 +230,12 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         content: {},
       }
 
-      if (declaration.type === 'DECLARE') {
+      if (declaration.type === declarationTypes.DECLARE) {
         currentDeclaration = {
           playerId: playerId,
           content: declaration.content,
         }
-      } else if (declaration.type === 'COINCHE') {
+      } else if (declaration.type === declarationTypes.COINCHE) {
         currentDeclaration.isCoinched = (currentDeclaration.isCoinched || 0) + 2;
       };
 
