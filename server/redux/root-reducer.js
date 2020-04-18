@@ -13,15 +13,13 @@ export const INITIAL_STATE = {
   declarationsHistory: null,
   teams: [],
   tricks: [],
-  players: [{
+  players: Array(4).fill({
+    name: null,
+    id: null,
     hand: [],
-  }, {
-    hand: [],
-  }, {
-    hand: [],
-  }, {
-    hand: [],
-  }],
+    sockets: [],
+    disconnected: false,
+  }),
   preferences: {},
   score: null,
 };
@@ -29,10 +27,12 @@ export const INITIAL_STATE = {
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case actionTypes.JOIN:
-      const {playerId, playerName} = action.payload;
-      const sameNamePlayerIndex = state.players.findIndex(p => p.name === playerName);
+      const {playerId, playerName, socketId} = action.payload;
+      const samePlayerIndex = state.players.findIndex(p => p.id === playerId);
       const firstAvailableIndex = state.players.findIndex(p => !p.id);
-      const newPlayerIndex = sameNamePlayerIndex === -1 ? firstAvailableIndex : sameNamePlayerIndex;
+      const firstDisconnectedIndex = state.players.findIndex(p => p.disconnected);
+      const newPlayerIndex = [samePlayerIndex, firstAvailableIndex, firstDisconnectedIndex].find(i => i > -1);
+      if (newPlayerIndex === undefined) return state;
       return {
         ...state,
         players: state.players.map((p, i) => {
@@ -41,6 +41,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
               ...p,
               id: playerId,
               name: playerName || p.name || `Joueur ${i+1}`,
+              sockets: p.sockets.concat(socketId),
               disconnected: false,
             }
           } else {
@@ -52,9 +53,11 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         players: state.players.map(p => {
+          const filteredSockets = p.sockets.filter(s => s !== action.payload);
           return {
             ...p,
-            disconnected: p.id === action.payload,
+            sockets: filteredSockets,
+            disconnected: p.id && filteredSockets.length === 0,
           }
         })
       }
