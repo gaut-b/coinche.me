@@ -1,0 +1,18 @@
+@import '../variables.scss';
+
+.score-reminder {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 6vh;
+  margin-right: 5vw;
+
+  .table {
+    background: none;
+    color: $text;
+    td {
+      text-align: center;
+    }
+  }
+
+}

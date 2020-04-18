@@ -16,6 +16,7 @@ const app = express();
 const server = http.Server(app);
 const io = socketio(server);
 const isProduction = app.get('env') === 'production';
+const PORT = process.env.PORT || 3000;
 
 if (isProduction) {
   app.set('trust proxy', 1);
@@ -30,8 +31,6 @@ app.use(session({
 }))
 app.use(express.static('build'));
 app.use(express.static('public'));
-
-const PORT = process.env.PORT || 3000;
 
 app.post('/join', async (req, res) => {
   const tableId = req.body.tableId || uuid();
@@ -52,12 +51,12 @@ const dispatchActionAndBroadcastNewState = async (tableId, action) => {
 
 try {
   io.on('connection', socket => {
-    const connectSessionId = (!isProduction) ? uuid() : cookie.parse(socket.handshake.headers.cookie || '')['connect.sid'];
-    console.log('New socket connection', socket.id, connectSessionId)
+    const playerId = process.env.IGNORE_COOKIE ? uuid() : cookie.parse(socket.handshake.headers.cookie || '')['connect.sid'];
+    console.log('New socket connection', socket.id, playerId)
 
     socket.on('join', async ({tableId, username}) => {
       socket.join(tableId);
-      dispatchActionAndBroadcastNewState(tableId, join({playerId: connectSessionId, socketId: socket.id, playerName: username}))
+      dispatchActionAndBroadcastNewState(tableId, join({playerId, socketId: socket.id, playerName: username}))
     })
 
     socket.on('dispatch', async ({tableId, action}) => {

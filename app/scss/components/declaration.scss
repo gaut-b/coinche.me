@@ -1,6 +1,7 @@
 @import '../variables';
 
 .declaration {
+	// @include background();
 	background: url(../../images/leather_1.png);
 	background-color: $background;
 	position: absolute;

@@ -2,26 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { selectTeams } from '../redux/selectors';
 
+import '../../scss/components/ScoreReminder.scss';
+
 const ScoreReminder = ({ teams }) => {
 	return (
-		<div className="table-container">
+		<div className="table-container score-reminder">
 			<table className="table is-fullwidth">
-			<tr>
-				{
-					teams.map( team => {
-						return (!team) ?
-							null :
-							<td key={team.name}>
-								<table className="table is-fullwidth">
-									<thead><tr><td>{team.name}</td></tr></thead>
-									<tbody>
-										<tr>{(team.totalScore || 0)}</tr>
-									</tbody>
-								</table>
-							</td>
-					})
-				}
-			</tr>
+				<thead>
+					<tr>
+						{teams.map( team =>
+							<td>{team.name}</td>
+						)}
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						{teams.map( team =>
+							<td>{team.totalScore || 0}</td>
+						)}
+					</tr>
+				</tbody>
 			</table>
 		</div>
 	);

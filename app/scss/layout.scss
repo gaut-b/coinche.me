@@ -3,8 +3,9 @@ html {
 }
 
 body {
-  background: url(../images/leather_1.png);
-  background-color: $background;
+  @include background();
+  // background: url(../images/leather_1.png);
+  // background-color: $background;
 }
 
 .content {
