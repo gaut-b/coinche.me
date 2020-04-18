@@ -24,7 +24,6 @@ const Game = ({onTable, isDistributed, isLastTrick, isGameStarted, tricks}) => {
   const GameTable = () => {
     return (
       <div>
-        {!isGameStarted ? <Declaration /> : null}
         <div className="level-container">
           <div className="level is-mobile">
             <Player position={NORTH} />
@@ -33,7 +32,7 @@ const Game = ({onTable, isDistributed, isLastTrick, isGameStarted, tricks}) => {
           <div className="level is-mobile">
             <Player position={WEST} />
             <div className="level-item">
-              <Table />
+            {!isGameStarted ? <Declaration /> : <Table />}
             </div>
             <Player position={EAST} />
           </div>

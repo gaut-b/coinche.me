@@ -95,3 +95,7 @@ body {
     margin: 0 1rem;
   }
 }
+
+.field:not(:last-child) {
+  margin-bottom: 2rem;
+}

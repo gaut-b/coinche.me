@@ -119,11 +119,11 @@ const Declaration = ({ players, currentPlayer, activePlayer, currentDeclaration,
 
 
   return (
-    <div className={`declaration ${isActivePlayer ? '' : 'is-disabled'}`}>
+    <div className={`declaration content ${isActivePlayer ? '' : 'is-disabled'}`}>
       <p className="title is-4">
         {isActivePlayer ? 'C\'est à votre tour d\'annoncer' : `En attente de l'annonce de ${activePlayer.name}`}
       </p>
-      <form onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleSubmit}>
         <div className="field is-grouped level">
           <label className="control number">Annonce</label>
           <div className="control level-item">
