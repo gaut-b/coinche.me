@@ -1,8 +1,6 @@
-import React, { Component, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { connect } from 'react-redux';
-import { useBeforeunload } from 'react-beforeunload';
 import { createStructuredSelector } from 'reselect';
-import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
 import { LocalStateContext } from '../pages/GamePage.js';
 import {selectIsDistributed, selectIsLastTrick, selectTricks} from '../redux/selectors';
 import {
@@ -11,26 +9,14 @@ import {
   SOUTH,
   WEST,
 } from '../../../shared/constants/positions';
-import {localstorageUsernameKey} from '../constants';
 
 import Table from './Table.js';
 import Player from './Player.js';
 import Controls from './Controls.js';
 import ScoreBoard from './ScoreBoard.js';
 
-const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsubscribeServerUpdate, tricks}) => {
+const Game = ({onTable, isDistributed, isLastTrick, tricks}) => {
   const {tableId} = useContext(LocalStateContext);
-
-  useBeforeunload(() => {
-    unsubscribeServerUpdate(tableId)
-  });
-
-  useEffect(() => {
-    subscribeServerUpdate(tableId, localStorage.getItem(localstorageUsernameKey))
-    return () => {
-      unsubscribeServerUpdate(tableId);
-    }
-  }, []);
 
   const GameComponent = () => {
     if (!isDistributed && !tricks.length) return <Controls />
@@ -52,7 +38,6 @@ const Game = ({onTable, isDistributed, isLastTrick, subscribeServerUpdate, unsub
           <Player position={SOUTH} />
         </div>
       </div>
-
   }
 
   return GameComponent();
@@ -64,9 +49,4 @@ const mapStateToProps = createStructuredSelector({
   tricks: selectTricks,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  subscribeServerUpdate: (tableId, username) => dispatch(subscribeServerUpdate(tableId, username)),
-  unsubscribeServerUpdate: (tableId) => dispatch(unsubscribeServerUpdate(tableId)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default connect(mapStateToProps)(Game);
