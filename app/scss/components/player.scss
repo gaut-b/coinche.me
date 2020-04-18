@@ -39,6 +39,14 @@
   .name {
     text-align: center;
     margin-bottom: 1rem;
+    .icon {
+      margin-right: 0.5rem;
+      vertical-align: bottom;
+      img {
+        vertical-align: middle;
+      }
+    }
+
     span.clickable {
       cursor: pointer;
     }

@@ -13,7 +13,7 @@ import '../../scss/components/player.scss';
 import Hand from './Hand.js';
 // import Tricks from './Tricks.js';
 
-const HandSymbol = require('../../images/hand.svg');
+const HandSymbol = require('../../images/hand2.svg');
 
 const Player = ({position, player, tricks, playRandomCard, canCollect, collect, activePlayerName}) => {
 
@@ -36,14 +36,14 @@ const Player = ({position, player, tricks, playRandomCard, canCollect, collect, 
   const playerTricks = tricks.filter(({playerIndex, _}) => playerIndex === index);
 
   const $name = (
-    <div className={` level name ${disconnected ? 'has-text-danger' : ''}`} title={disconnected ? 'Déconnecté' : ''}>
+    <div className={`name ${disconnected ? 'has-text-danger' : ''}`} title={disconnected ? 'Déconnecté' : ''}>
       {(name === activePlayerName) ?
-        <span className="level-item icon">
+        <span className="icon">
           <img src={HandSymbol}/>
         </span> :
         null
       }
-      <span className={`level-item ${!id ? 'clickable' : ''}`} onClick={handleClick} >{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(playerTricks.length, 'pli')})</span>
+      <span className={`${!id ? 'clickable' : ''}`} onClick={handleClick} >{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(playerTricks.length, 'pli')})</span>
       &nbsp;
       {!id && canCollect && <button className="button is-small is-text is-rounded" onClick={e => collect(tableId, index)}>Ramasser</button> }
     </div>
