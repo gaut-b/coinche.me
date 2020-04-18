@@ -52,7 +52,7 @@ const dispatchActionAndBroadcastNewState = async (tableId, action) => {
 
 try {
   io.on('connection', socket => {
-    const connectSessionId = cookie.parse(socket.handshake.headers.cookie || '')['connect.sid'];
+    const connectSessionId = (!isProduction) ? uuid() : cookie.parse(socket.handshake.headers.cookie || '')['connect.sid'];
     console.log('New socket connection', socket.id, connectSessionId)
 
     socket.on('join', async ({tableId, username}) => {
