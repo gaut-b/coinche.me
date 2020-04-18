@@ -1,14 +1,14 @@
 import {NORTH, EAST, SOUTH, WEST, POSITIONS} from '../../shared/constants/positions';
 
-export default function subjectiveState(state, playerId) {
-  const playerIndex = state.players.findIndex(p => p.id === playerId);
+export default function subjectiveState(state, socketId) {
+  const playerIndex = state.players.findIndex(p => p.sockets.find(s => s === socketId));
 
-  if (!playerId) {
+  if (!socketId) {
     console.error('playerId missing in subjectiveState');
     return state;
   }
   if (playerIndex === -1) {
-    console.error('playerId not found in players', playerId);
+    console.error('playerId not found in players', socketId);
     return state;
   }
 
