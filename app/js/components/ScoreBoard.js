@@ -7,9 +7,11 @@ import {selectScore,
 				selectPlayers,
 				selectLastMasterIndex,
 				selectCurrentPlayer,
-				selectCurrentDeclaration,
 				selectTeams,
 				selectPartnerId } from '../redux/selectors';
+import {
+  selectCurrentDeclaration
+} from '../../../server/redux/selectors';
 
 const ScoreBoard = ({ getScore, score, players, currentPlayer, lastMasterIndex, currentDeclaration, teams, partnerId }) => {
 

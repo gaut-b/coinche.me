@@ -11,24 +11,34 @@ import { last, range } from '../../../shared/utils/array';
 import cardSymbols from '../../images/symbols';
 import {selectPlayers,
         selectCurrentPlayer,
-        selectCurrentDeclaration,
         selectIsActivePlayer,
         selectActivePlayer,
         selectDeclarationsHistory,
         selectPartnerId } from '../redux/selectors';
+import {
+  selectCurrentDeclaration
+} from '../../../server/redux/selectors';
 import {name} from '../../../shared/utils/player';
 
 import '../../scss/components/DeclarationForm.scss';
 
-const INITIAL_STATE = {
-  goal: 80,
-  trumpType: null,
-};
+// const INITIAL_STATE = {
+//   goal: 80,
+//   trumpType: null,
+// };
 
 const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer, partnerId }) => {
 
   const {tableId} = useContext(LocalStateContext);
-  const [state, setState] = useState(INITIAL_STATE);
+  const [state, setState] = useState({});
+
+  const goalOptions = range(8, 16)
+    .map(i => 10*i)
+    .filter(i => !currentDeclaration || (i > currentDeclaration.goal))
+    .map(i => ({name: i, value: i}))
+    .concat({name: 'Capot', value: 250})
+
+  const previousDeclarations = declarationsHistory.filter((_d, i) => i !== declarationsHistory.length - 1)
 
   useEffect(() => {
     if (currentDeclaration) {
@@ -41,20 +51,15 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
       };
 
       // If everybody passed => create a new game
-      if ((declarationsHistory.length === 4) && (!Object.entries(currentDeclaration.content).length)) {
+      if (declarationsHistory.length === 4 && !declarationsHistory.filter(d => d.type !== declarationTypes.PASS)) {
         newGame(tableId);
         return;
       };
 
-      if (Object.entries(currentDeclaration.content).length) {
-        const content = currentDeclaration.content;
-        const prevGoal = parseInt(content.goal);
-        const newGoal = (prevGoal < 160) ? prevGoal + 10 : prevGoal;
-        setState({
-          ...state,
-          goal: newGoal,
-        });
-      }
+      // setState({
+      //   ...state,
+      //   goal: currentDeclaration.goal,
+      // });
     }
   }, [currentDeclaration]);
 
@@ -67,15 +72,17 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
   };
 
   const doPass = () => {
-    declare(tableId, currentPlayer.id, {type: declarationTypes.PASS, content: {}});
+    declare(tableId, currentPlayer.id, {
+      type: declarationTypes.PASS,
+    });
   };
 
   const doDeclare = () => {
-    const content = {
+    declare(tableId, currentPlayer.id, {
+      type: declarationTypes.DECLARE,
       trumpType: state.trumpType,
       goal: state.goal,
-    };
-    declare(tableId, currentPlayer.id, {type: declarationTypes.DECLARE, content})
+    })
   };
 
   let isCoincheVisible = false;
@@ -87,15 +94,7 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
     isCoincheVisible = (currentPlayer.id !== lastBid.playerId) && (partnerId !== lastBid.playerId) && (currentDeclaration.playerId === lastBid.playerId);
   }
 
-  const isDeclareDisabled = !state.goal || !state.trumpType || currentDeclaration && (currentDeclaration.content.goal === 250) || isCoinched;
-
-  const goalOptions = range(8, 16)
-    .map(i => 10*i)
-    .filter(i => !currentDeclaration || (i > currentDeclaration.content.goal))
-    .map(i => ({name: i, value: i}))
-    .concat({name: 'Capot', value: 250})
-
-  const previousDeclarations = declarationsHistory.filter((_d, i) => i !== declarationsHistory.length - 1)
+  const isDeclareDisabled = !state.goal || !state.trumpType || currentDeclaration && (currentDeclaration.goal === 250) || isCoinched;
 
   return (
     <div className={`declaration ${isActivePlayer ? '' : 'is-disabled'}`}>
@@ -104,7 +103,7 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
           {previousDeclarations.map((d, i) => <li key={i} ><Declaration value={d} /></li>)}
         </ul> : null}
         <h3 className="title is-3 is-spaced">
-          {<Declaration value={currentDeclaration} />}
+          {<Declaration value={last(declarationsHistory)} />}
         </h3>
         <p className="subtitle is-4">
           {isActivePlayer ? 'C\'est à votre tour d\'annoncer' : `A ${name(activePlayer)} de parler`}

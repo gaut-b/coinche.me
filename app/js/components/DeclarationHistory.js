@@ -2,7 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import trumpTypes from '../../../shared/constants/trumpTypes';
-import { selectPlayers, selectCurrentPlayer, selectCurrentDeclaration, selectDeclarationsHistory } from '../redux/selectors';
+import {
+  selectPlayers,
+  selectCurrentPlayer,
+  selectDeclarationsHistory
+} from '../redux/selectors';
+import {
+  selectCurrentDeclaration
+} from '../../../server/redux/selectors';
 import cardSymbols from '../../images/symbols';
 import {name} from '../../../shared/utils/player';
 

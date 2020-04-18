@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectPlayers, selectCurrentDeclaration } from '../redux/selectors';
+import { selectPlayers } from '../redux/selectors';
+import {
+  selectCurrentDeclaration
+} from '../../../server/redux/selectors';
 import trumpTypes from '../../../shared/constants/trumpTypes';
 import cardSymbols from '../../images/symbols';
 

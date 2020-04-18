@@ -4,7 +4,7 @@ import {DECK32, DECK52} from '../constants/decks';
 import { sortHand, distribute, distributeCoinche, cutDeck, countPlayerScore, hasBelote } from '../utils/coinche';
 import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
 import {shuffle, first, next, last, switchIndexes, partition} from '../../shared/utils/array';
-import declarationTypes from '../../shared/constants/declarationTypes';
+import {selectCurrentDeclaration} from './selectors';
 
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
@@ -102,7 +102,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       const card = action.payload;
       const playingPlayerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
       const activePlayer = next(state.players, playingPlayerIndex);
-      const trumpType = state.currentDeclaration.content.trumpType;
+      const trumpType = selectCurrentDeclaration(state).trumpType;
       return {
         ...state,
         players: state.players.map((p, i) => {
@@ -125,7 +125,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.CARD_BACK: {
       const card = action.payload;
       const playingPlayerIndex = state.players.findIndex(p => p.onTable === card);
-      const trumpType = state.currentDeclaration.content.trumpType;
+      const trumpType = selectCurrentDeclaration(state).trumpType;
 
       return {
         ...state,
@@ -212,7 +212,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       };
     };
     case actionTypes.DECLARE: {
-      const {playerId, declaration} = action.payload;
+      const {playerId, trumpType, goal, type} = action.payload;
       const playerIndex = state.players.findIndex(p => p.id === playerId);
 
       const playersUpdated = state.players.map((p, i) => {
@@ -222,34 +222,21 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         }
       });
 
-      const declarationsHistory = (state.declarationsHistory || []).concat({playerId, content: declaration.content});
-      let currentDeclaration = (state.currentDeclaration)
-      ? {...state.currentDeclaration}
-      : {
-        playerId: undefined,
-        content: {},
-      }
-
-      if (declaration.type === declarationTypes.DECLARE) {
-        currentDeclaration = {
-          playerId: playerId,
-          content: declaration.content,
-        }
-      } else if (declaration.type === declarationTypes.COINCHE) {
-        currentDeclaration.isCoinched = (currentDeclaration.isCoinched || 0) + 2;
-      };
-
       return {
         ...state,
         players: playersUpdated,
-        declarationsHistory,
-        currentDeclaration,
+        declarationsHistory: state.declarationsHistory.concat({
+          playerId,
+          trumpType,
+          goal,
+          type,
+        }),
       };
     };
     case actionTypes.LAUNCH_GAME: {
 
       const dealerIndex = state.players.findIndex(p => p.isDealer);
-      const trumpType = state.currentDeclaration.content.trumpType;
+      const trumpType = selectCurrentDeclaration(state).trumpType;
       const playersUpdated = state.players.map((p,i) => {
         return {
           ...p,

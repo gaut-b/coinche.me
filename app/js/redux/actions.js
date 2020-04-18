@@ -129,7 +129,7 @@ export function declare(tableId, playerId, declaration) {
       tableId,
       action: {
         type: actionTypes.DECLARE,
-        payload: {playerId, declaration},
+        payload: {playerId, ...declaration},
       }
     }
   }
