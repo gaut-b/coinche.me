@@ -174,6 +174,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       const dealerIndex = state.players.findIndex(p => p.isDealer)
       const newDealer = next(state.players, dealerIndex);
+
       // A refactorer aussi, très moche !
       const tricks = state.players.map((p, index) => {
         return state.tricks.filter(({playerIndex}) => index === playerIndex)
@@ -182,7 +183,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       // Rassemble les cartes en gardant les plis des équipes.
       // très moche, à refactorer
-      const newDeck = (tricks.length)
+      const newDeck = (!tricks.length)
         ? [].concat(tricks[0]).concat(tricks[2]).concat(tricks[1]).concat(tricks[3])
         : state.deck;
 
