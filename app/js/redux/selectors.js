@@ -50,6 +50,11 @@ export const selectLastTrick = createSelector(
   (tricks) => tricks[0],
 );
 
+export const selectActivePlayer = createSelector(
+  [selectPlayers],
+  players => players.find(p => p.isActivePlayer),
+);
+
 export const selectIsActivePlayer = createSelector(
   [selectCurrentPlayer],
   (player) => {

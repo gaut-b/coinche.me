@@ -8,6 +8,10 @@ import {shuffle, switchIndexes} from '../../shared/utils/array';
 
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
+  isGameStarted: false,
+  currentDeclaration: null,
+  declarationsHistory: null,
+  teams: [],
   tricks: [],
   players: Array(4).fill({
     name: null,
@@ -16,8 +20,10 @@ export const INITIAL_STATE = {
     sockets: [],
     disconnected: false,
   }),
-  score: '',
+  preferences: {},
+  score: null,
 };
+
 
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
