@@ -23,22 +23,24 @@ const Game = ({onTable, isDistributed, isLastTrick, isGameStarted, tricks}) => {
 
   const GameTable = () => {
     return (
-      <div className="level-container">
+      <div>
         {!isGameStarted ? <Declaration /> : null}
-        <div className="level is-mobile">
-          <Player position={NORTH} />
-          {isGameStarted ? <DeclarationReminder /> : null}
-        </div>
-        <div className="level is-mobile">
-          <Player position={WEST} />
-          <div className="level-item">
-            <Table />
+        <div className="level-container">
+          <div className="level is-mobile">
+            <Player position={NORTH} />
+            {isGameStarted ? <DeclarationReminder /> : null}
           </div>
-          <Player position={EAST} />
-        </div>
-        <div className="level is-mobile">
-          <Player position={SOUTH} />
-          <ScoreReminder />
+          <div className="level is-mobile">
+            <Player position={WEST} />
+            <div className="level-item">
+              <Table />
+            </div>
+            <Player position={EAST} />
+          </div>
+          <div className="level is-mobile">
+            <Player position={SOUTH} />
+            <ScoreReminder />
+          </div>
         </div>
       </div>
     );
