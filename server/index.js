@@ -47,7 +47,7 @@ const dispatchActionAndBroadcastNewState = async (tableId, action) => {
   const store = await getStore(tableId);
   store.dispatch(action);
   const state = store.getState().present;
-  return emitEachInRoom(io, tableId, socketEvents.UPDATED_STATE, clientId => subjectiveState(state, clientId));
+  return emitEachInRoom(io, tableId, socketEvents.UPDATED_STATE, socketId => subjectiveState(state, socketId));
 }
 
 try {
@@ -57,7 +57,7 @@ try {
 
     socket.on('join', async ({tableId, username}) => {
       socket.join(tableId);
-      dispatchActionAndBroadcastNewState(tableId, join({playerId: socket.id, playerName: username}))
+      dispatchActionAndBroadcastNewState(tableId, join({playerId: connectSessionId, socketId: socket.id, playerName: username}))
     })
 
     socket.on('dispatch', async ({tableId, action}) => {
@@ -68,6 +68,10 @@ try {
       socket.disconnect();
       dispatchActionAndBroadcastNewState(tableId, leave(socket.id))
     });
+
+    socket.on('disconnect', async () => {
+      console.log('disconnected', socket.id);
+    })
   });
 } catch(e) {
   console.error('Socket error:')
