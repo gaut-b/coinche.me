@@ -1,5 +1,11 @@
+import http from 'http';
 import express from 'express';
+import bodyParser from 'body-parser';
+import cookie from 'cookie';
+import session from 'express-session';
+import socketio from 'socket.io';
 import { v4 as uuid } from 'uuid';
+
 import getStore from './redux/store';
 import subjectiveState from './redux/subjectiveState';
 import {emitEachInRoom} from '../shared/utils/sockets';
@@ -7,15 +13,21 @@ import {join, leave} from './redux/actions';
 import socketEvents from '../shared/constants/socketEvents';
 
 const app = express();
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const server = http.Server(app);
+const io = socketio(server);
+const isProduction = app.get('env') === 'production';
 
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
 
-app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(session({
+  secret: process.env.SESSION_KEY,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: isProduction }
+}))
 app.use(express.static('build'));
 app.use(express.static('public'));
 
@@ -40,7 +52,8 @@ const dispatchActionAndBroadcastNewState = async (tableId, action) => {
 
 try {
   io.on('connection', socket => {
-    console.log('new connection', socket.id)
+    const connectSessionId = cookie.parse(socket.handshake.headers.cookie || '')['connect.sid'];
+    console.log('New socket connection', socket.id, connectSessionId)
 
     socket.on('join', async ({tableId, username}) => {
       socket.join(tableId);
@@ -60,7 +73,6 @@ try {
   console.error('Socket error:')
   console.error(e);
 }
-
 
 server.listen(PORT, () => {
   console.log(`Le coincheur listening on port ${PORT}!`)
