@@ -27,7 +27,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       const firstAvailableIndex = state.players.findIndex(p => !p.id);
       const firstDisconnectedIndex = state.players.findIndex(p => p.disconnected);
       const newPlayerIndex = [samePlayerIndex, firstAvailableIndex, firstDisconnectedIndex].find(i => i > -1);
-      if (!newPlayerIndex) return state;
+      if (newPlayerIndex === undefined) return state;
       return {
         ...state,
         players: state.players.map((p, i) => {
