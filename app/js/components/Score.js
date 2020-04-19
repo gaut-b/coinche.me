@@ -15,8 +15,11 @@ const Score = ({players, tricks, teams, newGame}) => {
   const teamWithTricks = teams.map(team => {
     return {
       ...team,
-      tricks: tricks.filter(trick => include(team.players, trick.playerId))
-    }
+      tricks: tricks.filter(trick => {
+        const player = players.find(p=> p.index === trick.playerIndex)
+        return include(team.players, player.id)
+        }),
+      }
   });
 
   return (
@@ -29,7 +32,9 @@ const Score = ({players, tricks, teams, newGame}) => {
               <h2>{name}</h2>
               <div className="hand">
               {
-                tricks.length ? tricks.map(c => <Card key={c} value={c} />) : <div>Vous n'avez fait aucun plis</div>
+                tricks.length
+                ? tricks.map(({cards}) => cards.map(c => <Card key={c} value={c} />))
+                : <div>Vous n'avez fait aucun plis</div>
               }
               </div>
             </div>
