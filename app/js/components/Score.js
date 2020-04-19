@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {selectTricks, selectPlayers, selectTeams} from '../redux/selectors';
 import {newGame} from '../redux/actions';
 import { LocalStateContext } from '../pages/GamePage.js';
+import {include} from '../../../shared/utils/array';
 
 import ScoreBoard from './ScoreBoard';
 import Card from './Card';
