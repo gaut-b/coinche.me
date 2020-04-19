@@ -21,44 +21,41 @@ const ScoreBoard = ({ getScore, score, players, currentPlayer, lastMasterIndex, 
 	  getScore(tableId)
 	}, []);
 
-	return (
+	console.log('CACA BOUDIN !', teams.filter(team => team.currentGame), !teams.filter(team => team.currentGame).length)
+
+	return (!teams.filter(team => team.currentGame).length) ? null :
 		<div className="table-container">
-			<table className="table is-fullwidth">
-			<tr>
-				<td>
-					<table className="table is-fullwidth">
-						<thead><tr><td>&nbsp;</td></tr></thead>
-						<tbody>
-							<tr>Points</tr>
-							<tr>Dix de der</tr>
-							<tr>Belote</tr>
-							<tr>Total</tr>
-							<tr>Total de la partie</tr>
-						</tbody>
-					</table>
-				</td>
-				{
-					teams.map( (team) => {
-						return (!team.currentGame) ?
-							null :
-							<td key={team.name}>
-								<table className="table is-fullwidth">
-									<thead><tr><td>{team.name}</td></tr></thead>
-									<tbody>
-										<tr>{team.currentGame.gameScore}</tr>
-										<tr>{(team.currentGame.hasLastTen) ? 10 : 0}</tr>
-										<tr>{(team.currentGame.hasBelote) ? 20 : 0}</tr>
-										<tr>{team.currentGame.gameTotal}</tr>
-										<tr>{(team.totalScore || 0) + team.currentGame.gameTotal}</tr>
-									</tbody>
-								</table>
-							</td>
-					})
-				}
-			</tr>
+			<table className="table is-fullwidth score-board">
+				<thead>
+					<tr>
+						<td>&nbsp;</td>
+						{teams.map( (team, i) => <td key={i}>{team.name}</td>)}
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Points</td>
+						{teams.map( (team, i) => <td key={i}>{team.currentGame.gameScore}</td>)}
+					</tr>
+					<tr>
+						<td>Dix de der</td>
+						{teams.map( (team, i) => <td key={i}>{(team.currentGame.hasLastTen) ? 10 : 0}</td>)}
+					</tr>
+					<tr>
+						<td>Belote</td>
+						{teams.map( (team, i) => <td key={i}>{(team.currentGame.hasBelote) ? 20 : 0}</td>)}
+					</tr>
+					<tr>
+						<td>Total</td>
+						{teams.map( (team, i) => <td key={i}>{team.currentGame.gameTotal}</td>)}
+					</tr>
+					<tr>
+						<td>Total de la partie</td>
+						{teams.map( (team, i) => <td key={i}>{(team.totalScore || 0) + team.currentGame.gameTotal}</td>)}
+					</tr>
+				</tbody>
 			</table>
 		</div>
-	);
 };
 
 const mapDispatchToProps = (dispatch) => ({
