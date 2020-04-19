@@ -39,25 +39,21 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
 
   useEffect(() => {
     if (currentDeclaration) {
+        // If currentPlayer made a declaration and everybody else passed OR someone has surcoinched
+        //  => launch the game
+        if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (currentDeclaration.isCoinched === 4)) {
+          launchGame(tableId);
+          return;
+        };
 
-      // If currentPlayer made a declaration and everybody else passed OR someone has surcoinched
-      //  => launch the game
-      if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (currentDeclaration.isCoinched === 4)) {
-        launchGame(tableId);
-        return;
-      };
+      }
 
       // If everybody passed => create a new game
-      if (declarationsHistory.length === 4 && !declarationsHistory.filter(d => d.type !== declarationTypes.PASS)) {
+      if (declarationsHistory.length === 4 && !declarationsHistory.filter(d => d.type !== declarationTypes.PASS).length) {
         newGame(tableId);
         return;
       };
 
-      // setState({
-      //   ...state,
-      //   goal: currentDeclaration.goal,
-      // });
-    }
   }, [currentDeclaration]);
 
   const handleChange = (event) => {
