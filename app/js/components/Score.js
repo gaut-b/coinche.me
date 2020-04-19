@@ -34,7 +34,7 @@ const Score = ({players, tricks, teams, newGame}) => {
               {
                 tricks.length
                 ? tricks.map(({cards}) => cards.map(c => <Card key={c} value={c} />))
-                : <div>Vous n'avez fait aucun plis</div>
+                : <div>Vous n'avez fait aucun pli</div>
               }
               </div>
             </div>
