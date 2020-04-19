@@ -1,7 +1,7 @@
 import {NORTH, EAST, SOUTH, WEST, POSITIONS} from '../../shared/constants/positions';
 
 export default function subjectiveState(state, socketId) {
-  const playerIndex = state.players.findIndex(p => p.sockets.find(s => s === socketId));
+  const playerIndex = state.players.findIndex(p => (p.sockets || []).find(s => s === socketId));
   if (!socketId) {
     console.error('socketId missing in subjectiveState');
     return state;
