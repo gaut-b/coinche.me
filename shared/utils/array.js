@@ -22,6 +22,8 @@ export const range = (from, to) => {
   return [...Array(to - from + 1).keys()].map(i => `${i+from}`)
 }
 
+export const include = (array, elem) => array.indexOf(elem) > -1;
+
 export const groupBy = (array, mapFunc) => {
   return array.reduce((result, elem, i) => {
     const key = mapFunc(elem, i, result);
