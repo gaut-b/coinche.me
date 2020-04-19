@@ -170,6 +170,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
       const dealerIndex = state.players.findIndex(p => p.isDealer)
       const newDealer = next(state.players, dealerIndex);
+      const newActivePlayer = next(state.players, state.players.findIndex(p => p.id === newDealer.id));
 
       // A refactorer aussi, très moche !
       const tricks = state.players.map((p, index) => {
@@ -189,6 +190,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           hand: [],
           onTable: null,
           isDealer: p.id === newDealer.id,
+          isActivePlayer: p.id === newActivePlayer.id,
         }
       });
 
@@ -254,7 +256,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     };
     case actionTypes.GET_SCORE: {
       const currentDeclaration = selectCurrentDeclaration(state);
-      const allPlayerScore = countPlayerScore(state.tricks, currentDeclaration);
+      const allPlayerScore = countPlayerScore(state.tricks, currentDeclaration.trumpType);
       const isCoinched = selectIsCoinched(state);
 
       const updatedTeams = state.teams.map( team => {
