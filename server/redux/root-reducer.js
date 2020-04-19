@@ -275,7 +275,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         const belote = team.currentGame.hasBelote ? 20 : 0;
         const coef = (isCoinched.length) ? isCoinched.length * 2 : 1;
         const preTotal = team.currentGame.gameScore + lastTen;
-        console.log('coef', coef)
+
         if (team.currentGame.isBidderTeam) {
           if (preTotal < 82) {
             team.currentGame.gameTotal = belote;
@@ -291,7 +291,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
             if (preTotal !== 0) team.currentGame.gameTotal = 162 * coef + belote;
             else team.currentGame.gameTotal = belote;
           } else if (preTotal <= (162 - currentDeclaration.goal)) {
-            team.currentGame.gameTotal = preTotal + belote;
+            team.currentGame.gameTotal = belote;
           } else {
             team.currentGame.gameTotal = 162 * coef + belote;
           }

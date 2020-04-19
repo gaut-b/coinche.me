@@ -21,8 +21,6 @@ const ScoreBoard = ({ getScore, score, players, currentPlayer, lastMasterIndex, 
 	  getScore(tableId)
 	}, []);
 
-	console.log('CACA BOUDIN !', teams.filter(team => team.currentGame), !teams.filter(team => team.currentGame).length)
-
 	return (!teams.filter(team => team.currentGame).length) ? null :
 		<div className="table-container">
 			<table className="table is-fullwidth score-board">
