@@ -109,5 +109,5 @@ export const hasBelote = (hand=[], trumpType='') => {
 
   const king = "K" + trumpType;
   const queen = "Q" + trumpType;
-  return hand.includes(king) && queen.includes(queen);
+  return hand.includes(king) && hand.includes(queen);
 };

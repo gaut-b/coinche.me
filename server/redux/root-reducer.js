@@ -254,7 +254,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     };
     case actionTypes.GET_SCORE: {
       const currentDeclaration = selectCurrentDeclaration(state);
-      const allPlayerScore = countPlayerScore(state.tricks, currentDeclaration);
+      const allPlayerScore = countPlayerScore(state.tricks, currentDeclaration.trumpType);
       const isCoinched = selectIsCoinched(state);
 
       const updatedTeams = state.teams.map( team => {

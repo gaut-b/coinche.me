@@ -13,6 +13,8 @@ import {
   selectCurrentDeclaration
 } from '../../../server/redux/selectors';
 
+import Declaration from './Declaration';
+
 const ScoreBoard = ({ getScore, score, players, currentPlayer, lastMasterIndex, currentDeclaration, teams, partnerId }) => {
 
 	const {tableId} = useContext(LocalStateContext);
@@ -32,12 +34,16 @@ const ScoreBoard = ({ getScore, score, players, currentPlayer, lastMasterIndex, 
 				</thead>
 				<tbody>
 					<tr>
-						<td>Points</td>
-						{teams.map( (team, i) => <td key={i}>{team.currentGame.gameScore}</td>)}
+						<td>Annonce</td>
+						{teams.map( (team, i) => (team.currentGame.isBidderTeam) ? <td><Declaration value={currentDeclaration} /></td> : <td>&nbsp;</td> )}
 					</tr>
 					<tr>
-						<td>Dix de der</td>
-						{teams.map( (team, i) => <td key={i}>{(team.currentGame.hasLastTen) ? 10 : 0}</td>)}
+						<td>Coinche</td>
+						{teams.map( (team, i) => (team.currentGame.isBidderTeam) ? <td colspan="2">{team.currentGame.isCoinched}</td> : null )}
+					</tr>
+					<tr>
+						<td>Points</td>
+						{teams.map( (team, i) => <td key={i}>{team.currentGame.gameScore + ((team.currentGame.hasLastTen) ? 10 : 0)}</td>)}
 					</tr>
 					<tr>
 						<td>Belote</td>

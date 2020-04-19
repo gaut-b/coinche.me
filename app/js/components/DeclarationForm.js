@@ -40,6 +40,7 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
 
   useEffect(() => {
     if (currentDeclaration) {
+      // console.log(currentDeclaration, declarationsHistory)
       // If currentPlayer made a declaration and everybody else passed OR someone has surcoinched => launch the game
       if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (declarationsHistory.filter(d => d.type === declarationTypes.COINCHE).length === 2)) {
         launchGame(tableId);
@@ -86,7 +87,6 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
   let isCoincheVisible = false;
 
   if (currentDeclaration) {
-
     const lastBid = last(declarationsHistory);
     const isCoincheEnabled = (currentPlayer.id !== lastBid.playerId) && (partnerId !== lastBid.playerId) && (currentDeclaration.playerId === lastBid.playerId);
     const isOverCoincheEnabled = isCoinched.length && ((currentPlayer.id === currentDeclaration.playerId) || (partnerId === currentDeclaration.playerId));
