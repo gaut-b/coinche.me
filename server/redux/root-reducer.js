@@ -253,8 +253,8 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       }
     };
     case actionTypes.GET_SCORE: {
-      const currentDeclaration = state.currentDeclaration
-      const allPlayerScore = countPlayerScore(state.tricks, state.currentDeclaration);
+      const currentDeclaration = selectCurrentDeclaration(state);
+      const allPlayerScore = countPlayerScore(state.tricks, currentDeclaration);
 
       const updatedTeams = state.teams.map( team => {
         team.currentGame = team.players.reduce((currentGame, playerId) => {
@@ -277,18 +277,18 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         if (team.currentGame.isBidderTeam) {
           if (preTotal < 82) {
             team.currentGame.gameTotal = belote;
-          } else if ((currentDeclaration.content.goal === 250) && (preTotal === 162)) {
+          } else if ((currentDeclaration.goal === 250) && (preTotal === 162)) {
             team.currentGame.gameTotal = 250 * coef + belote;
-          } else if ((preTotal + belote) >= currentDeclaration.content.goal) {
-            team.currentGame.gameTotal = currentDeclaration.content.goal * coef + belote;
-          } else if ((preTotal + belote) < currentDeclaration.content.goal) {
+          } else if ((preTotal + belote) >= currentDeclaration.goal) {
+            team.currentGame.gameTotal = currentDeclaration.goal * coef + belote;
+          } else if ((preTotal + belote) < currentDeclaration.goal) {
             team.currentGame.gameTotal =  belote;
           }
         } else {
-          if (currentDeclaration.content.goal === 250) {
+          if (currentDeclaration.goal === 250) {
             if (preTotal !== 0) team.currentGame.gameTotal = 162 * coef + belote;
             else team.currentGame.gameTotal = belote;
-          } else if (preTotal <= (162 - currentDeclaration.content.goal)) {
+          } else if (preTotal <= (162 - currentDeclaration.goal)) {
             team.currentGame.gameTotal = preTotal + belote;
           } else {
             team.currentGame.gameTotal = 162 * coef + belote;

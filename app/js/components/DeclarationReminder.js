@@ -21,7 +21,7 @@ const DeclarationReminder = ({ players, currentDeclaration }) => {
 		} else {
 			return (
 				<span className="icon is-small">
-					<img src={cardSymbols[currentDeclaration.content.trumpType]}/>
+					<img src={cardSymbols[currentDeclaration.trumpType]}/>
 				</span>
 			)
 		}
@@ -32,7 +32,7 @@ const DeclarationReminder = ({ players, currentDeclaration }) => {
 			<h1 className="title is-4">{playerName}</h1>
 			<div className="level">
 				<div className="level-left">
-					{currentDeclaration.content.goal}
+					{currentDeclaration.goal}
 				</div>
 				<div className="level-right">
 					<TrumpType />

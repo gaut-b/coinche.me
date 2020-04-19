@@ -7,7 +7,7 @@ import Declaration from './Declaration';
 import DeclarationHistory from './DeclarationHistory';
 import {trumpTypes, trumpNames} from '../../../shared/constants/trumpTypes';
 import declarationTypes from '../../../shared/constants/declarationTypes';
-import { last, range } from '../../../shared/utils/array';
+import { first, last, range } from '../../../shared/utils/array';
 import cardSymbols from '../../images/symbols';
 import {selectPlayers,
         selectCurrentPlayer,
@@ -22,21 +22,18 @@ import {name} from '../../../shared/utils/player';
 
 import '../../scss/components/DeclarationForm.scss';
 
-// const INITIAL_STATE = {
-//   goal: 80,
-//   trumpType: null,
-// };
 
 const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer, partnerId }) => {
 
   const {tableId} = useContext(LocalStateContext);
-  const [state, setState] = useState({});
 
   const goalOptions = range(8, 16)
     .map(i => 10*i)
     .filter(i => !currentDeclaration || (i > currentDeclaration.goal))
     .map(i => ({name: i, value: i}))
     .concat({name: 'Capot', value: 250})
+
+  const [state, setState] = useState({goal: first(goalOptions).value});
 
   const previousDeclarations = declarationsHistory.filter((_d, i) => i !== declarationsHistory.length - 1)
 

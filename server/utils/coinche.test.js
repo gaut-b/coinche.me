@@ -19,17 +19,10 @@ it('is counting players score correctly', () => {
 		{playerIndex: 2, cards: ['JD', '9S', 'KH', 'AC']},
 		{playerIndex: 3, cards: ['JC', '9D', 'KS', 'AH']},
 	];
-	const lastDeclaration = {
-		playerId: 'abcdef',
-		content: {
-			goal: 80,
-			trumpType: trumpTypes.H,
-		},
-	};
 	expect(countPlayerScore([], {})).toEqual({});
-	expect(countPlayerScore([], lastDeclaration)).toEqual({});
+	expect(countPlayerScore([], trumpTypes.H)).toEqual({});
 	expect(countPlayerScore(tricks, {})).toEqual({});
-	expect(countPlayerScore(tricks, lastDeclaration)).toEqual({
+	expect(countPlayerScore(tricks, trumpTypes.H)).toEqual({
 		0: 35,
 		1: 31,
 		2: 17,

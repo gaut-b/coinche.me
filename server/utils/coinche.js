@@ -76,10 +76,8 @@ export const countTrick = (trick, trumpType) => {
   }, 0)
 };
 
-export const countPlayerScore = (tricks, currentDeclaration={}) => {
-  if (!currentDeclaration.content) return {};
-  const {goal, trumpType} = currentDeclaration.content;
-
+export const countPlayerScore = (tricks, trumpType) => {
+  if (!Object.keys(trumpType).length) return {};
   return tricks.reduce((scoreList, trick) => {
     const currentScore = scoreList[trick.playerIndex] || 0;
     scoreList[trick.playerIndex] = currentScore + countTrick(trick.cards, trumpType);
