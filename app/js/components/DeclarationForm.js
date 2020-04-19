@@ -131,9 +131,9 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
         <div className="field">
           <button className="button is-primary" type="submit" name={declarationTypes.PASS} onClick={e => doPass()}>Passer</button>
         </div>
-        <div className="field">
-          <button className={`button is-primary ${!isCoincheVisible ? 'is-hidden' : ''}`} type="submit" name={declarationTypes.COINCHE} onClick={e => doCoinche()}>{`${!isCoinched.length ? 'Coincher' : 'Surcoincher'}`}</button>
-        </div>
+      </div>
+      <div className="field">
+        <button className={`button is-primary ${!isCoincheVisible ? 'is-hidden' : ''}`} type="submit" name={declarationTypes.COINCHE} onClick={e => doCoinche()}>{`${!isCoinched.length ? 'Coincher' : 'Surcoincher'}`}</button>
       </div>
     </div>
   );

@@ -11,25 +11,18 @@ const Score = ({players, tricks, teams, newGame}) => {
 
   const {tableId} = useContext(LocalStateContext);
 
-  const teamTricks = teams.reduce((teamTricks, team) => {
-
-    const playersTricks = team.players.reduce((playerTricks, playerId) => {
-      const pIndex = players.findIndex(p => p.id === playerId);
-      const cards =  tricks.find(({playerIndex}) => playerIndex === pIndex)
-        ? tricks.find(({playerIndex}) => playerIndex === pIndex).cards
-        : [];
-      return [...playerTricks, ...cards];
-    }, []);
-
-    teamTricks[team.name] = playersTricks;
-    return teamTricks;
-  }, {});
+  const teamWithTricks = teams.map(team => {
+    return {
+      ...team,
+      tricks: tricks.filter(trick => include(team.players, trick.playerId))
+    }
+  });
 
   return (
     <div className="has-text-centered">
       <ScoreBoard />
       {
-        Object.entries(teamTricks).map(([name, tricks]) => {
+        teamWithTricks.map(({name, tricks}) => {
           return (
             <div key={name}>
               <h2>{name}</h2>
