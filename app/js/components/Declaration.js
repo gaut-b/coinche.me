@@ -9,7 +9,7 @@ const Declaration = ({value, players}) => {
   if (value) {
     const {playerId, type, goal, trumpType} = value;
     const player = players.find(p => p.id === playerId);
-    const declaration = type !== declarationTypes.PASS ? `${goal} ${trumpNames[trumpType]}` : 'Passe';
+    const declaration = type === declarationTypes.COINCHE ? 'Coinche' : (type !== declarationTypes.PASS) ? `${goal} ${trumpNames[trumpType]}` : 'Passe';
     return <span>{player.name} : {declaration}</span>
   }
   return <span>Première annonce</span>

@@ -16,14 +16,15 @@ import {selectPlayers,
         selectDeclarationsHistory,
         selectPartnerId } from '../redux/selectors';
 import {
-  selectCurrentDeclaration
+  selectCurrentDeclaration,
+  selectIsCoinched
 } from '../../../server/redux/selectors';
 import {name} from '../../../shared/utils/player';
 
 import '../../scss/components/DeclarationForm.scss';
 
 
-const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer, partnerId }) => {
+const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer, partnerId, isCoinched }) => {
 
   const {tableId} = useContext(LocalStateContext);
 
@@ -39,20 +40,18 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
 
   useEffect(() => {
     if (currentDeclaration) {
-        // If currentPlayer made a declaration and everybody else passed OR someone has surcoinched
-        //  => launch the game
-        if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (currentDeclaration.isCoinched === 4)) {
-          launchGame(tableId);
-          return;
-        };
-
-      }
-
-      // If everybody passed => create a new game
-      if (declarationsHistory.length === 4 && !declarationsHistory.filter(d => d.type !== declarationTypes.PASS).length) {
-        newGame(tableId);
+      // If currentPlayer made a declaration and everybody else passed OR someone has surcoinched => launch the game
+      if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (declarationsHistory.filter(d => d.type === declarationTypes.COINCHE).length === 2)) {
+        launchGame(tableId);
         return;
       };
+    };
+
+    // If everybody passed => create a new game
+    if (declarationsHistory.length === 4 && !declarationsHistory.filter(d => d.type !== declarationTypes.PASS).length) {
+      newGame(tableId);
+      return;
+    };
 
   }, [currentDeclaration]);
 
@@ -78,16 +77,22 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
     })
   };
 
+  const doCoinche = () => {
+    declare(tableId, currentPlayer.id, {
+      type: declarationTypes.COINCHE,
+    })
+  };
+
   let isCoincheVisible = false;
-  let isCoinched = false;
 
   if (currentDeclaration) {
-    const lastBid = last(declarationsHistory);
-    isCoinched = (currentDeclaration.isCoinched);
-    isCoincheVisible = (currentPlayer.id !== lastBid.playerId) && (partnerId !== lastBid.playerId) && (currentDeclaration.playerId === lastBid.playerId);
-  }
 
-  const isDeclareDisabled = !state.goal || !state.trumpType || currentDeclaration && (currentDeclaration.goal === 250) || isCoinched;
+    const lastBid = last(declarationsHistory);
+    const isCoincheEnabled = (currentPlayer.id !== lastBid.playerId) && (partnerId !== lastBid.playerId) && (currentDeclaration.playerId === lastBid.playerId);
+    const isOverCoincheEnabled = isCoinched.length && ((currentPlayer.id === currentDeclaration.playerId) || (partnerId === currentDeclaration.playerId));
+    isCoincheVisible = isCoincheEnabled || isOverCoincheEnabled;
+  }
+  const isDeclareDisabled = !state.goal || !state.trumpType || currentDeclaration && (currentDeclaration.goal === 250) || isCoinched.length;
 
   return (
     <div className={`declaration ${isActivePlayer ? '' : 'is-disabled'}`}>
@@ -126,22 +131,13 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
         <div className="field">
           <button className="button is-primary" type="submit" name={declarationTypes.PASS} onClick={e => doPass()}>Passer</button>
         </div>
+        <div className="field">
+          <button className={`button is-primary ${!isCoincheVisible ? 'is-hidden' : ''}`} type="submit" name={declarationTypes.COINCHE} onClick={e => doCoinche()}>{`${!isCoinched.length ? 'Coincher' : 'Surcoincher'}`}</button>
+        </div>
       </div>
     </div>
   );
 };
-      // <div className="column is-narrow content">
-      //   <DeclarationHistory />
-      //   <div className="buttons is-centered">
-      //     <button
-      //       className={`button is-primary ${!isCoincheVisible ? 'is-hidden' : ''}`}
-      //       name={declarationTypes.COINCHE}
-      //       onClick={handleClick}
-      //       >
-      //       {`${!isCoinched ? 'Coincher' : 'Surcoincher'}`}
-      //       </button>
-      //   </div>
-      // </div>
 
 const mapStateToProps = createStructuredSelector({
   players: selectPlayers,
@@ -151,6 +147,7 @@ const mapStateToProps = createStructuredSelector({
   declarationsHistory: selectDeclarationsHistory,
   isActivePlayer: selectIsActivePlayer,
   partnerId: selectPartnerId,
+  isCoinched: selectIsCoinched,
 });
 
 const mapDispatchToProps = (dispatch) => ({

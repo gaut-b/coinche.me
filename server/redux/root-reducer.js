@@ -4,7 +4,7 @@ import {DECK32, DECK52} from '../constants/decks';
 import { sortHand, distribute, distributeCoinche, cutDeck, countPlayerScore, hasBelote } from '../utils/coinche';
 import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
 import {shuffle, first, next, last, switchIndexes, partition} from '../../shared/utils/array';
-import {selectCurrentDeclaration} from './selectors';
+import {selectCurrentDeclaration, selectIsCoinched} from './selectors';
 
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
@@ -255,6 +255,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.GET_SCORE: {
       const currentDeclaration = selectCurrentDeclaration(state);
       const allPlayerScore = countPlayerScore(state.tricks, currentDeclaration);
+      const isCoinched = selectIsCoinched(state);
 
       const updatedTeams = state.teams.map( team => {
         team.currentGame = team.players.reduce((currentGame, playerId) => {
@@ -266,14 +267,15 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           currentGame.hasBelote = (currentGame.hasBelote) || state.players[playerIndex].hasBelote;
           currentGame.hasLastTen = (currentGame.hasLastTen) || hasLastTen;
           currentGame.isBidderTeam = (currentGame.isBidderTeam) || (currentDeclaration.playerId === playerId);
+          currentGame.isCoinched = (currentGame.isCoinched) || `${(isCoinched.length >= 2) ? 'Surcoinchée' : ((isCoinched.length === 1) ? 'Coinchée' : '')}`;
           return currentGame;
         }, {});
 
         const lastTen = team.currentGame.hasLastTen ? 10 : 0;
         const belote = team.currentGame.hasBelote ? 20 : 0;
-        const coef = (!currentDeclaration.isCoinched) ? 1 : currentDeclaration.isCoinched;
+        const coef = (isCoinched.length) ? isCoinched.length * 2 : 1;
         const preTotal = team.currentGame.gameScore + lastTen;
-
+        console.log('coef', coef)
         if (team.currentGame.isBidderTeam) {
           if (preTotal < 82) {
             team.currentGame.gameTotal = belote;
