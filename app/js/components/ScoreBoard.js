@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { getScore } from '../redux/actions';
 import { LocalStateContext } from '../pages/GamePage.js';
-import {selectScore,
-				selectPlayers,
-				selectLastMasterIndex,
-				selectCurrentPlayer,
-				selectTeams,
-				selectPartnerId } from '../redux/selectors';
 import {
-  selectCurrentDeclaration
-} from '../../../server/redux/selectors';
+	selectScore,
+	selectPlayers,
+	selectLastMasterIndex,
+	selectCurrentPlayer,
+	selectTeams,
+	selectPartnerId,
+	selectCurrentDeclaration,
+} from '../redux/selectors';
 
 import Declaration from './Declaration';
 

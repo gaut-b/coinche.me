@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectPlayers, selectDeclarationsHistory } from '../redux/selectors';
+import { createStructuredSelector } from 'reselect';
 import {
-  selectCurrentDeclaration,
-  selectIsCoinched
-} from '../../../server/redux/selectors';
+	selectPlayers,
+	selectDeclarationsHistory,
+	selectCurrentDeclaration,
+	selectIsCoinched,
+} from '../redux/selectors';
 import declarationTypes from '../../../shared/constants/declarationTypes';
 import trumpTypes from '../../../shared/constants/trumpTypes';
 import cardSymbols from '../../images/symbols';
@@ -48,11 +50,11 @@ const DeclarationReminder = ({ players, currentDeclaration, declarationsHistory,
 };
 
 
-const mapStateToProps = state => ({
-	players: selectPlayers(state),
-	currentDeclaration: selectCurrentDeclaration(state),
-	declarationsHistory: selectDeclarationsHistory(state),
-	isCoinched: selectIsCoinched(state),
+const mapStateToProps = createStructuredSelector({
+	players: selectPlayers,
+	currentDeclaration: selectCurrentDeclaration,
+	declarationsHistory: selectDeclarationsHistory,
+	isCoinched: selectIsCoinched,
 })
 
 

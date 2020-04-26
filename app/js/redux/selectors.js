@@ -1,18 +1,25 @@
+import get from 'lodash.get';
 import { createSelector } from 'reselect';
 import {SOUTH} from '../../../shared/constants/positions';
+import {last} from '../../../shared/utils/array';
 
-export const selectPlayers = state => state.players;
-export const selectTricks = state => state.tricks;
-export const selectDeck = state => state.deck;
-export const selectDeclarationsHistory = state => state.declarationsHistory;
-export const selectIsGameStarted = state => state.isGameStarted;
-export const selectScore = state => state.score;
-export const selectTeams = state => state.teams;
+export const selectPlayers = state => get(state, 'game.players', []);
+export const selectTricks = state => get(state, 'game.tricks', []);
+export const selectDeck = state => get(state, 'game.deck', []);
+export const selectDeclarationsHistory = state => get(state, 'game.declarationsHistory', []);
+export const selectIsGameStarted = state => get(state, 'game.isGameStarted');
+export const selectScore = state => get(state, 'game.score', []);
+export const selectTeams = state => get(state, 'game.teams', []);
 
 export const selectNbPlayers = createSelector(
   [selectPlayers],
   (players) => players.length,
 );
+
+export const selectPlayerByPosition = createSelector(
+  [selectPlayers],
+  players => position => players.find(player => player.position === position)
+)
 
 export const selectCurrentPlayer = createSelector(
   [selectPlayers],
@@ -81,4 +88,14 @@ export const selectPartnerId = createSelector(
     const team = teams.find(team => team.players.includes(currentPlayer.id))
     return team.players.find(playerId => playerId !== currentPlayer.id)
   },
+);
+
+export const selectCurrentDeclaration = createSelector(
+  [selectDeclarationsHistory],
+  (declarationsHistory) => last(declarationsHistory.filter(d => (d.type !== declarationTypes.PASS) && (d.type !== declarationTypes.COINCHE)))
+)
+
+export const selectIsCoinched = createSelector(
+	[selectDeclarationsHistory],
+	(declarationsHistory) => declarationsHistory.filter(d => d.type === declarationTypes.COINCHE),
 );

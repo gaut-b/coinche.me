@@ -1,16 +1,17 @@
 import actionTypes from './actionsTypes';
 
 const INITIAL_STATE = {
-  deck: [],
-  tricks: [],
-  onTable: [],
-  players: [],
+  local: {},
+  game: {},
 }
 
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case actionTypes.UPDATED_SERVER_STATE:
-      return action.payload;
+      return {
+        ...state,
+        game: action.payload
+      };
     default:
       return state;
   };

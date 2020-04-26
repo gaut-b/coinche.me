@@ -5,11 +5,9 @@ import trumpTypes from '../../../shared/constants/trumpTypes';
 import {
   selectPlayers,
   selectCurrentPlayer,
-  selectDeclarationsHistory
+  selectDeclarationsHistory,
+  selectCurrentDeclaration,
 } from '../redux/selectors';
-import {
-  selectCurrentDeclaration
-} from '../../../server/redux/selectors';
 import cardSymbols from '../../images/symbols';
 import {name} from '../../../shared/utils/player';
 

@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
 import {connect} from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import {selectTricks, selectPlayers, selectTeams} from '../redux/selectors';
 import {newGame} from '../redux/actions';
 import { LocalStateContext } from '../pages/GamePage.js';
@@ -46,14 +47,14 @@ const Score = ({players, tricks, teams, newGame}) => {
   );
 };
 
+const mapStateToProps = createStructuredSelector({
+  players: selectPlayers,
+  tricks: selectTricks,
+  teams: selectTeams,
+})
+
 const mapDispatchToProps = (dispatch) => ({
   newGame: (tableId) => dispatch(newGame(tableId)),
 });
-
-const mapStateToProps = (state) => ({
-  players: selectPlayers(state),
-  tricks: selectTricks(state),
-  teams: selectTeams(state),
-})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Score);

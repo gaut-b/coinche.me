@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { selectTeams } from '../redux/selectors';
 
 import '../../scss/components/ScoreReminder.scss';
@@ -27,8 +28,8 @@ const ScoreReminder = ({ teams }) => {
 	);
 };
 
-const mapStateToProps = (state) => ({
-	teams: selectTeams(state),
+const mapStateToProps = createStructuredSelector({
+	teams: selectTeams,
 });
 
 export default connect(mapStateToProps)(ScoreReminder);

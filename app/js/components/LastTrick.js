@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { selectLastTrick } from '../redux/selectors';
 import { LocalStateContext } from '../pages/GamePage'
 import Card from './Card';
@@ -22,8 +23,8 @@ const LastTrick = ({toggleLastTrick,  lastTrick}) => {
     );
   };
 
-  const mapStateToProps = (state) => ({
-    lastTrick: selectLastTrick(state),
+  const mapStateToProps = createStructuredSelector({
+    lastTrick: selectLastTrick,
   });
 
   export default connect(mapStateToProps)(LastTrick);

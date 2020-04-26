@@ -1,5 +1,6 @@
 import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { collect } from '../redux/actions';
 import PropTypes from 'prop-types';
 import {LocalStateContext} from '../pages/GamePage';
@@ -36,10 +37,10 @@ Table.propTypes = {
   onTable: PropTypes.array.isRequired,
 }
 
-const mapStateToProps = state => ({
-  currentPlayer: selectCurrentPlayer(state),
-  onTable: selectOnTable(state),
-  canCollect: selectCanCollect(state),
+const mapStateToProps = createStructuredSelector({
+  currentPlayer: selectCurrentPlayer,
+  onTable: selectOnTable,
+  canCollect: selectCanCollect,
 });
 
 const mapDispatchToProps = (dispatch) => ({

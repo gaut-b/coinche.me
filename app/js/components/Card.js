@@ -1,5 +1,6 @@
 import React, { Component, useContext } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { LocalStateContext } from '../pages/GamePage';
 import { playCard, getCardBack } from '../redux/actions';
 import { selectOnTable, selectIsActivePlayer } from '../redux/selectors';
@@ -18,7 +19,7 @@ const Card = ({value, onTable, isActivePlayer, isHidden, isSelectable, playCard,
     if (!isSelectable) return;
     const cardValue = value;
     if (!isActivePlayer) {
-      if (!window.confirm("Ce n'est pas votre tour !")) 
+      if (!window.confirm("Ce n'est pas votre tour !"))
       return;
     };
     (onTable.find(({value}) => value === cardValue)) ? getCardBack(tableId, value) : playCard(tableId, value);
@@ -38,9 +39,9 @@ Card.propTypes = {
   playCard: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = (state) => ({
-  onTable: selectOnTable(state),
-  isActivePlayer: selectIsActivePlayer(state),
+const mapStateToProps = createStructuredSelector({
+  onTable: selectOnTable,
+  isActivePlayer: selectIsActivePlayer,
 })
 
 const mapDispatchToProps = (dispatch) => ({

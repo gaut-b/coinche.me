@@ -6,7 +6,8 @@ import {pluralize} from '../../../shared/utils/string';
 import {random} from '../../../shared/utils/array';
 import { playCard, collect } from '../redux/actions';
 import {LocalStateContext} from '../pages/GamePage';
-import { selectCanCollect, selectActivePlayerName } from '../redux/selectors';
+import { selectPlayerByPosition, selectCanCollect, selectActivePlayerName, selectTricks } from '../redux/selectors';
+
 
 import '../../scss/components/player.scss';
 
@@ -66,8 +67,8 @@ Player.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  player: state.players.find(p => (p.position === ownProps.position)),
-  tricks: state.tricks,
+  player: selectPlayerByPosition(state)(ownProps.position),
+  tricks: selectTricks(state),
   canCollect: selectCanCollect(state),
   activePlayerName: selectActivePlayerName(state),
 });

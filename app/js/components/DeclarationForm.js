@@ -9,16 +9,17 @@ import {trumpTypes, trumpNames} from '../../../shared/constants/trumpTypes';
 import declarationTypes from '../../../shared/constants/declarationTypes';
 import { first, last, range } from '../../../shared/utils/array';
 import cardSymbols from '../../images/symbols';
-import {selectPlayers,
-        selectCurrentPlayer,
-        selectIsActivePlayer,
-        selectActivePlayer,
-        selectDeclarationsHistory,
-        selectPartnerId } from '../redux/selectors';
 import {
+  selectPlayers,
+  selectCurrentPlayer,
+  selectIsActivePlayer,
+  selectActivePlayer,
+  selectDeclarationsHistory,
+  selectPartnerId,
   selectCurrentDeclaration,
-  selectIsCoinched
-} from '../../../server/redux/selectors';
+  selectIsCoinched,
+} from '../redux/selectors';
+
 import {name} from '../../../shared/utils/player';
 
 import '../../scss/components/DeclarationForm.scss';

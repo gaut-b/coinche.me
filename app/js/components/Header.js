@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { Link } from 'react-router-dom';
 import { LocalStateContext } from '../pages/GamePage.js';
 import '../../scss/components/header.scss';
@@ -87,9 +88,9 @@ const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) =
   )
 }
 
-const mapStateToProps = state => ({
-  currentPlayer: selectCurrentPlayer(state),
-  nbPlayers: selectNbPlayers(state),
+const mapStateToProps = createStructuredSelector({
+  currentPlayer: selectCurrentPlayer,
+  nbPlayers: selectNbPlayers,
 });
 
 const mapDispatchToProps = (dispatch) => ({
