@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {trumpNames} from '../../../shared/constants/trumpTypes';
 import declarationTypes from '../../../shared/constants/declarationTypes';
-import {selectPlayers} from '../redux/selectors';
+import {selectPlayers} from '../redux/selectors/game';
 
 const Declaration = ({value, players}) => {
   if (value) {

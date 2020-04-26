@@ -1,17 +1,17 @@
 import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { selectLastTrick } from '../redux/selectors';
-import { LocalStateContext } from '../pages/GamePage'
+import { selectLastTrick } from '../redux/selectors/game';
+import { selectIsLastTrickVisible } from '../redux/selectors/local';
+import { toggleIsLastTrickVisible } from '../redux/actions/localActions';
 import Card from './Card';
 
 import '../../scss/components/lastTrick.scss';
 
-const LastTrick = ({toggleLastTrick,  lastTrick}) => {
-  const {isLastTrickVisible} = useContext(LocalStateContext);
+const LastTrick = ({isLastTrickVisible, toggleIsLastTrickVisible, lastTrick}) => {
 
   return (
-    <div className={`overlay ${isLastTrickVisible ? 'isVisible' : ''}`} onClick={toggleLastTrick} >
+    <div className={`overlay ${isLastTrickVisible ? 'isVisible' : ''}`} onClick={e => toggleIsLastTrickVisible()} >
       <div className="overlay-content hand is-normal">
         { (lastTrick) ?
           lastTrick.cards.map( c => <Card key={c} value={c} /> ) :
@@ -24,6 +24,11 @@ const LastTrick = ({toggleLastTrick,  lastTrick}) => {
 
   const mapStateToProps = createStructuredSelector({
     lastTrick: selectLastTrick,
+    isLastTrickVisible: selectIsLastTrickVisible
   });
 
-  export default connect(mapStateToProps)(LastTrick);
+  const mapDispatchToProps = {
+    toggleIsLastTrickVisible,
+  }
+
+  export default connect(mapStateToProps, mapDispatchToProps)(LastTrick);

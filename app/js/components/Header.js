@@ -4,10 +4,11 @@ import { createStructuredSelector } from 'reselect';
 import { Link } from 'react-router-dom';
 import '../../scss/components/header.scss';
 import { undo, distribute } from '../redux/actions/socketActions';
+import { toggleIsLastTrickVisible } from '../redux/actions/localActions';
 import {isArray, isFunction} from '../../../shared/utils/boolean';
-import {selectCurrentPlayer, selectNbPlayers, selectTableId} from '../redux/selectors'
+import {selectCurrentPlayer, selectNbPlayers, selectTableId} from '../redux/selectors/game'
 
-const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick, tableId}) => {
+const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleIsLastTrickVisible, tableId}) => {
   const [menuShown, showMenu] = useState(false);
 
   const toggleMenu = e => showMenu(!menuShown);
@@ -35,7 +36,7 @@ const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick, ta
       label: 'Revoir le dernier pli',
       onClick: e => {
         toggleMenu();
-        toggleLastTrick();
+        toggleIsLastTrickVisible();
       },
     }]
   }] : [])
@@ -92,6 +93,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = {
   distribute,
   undo,
+  toggleIsLastTrickVisible,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

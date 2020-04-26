@@ -1,7 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import {selectIsDistributed, selectIsLastTrick, selectTricks, selectIsGameStarted} from '../redux/selectors';
+import {
+  selectIsDistributed,
+  selectIsLastTrick,
+  selectTricks,
+  selectIsGameStarted
+} from '../redux/selectors/game';
 import {
   NORTH,
   EAST,

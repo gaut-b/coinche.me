@@ -1,11 +1,12 @@
-import actionTypes from '../actionsTypes';
+import {socketActionTypes} from '../actionsTypes';
+import gameActionTypes from '../../../../shared/constants/actionsTypes';
 import socketEvents from '../../../../shared/constants/socketEvents';
 
 export const subscribeServerUpdate = (tableId, username) => {
   return {
-    type: actionTypes.RESET_LOCAL_GAME,
+    type: socketActionTypes.RESET_LOCAL_GAME,
     listenSocketEvent: socketEvents.UPDATED_STATE,
-    dispatchOnSocketEvent: actionTypes.UPDATED_SERVER_STATE,
+    dispatchOnSocketEvent: socketActionTypes.UPDATED_SERVER_STATE,
     emit: socketEvents.JOIN,
     payload: {
       tableId,
@@ -16,7 +17,7 @@ export const subscribeServerUpdate = (tableId, username) => {
 
 export const unsubscribeServerUpdate = tableId => {
   return {
-    type: actionTypes.NO_LOCAL_EFFECT,
+    type: socketActionTypes.NO_LOCAL_EFFECT,
     stopListeningSocketEvent: socketEvents.UPDATED_STATE,
     emit: socketEvents.LEAVE,
     payload: {tableId},
@@ -24,7 +25,7 @@ export const unsubscribeServerUpdate = tableId => {
 }
 
 const buildSocketDispatchAction = (type, payload) => ({
-  type: actionTypes.NO_LOCAL_EFFECT,
+  type: socketActionTypes.NO_LOCAL_EFFECT,
   emit: socketEvents.DISPATCH,
   payload: {
     action: {
@@ -35,31 +36,31 @@ const buildSocketDispatchAction = (type, payload) => ({
 })
 
 export const distribute = playerId =>
-  buildSocketDispatchAction(actionTypes.DISTRIBUTE, {playerId})
+  buildSocketDispatchAction(gameActionTypes.DISTRIBUTE, {playerId})
 
 export const swichTeams = indexes =>
-  buildSocketDispatchAction(actionTypes.SWITCH_TEAMS, {indexes})
+  buildSocketDispatchAction(gameActionTypes.SWITCH_TEAMS, {indexes})
 
 export const playCard = card =>
-  buildSocketDispatchAction(actionTypes.PLAY_CARD, card)
+  buildSocketDispatchAction(gameActionTypes.PLAY_CARD, card)
 
 export const getCardBack = card =>
-  buildSocketDispatchAction(actionTypes.CARD_BACK, card)
+  buildSocketDispatchAction(gameActionTypes.CARD_BACK, card)
 
 export const collect = card =>
-  buildSocketDispatchAction(actionTypes.COLLECT, {playerIndex})
+  buildSocketDispatchAction(gameActionTypes.COLLECT, {playerIndex})
 
 export const newGame = () =>
-  buildSocketDispatchAction(actionTypes.NEW_GAME, {})
+  buildSocketDispatchAction(gameActionTypes.NEW_GAME, {})
 
 export const undo = () =>
-  buildSocketDispatchAction(actionTypes.UNDO, {})
+  buildSocketDispatchAction(gameActionTypes.UNDO, {})
 
 export const declare = (playerId, declaration) =>
-  buildSocketDispatchAction(actionTypes.DECLARE, {playerId, ...declaration})
+  buildSocketDispatchAction(gameActionTypes.DECLARE, {playerId, ...declaration})
 
 export const launchGame = () =>
-  buildSocketDispatchAction(actionTypes.LAUNCH_GAME, {})
+  buildSocketDispatchAction(gameActionTypes.LAUNCH_GAME, {})
 
 export const getScore = () =>
-  buildSocketDispatchAction(actionTypes.GET_SCORE, {})
+  buildSocketDispatchAction(gameActionTypes.GET_SCORE, {})

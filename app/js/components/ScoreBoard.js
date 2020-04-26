@@ -10,7 +10,7 @@ import {
 	selectTeams,
 	selectPartnerId,
 	selectCurrentDeclaration,
-} from '../redux/selectors';
+} from '../redux/selectors/game';
 
 import Declaration from './Declaration';
 

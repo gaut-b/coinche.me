@@ -15,7 +15,7 @@ import {
   selectPartnerId,
   selectCurrentDeclaration,
   selectIsCoinched,
-} from '../redux/selectors';
+} from '../redux/selectors/game';
 
 import {name} from '../../../shared/utils/player';
 

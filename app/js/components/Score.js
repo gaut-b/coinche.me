@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import {selectTricks, selectPlayers, selectTeams} from '../redux/selectors';
+import {selectTricks, selectPlayers, selectTeams} from '../redux/selectors/game';
 import {newGame} from '../redux/actions/socketActions';
 import {include} from '../../../shared/utils/array';
 

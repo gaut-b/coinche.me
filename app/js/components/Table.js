@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { collect } from '../redux/actions/socketActions';
 import PropTypes from 'prop-types';
-import {selectCurrentPlayer, selectCanCollect, selectOnTable} from '../redux/selectors'
+import {selectCurrentPlayer, selectCanCollect, selectOnTable} from '../redux/selectors/game'
 import {SOUTH} from '../../../shared/constants/positions';
 
 import '../../scss/components/table.scss';

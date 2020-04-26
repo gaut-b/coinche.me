@@ -7,8 +7,6 @@ import Layout from '../components/Layout';
 import Game from '../components/Game';
 import {localstorageUsernameKey} from '../constants';
 
-export const LocalStateContext = createContext('');
-
 const GamePage = ({subscribeServerUpdate, unsubscribeServerUpdate, match: {params: {tableId}}}) => {
   if (!tableId) return (
     <Redirect to="/" />
@@ -25,31 +23,12 @@ const GamePage = ({subscribeServerUpdate, unsubscribeServerUpdate, match: {param
     }
   }, []);
 
-  const [localState, setLocalState] = useState({
-    // tableId,
-    isLastTrickVisible: false,
-  });
-
-  const toggleLastTrick = () => {
-    setLocalState({
-      ...localState,
-      isLastTrickVisible: !localState.isLastTrickVisible,
-    })
-  };
-
   return (
-    <LocalStateContext.Provider value={localState}>
-      <Layout toggleLastTrick={toggleLastTrick}>
-        <Game />
-      </Layout>
-    </LocalStateContext.Provider>
+    <Layout>
+      <Game />
+    </Layout>
   );
 };
-
-// const mapDispatchToProps = (dispatch) => ({
-//   subscribeServerUpdate: (tableId, username) => dispatch(subscribeServerUpdate(tableId, username)),
-//   unsubscribeServerUpdate: (tableId) => dispatch(unsubscribeServerUpdate(tableId)),
-// })
 
 const mapDispatchToProps = {
   subscribeServerUpdate,

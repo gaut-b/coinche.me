@@ -8,7 +8,7 @@ import {
   selectCurrentPlayer,
   selectPlayers,
   selectTableId,
-} from '../redux/selectors';
+} from '../redux/selectors/game';
 import {queryParamToJoin} from '../constants';
 import { distribute, swichTeams } from '../redux/actions/socketActions';
 import '../../scss/components/controls.scss';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { selectTeams } from '../redux/selectors';
+import { selectTeams } from '../redux/selectors/game';
 
 import '../../scss/components/ScoreReminder.scss';
 

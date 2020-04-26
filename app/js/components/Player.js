@@ -5,7 +5,7 @@ import {SOUTH, NORTH} from '../../../shared/constants/positions';
 import {pluralize} from '../../../shared/utils/string';
 import {random} from '../../../shared/utils/array';
 import { playCard, collect } from '../redux/actions/socketActions';
-import { selectPlayerByPosition, selectCanCollect, selectActivePlayerName, selectTricks } from '../redux/selectors';
+import { selectPlayerByPosition, selectCanCollect, selectActivePlayerName, selectTricks } from '../redux/selectors/game';
 
 
 import '../../scss/components/player.scss';

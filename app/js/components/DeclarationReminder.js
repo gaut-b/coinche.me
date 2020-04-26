@@ -6,7 +6,7 @@ import {
 	selectDeclarationsHistory,
 	selectCurrentDeclaration,
 	selectIsCoinched,
-} from '../redux/selectors';
+} from '../redux/selectors/game';
 import trumpTypes from '../../../shared/constants/trumpTypes';
 import cardSymbols from '../../images/symbols';
 

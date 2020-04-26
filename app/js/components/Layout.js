@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 import LastTrick from './LastTrick';
 
-const Layout = ({mode, children, toggleLastTrick}) => {
+const Layout = ({mode, children}) => {
   const containerMode = mode === 'container';
   const wrappedChildren = containerMode ? (
     <div className="container">
@@ -16,8 +16,8 @@ const Layout = ({mode, children, toggleLastTrick}) => {
 
   return (
     <div>
-      <Header toggleLastTrick={toggleLastTrick}/>
-      <LastTrick toggleLastTrick={toggleLastTrick} />
+      <Header />
+      <LastTrick />
       <div className={`section is-main ${containerMode ? '' : 'is-full-screen'}`}>
         {wrappedChildren}
       </div>

@@ -2,7 +2,7 @@ import {last} from '../../../shared/utils/array';
 import io from 'socket.io-client';
 import socketEvents from '../../../shared/constants/socketEvents';
 import store from './store';
-import {selectTableId} from './selectors';
+import {selectTableId} from './selectors/game';
 
 const dispatchWithTableId = payload => {
   return {

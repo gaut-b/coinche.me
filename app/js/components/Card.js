@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { playCard, getCardBack } from '../redux/actions/socketActions';
-import { selectOnTable, selectIsActivePlayer } from '../redux/selectors';
+import { selectOnTable, selectIsActivePlayer } from '../redux/selectors/game';
 import PropTypes from 'prop-types';
 
 import '../../scss/components/card.scss';
