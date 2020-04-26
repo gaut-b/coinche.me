@@ -290,7 +290,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           }
         } else {
           if (currentDeclaration.goal === 250) {
-            if (preTotal !== 0) team.currentGame.gameTotal = 162 * coef + belote;
+            if (preTotal !== 0) team.currentGame.gameTotal = 250 * coef + belote;
             else team.currentGame.gameTotal = belote;
           } else if (preTotal <= (162 - currentDeclaration.goal)) {
             team.currentGame.gameTotal = belote;
