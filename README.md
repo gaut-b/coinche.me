@@ -4,7 +4,7 @@ Jouer aux cartes en ligne entre amis sans création de compte.
 
 ## Comment jouer ?
 
-Toutes les informations sont sur la [page d'aide dédiée](./js/content/help.md).
+Toutes les informations sont sur la [page d'aide dédiée](./app/js/content/help.md).
 
 ## Comment contribuer ?
 
