@@ -1,11 +1,10 @@
-import React, { Component, useContext } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {SOUTH, NORTH} from '../../../shared/constants/positions';
 import {pluralize} from '../../../shared/utils/string';
 import {random} from '../../../shared/utils/array';
-import { playCard, collect } from '../redux/actions';
-import {LocalStateContext} from '../pages/GamePage';
+import { playCard, collect } from '../redux/actions/socketActions';
 import { selectPlayerByPosition, selectCanCollect, selectActivePlayerName, selectTricks } from '../redux/selectors';
 
 
@@ -16,9 +15,7 @@ import Hand from './Hand.js';
 
 const HandSymbol = require('../../images/hand2.svg');
 
-const Player = ({position, player, tricks, playRandomCard, canCollect, collect, activePlayerName}) => {
-
-  const {tableId} = useContext(LocalStateContext);
+const Player = ({position, player, tricks, canCollect, collect, activePlayerName}) => {
 
   if (!player) return null;
   const { name,
@@ -30,7 +27,7 @@ const Player = ({position, player, tricks, playRandomCard, canCollect, collect, 
         } = player;
 
   const handleClick = (e) => {
-    if (!id) playRandomCard(tableId, hand)
+    if (!id) playCard(random(hand))
     return;
   }
 
@@ -46,7 +43,7 @@ const Player = ({position, player, tricks, playRandomCard, canCollect, collect, 
       }
       <span className={`${!id ? 'clickable' : ''}`} onClick={handleClick} >{!id ? 'BOT' : name} {isDealer ? 'a distribué' : ''} ({pluralize(playerTricks.length, 'pli')})</span>
       &nbsp;
-      {!id && canCollect && <button className="button is-small is-text is-rounded" onClick={e => collect(tableId, index)}>Ramasser</button> }
+      {!id && canCollect && <button className="button is-small is-text is-rounded" onClick={e => collect(index)}>Ramasser</button> }
     </div>
   );
 
@@ -73,10 +70,10 @@ const mapStateToProps = (state, ownProps) => ({
   activePlayerName: selectActivePlayerName(state),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  playRandomCard: (tableId, hand) => dispatch(playCard(tableId, random(hand))),
-  collect: (tableId, index) => dispatch(collect(tableId, index)),
-})
+const mapDispatchToProps = {
+  playCard,
+  collect,
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Player);
 

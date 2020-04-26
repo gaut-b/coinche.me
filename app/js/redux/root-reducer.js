@@ -12,6 +12,11 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ...state,
         game: action.payload
       };
+    case actionTypes.RESET_LOCAL_GAME:
+      return {
+        ...state,
+        game: {}
+      };
     default:
       return state;
   };

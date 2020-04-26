@@ -1,5 +1,15 @@
 import {last} from '../../../shared/utils/array';
 import io from 'socket.io-client';
+import socketEvents from '../../../shared/constants/socketEvents';
+import store from './store';
+import {selectTableId} from './selectors';
+
+const dispatchWithTableId = payload => {
+  return {
+    tableId: selectTableId(store.getState()),
+    ...payload
+  }
+}
 
 export default function socketMiddleware() {
   const socket = io.connect('');
@@ -9,7 +19,7 @@ export default function socketMiddleware() {
       return next(action);
     }
 
-    const { listenSocketEvent, stopListeningSocketEvent, dispatchOnSocketEvent, emit, payload: actionPayload } = action;
+    const { listenSocketEvent, stopListeningSocketEvent, dispatchOnSocketEvent, emit: socketEvent, payload } = action;
 
     if (listenSocketEvent && dispatchOnSocketEvent) {
       socket.on(listenSocketEvent, socketPayload => {
@@ -17,8 +27,13 @@ export default function socketMiddleware() {
       });
     }
 
-    if (emit) {
-      socket.emit(emit, actionPayload);
+    if (socketEvent) {
+      socket.emit(
+        socketEvent,
+        socketEvent === socketEvents.DISPATCH ?
+          dispatchWithTableId(payload) :
+          payload
+      );
     }
 
     if (stopListeningSocketEvent) {
@@ -28,3 +43,4 @@ export default function socketMiddleware() {
     return next(action);
   };
 }
+

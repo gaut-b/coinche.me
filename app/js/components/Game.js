@@ -1,7 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { LocalStateContext } from '../pages/GamePage.js';
 import {selectIsDistributed, selectIsLastTrick, selectTricks, selectIsGameStarted} from '../redux/selectors';
 import {
   NORTH,
@@ -18,8 +17,7 @@ import DeclarationForm from './DeclarationForm.js';
 import ScoreReminder from './ScoreReminder.js';
 import DeclarationReminder from './DeclarationReminder';
 
-const Game = ({onTable, isDistributed, isLastTrick, isGameStarted, tricks}) => {
-  const {tableId} = useContext(LocalStateContext);
+const Game = ({isDistributed, isLastTrick, isGameStarted, tricks}) => {
 
   const GameTable = () => {
     return (

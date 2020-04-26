@@ -7,7 +7,6 @@ import {
 	selectCurrentDeclaration,
 	selectIsCoinched,
 } from '../redux/selectors';
-import declarationTypes from '../../../shared/constants/declarationTypes';
 import trumpTypes from '../../../shared/constants/trumpTypes';
 import cardSymbols from '../../images/symbols';
 

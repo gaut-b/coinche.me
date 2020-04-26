@@ -1,17 +1,14 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {selectTricks, selectPlayers, selectTeams} from '../redux/selectors';
-import {newGame} from '../redux/actions';
-import { LocalStateContext } from '../pages/GamePage.js';
+import {newGame} from '../redux/actions/socketActions';
 import {include} from '../../../shared/utils/array';
 
 import ScoreBoard from './ScoreBoard';
 import Card from './Card';
 
 const Score = ({players, tricks, teams, newGame}) => {
-
-  const {tableId} = useContext(LocalStateContext);
 
   const teamWithTricks = teams.map(team => {
     return {
@@ -42,7 +39,7 @@ const Score = ({players, tricks, teams, newGame}) => {
           );
         })
       }
-      <button className="button is-primary is-large" onClick={() => newGame(tableId)} style={{marginTop: '2rem'}}>New game</button>
+      <button className="button is-primary is-large" onClick={() => newGame()} style={{marginTop: '2rem'}}>New game</button>
     </div>
   );
 };
@@ -53,8 +50,8 @@ const mapStateToProps = createStructuredSelector({
   teams: selectTeams,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  newGame: (tableId) => dispatch(newGame(tableId)),
-});
+const mapDispatchToProps = {
+  newGame,
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Score);

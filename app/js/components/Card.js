@@ -1,8 +1,7 @@
-import React, { Component, useContext } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { LocalStateContext } from '../pages/GamePage';
-import { playCard, getCardBack } from '../redux/actions';
+import { playCard, getCardBack } from '../redux/actions/socketActions';
 import { selectOnTable, selectIsActivePlayer } from '../redux/selectors';
 import PropTypes from 'prop-types';
 
@@ -12,7 +11,6 @@ import '../../scss/components/card.scss';
 const images = require('../../images/cards/*.svg');
 
 const Card = ({value, onTable, isActivePlayer, isHidden, isSelectable, playCard, getCardBack}) => {
-  const {tableId} = useContext(LocalStateContext);
   const image = isHidden ? images['BLUE_BACK'] : images[value];
 
   const handleClick = (e) => {
@@ -22,7 +20,7 @@ const Card = ({value, onTable, isActivePlayer, isHidden, isSelectable, playCard,
       if (!window.confirm("Ce n'est pas votre tour !"))
       return;
     };
-    (onTable.find(({value}) => value === cardValue)) ? getCardBack(tableId, value) : playCard(tableId, value);
+    (onTable.find(({value}) => value === cardValue)) ? getCardBack(value) : playCard(value);
   }
 
   return (
@@ -44,9 +42,9 @@ const mapStateToProps = createStructuredSelector({
   isActivePlayer: selectIsActivePlayer,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  playCard: (tableId, value) => dispatch(playCard(tableId, value)),
-  getCardBack: (tableId, value) => dispatch(getCardBack(tableId, value)),
-})
+const mapDispatchToProps = {
+  playCard,
+  getCardBack,
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Card);

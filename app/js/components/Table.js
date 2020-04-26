@@ -1,9 +1,8 @@
-import React, { Component, useContext } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { collect } from '../redux/actions';
+import { collect } from '../redux/actions/socketActions';
 import PropTypes from 'prop-types';
-import {LocalStateContext} from '../pages/GamePage';
 import {selectCurrentPlayer, selectCanCollect, selectOnTable} from '../redux/selectors'
 import {SOUTH} from '../../../shared/constants/positions';
 
@@ -12,11 +11,9 @@ import Card from './Card';
 
 const Table = ({onTable, currentPlayer, collect, canCollect}) => {
 
-  const {tableId} = useContext(LocalStateContext);
-
   const handleClick = (e) => {
     e.stopPropagation();
-    collect(tableId, currentPlayer.index);
+    collect(currentPlayer.index);
   };
 
   return (
@@ -43,9 +40,8 @@ const mapStateToProps = createStructuredSelector({
   canCollect: selectCanCollect,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  collect: (tableId, index) => dispatch(collect(tableId, index)),
-  undo: (tableId) => dispatch(undo(tableId)),
-})
+const mapDispatchToProps = {
+  collect,
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Table);

@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { useBeforeunload } from 'react-beforeunload';
-import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions';
+import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions/socketActions';
 import Layout from '../components/Layout';
 import Game from '../components/Game';
 import {localstorageUsernameKey} from '../constants';
@@ -21,12 +21,12 @@ const GamePage = ({subscribeServerUpdate, unsubscribeServerUpdate, match: {param
   useEffect(() => {
     subscribeServerUpdate(tableId, localStorage.getItem(localstorageUsernameKey))
     return () => {
-      unsubscribeServerUpdate(tableId);
+      // unsubscribeServerUpdate(tableId);
     }
   }, []);
 
   const [localState, setLocalState] = useState({
-    tableId,
+    // tableId,
     isLastTrickVisible: false,
   });
 
@@ -46,9 +46,14 @@ const GamePage = ({subscribeServerUpdate, unsubscribeServerUpdate, match: {param
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  subscribeServerUpdate: (tableId, username) => dispatch(subscribeServerUpdate(tableId, username)),
-  unsubscribeServerUpdate: (tableId) => dispatch(unsubscribeServerUpdate(tableId)),
-})
+// const mapDispatchToProps = (dispatch) => ({
+//   subscribeServerUpdate: (tableId, username) => dispatch(subscribeServerUpdate(tableId, username)),
+//   unsubscribeServerUpdate: (tableId) => dispatch(unsubscribeServerUpdate(tableId)),
+// })
+
+const mapDispatchToProps = {
+  subscribeServerUpdate,
+  unsubscribeServerUpdate
+}
 
 export default connect(null, mapDispatchToProps)(GamePage);

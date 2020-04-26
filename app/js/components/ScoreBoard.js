@@ -1,8 +1,7 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { getScore } from '../redux/actions';
-import { LocalStateContext } from '../pages/GamePage.js';
+import { getScore } from '../redux/actions/socketActions';
 import {
 	selectScore,
 	selectPlayers,
@@ -17,10 +16,8 @@ import Declaration from './Declaration';
 
 const ScoreBoard = ({ getScore, score, players, currentPlayer, lastMasterIndex, currentDeclaration, teams, partnerId }) => {
 
-	const {tableId} = useContext(LocalStateContext);
-
 	useEffect(() => {
-	  getScore(tableId)
+	  getScore()
 	}, []);
 
 	return (!teams.filter(team => team.currentGame).length) ? null :
@@ -62,10 +59,6 @@ const ScoreBoard = ({ getScore, score, players, currentPlayer, lastMasterIndex, 
 		</div>
 };
 
-const mapDispatchToProps = (dispatch) => ({
-	getScore: (tableId) => dispatch(getScore(tableId)),
-});
-
 const mapStateToProps = createStructuredSelector({
 	score: selectScore,
 	players: selectPlayers,
@@ -75,5 +68,9 @@ const mapStateToProps = createStructuredSelector({
 	teams: selectTeams,
 	partnerId: selectPartnerId
 });
+
+const mapDispatchToProps = {
+	getScore,
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScoreBoard);

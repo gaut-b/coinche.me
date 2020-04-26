@@ -46,36 +46,36 @@ const dispatchActionAndBroadcastNewState = async (tableId, action) => {
   const store = await getStore(tableId);
   store.dispatch(action);
   const state = store.getState().present;
-  return emitEachInRoom(io, tableId, socketEvents.UPDATED_STATE, socketId => subjectiveState(state, socketId));
+  return emitEachInRoom(io, tableId, socketEvents.UPDATED_STATE, socketId => subjectiveState({tableId, ...state}, socketId));
 }
 
-try {
+// try {
   io.on('connection', socket => {
     const playerId = process.env.IGNORE_COOKIE ? uuid() : cookie.parse(socket.handshake.headers.cookie || '')['connect.sid'];
     console.log('New socket connection', socket.id, playerId)
 
-    socket.on('join', async ({tableId, username}) => {
+    socket.on(socketEvents.JOIN, async ({tableId, username}) => {
       socket.join(tableId);
       dispatchActionAndBroadcastNewState(tableId, join({playerId, socketId: socket.id, playerName: username}))
     })
 
-    socket.on('dispatch', async ({tableId, action}) => {
+    socket.on(socketEvents.DISPATCH, async ({tableId, action}) => {
       dispatchActionAndBroadcastNewState(tableId, action)
     });
 
-    socket.on('leave', async ({tableId}) => {
+    socket.on(socketEvents.LEAVE, async ({tableId}) => {
       socket.disconnect();
       dispatchActionAndBroadcastNewState(tableId, leave(socket.id))
     });
 
-    socket.on('disconnect', async () => {
+    socket.on(socketEvents.DISCONNECT, async () => {
       console.log('disconnected', socket.id);
     })
   });
-} catch(e) {
-  console.error('Socket error:')
-  console.error(e);
-}
+// } catch(e) {
+//   console.error('Socket error:')
+//   console.error(e);
+// }
 
 server.listen(PORT, () => {
   console.log(`Le coincheur listening on port ${PORT}!`)

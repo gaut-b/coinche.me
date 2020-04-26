@@ -1,20 +1,14 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Link } from 'react-router-dom';
-import { LocalStateContext } from '../pages/GamePage.js';
 import '../../scss/components/header.scss';
-import { undo, distribute } from '../redux/actions';
+import { undo, distribute } from '../redux/actions/socketActions';
 import {isArray, isFunction} from '../../../shared/utils/boolean';
-import {selectCurrentPlayer, selectNbPlayers} from '../redux/selectors'
+import {selectCurrentPlayer, selectNbPlayers, selectTableId} from '../redux/selectors'
 
-import LastTrick from './LastTrick';
-
-const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) => {
+const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick, tableId}) => {
   const [menuShown, showMenu] = useState(false);
-  // const [isLastTrickVisible, toggleLastTrick] = useState(false);
-
-  const {tableId, isLastTrickVisible} = useContext(LocalStateContext);
 
   const toggleMenu = e => showMenu(!menuShown);
 
@@ -26,14 +20,15 @@ const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) =
     to: '/config'
   }].concat(tableId ? [{
     label: 'Partie en cours',
+    to: `/game/${tableId}`,
     dropdown: [{
       label: 'Annuler l\'action précédente',
-      onClick: e => undo(tableId),
+      onClick: e => undo(),
     }, {
       label: 'Redistribuer',
       onClick: e => {
         if (window.confirm('Voulez-vous vraiment redistribuer une nouvelle partie et annuler celle en cours ?')) {
-          distribute(tableId, currentPlayer.id)
+          distribute(currentPlayer.id)
         }
       },
     }, {
@@ -46,24 +41,24 @@ const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) =
   }] : [])
 
   const renderMenuEntry = (entry, i) => {
-    if (entry.divider)
-      return <hr key={`divider-${i}`} className="navbar-divider" />;
-    if (entry.to)
-      return <Link key={entry.label} className="navbar-item" to={entry.to}>{entry.label}</Link>;
-    if (isFunction(entry.onClick))
-      return <a key={entry.label} className="navbar-item" onClick={e => (entry.onClick() && toggleMenu())}>{entry.label}</a>;
     if (isArray(entry.dropdown)) {
       return (
         <div key={entry.label} className="navbar-item has-dropdown is-active">
-          <a className="navbar-link is-arrowless">
+          <Link to={entry.to} className="navbar-link is-arrowless">
             {entry.label}
-          </a>
+          </Link>
           <div className="navbar-dropdown">
             {entry.dropdown.map(renderMenuEntry)}
           </div>
         </div>
       );
     }
+    if (entry.divider)
+      return <hr key={`divider-${i}`} className="navbar-divider" />;
+    if (entry.to)
+      return <Link key={entry.label} className="navbar-item" to={entry.to}>{entry.label}</Link>;
+    if (isFunction(entry.onClick))
+      return <a key={entry.label} className="navbar-item" onClick={e => (entry.onClick() && toggleMenu())}>{entry.label}</a>;
   }
 
   return (
@@ -89,13 +84,14 @@ const Header = ({currentPlayer, nbPlayers, distribute, undo, toggleLastTrick}) =
 }
 
 const mapStateToProps = createStructuredSelector({
+  tableId: selectTableId,
   currentPlayer: selectCurrentPlayer,
   nbPlayers: selectNbPlayers,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  distribute: (tableId, playerId) => dispatch(distribute(tableId, playerId)),
-  undo: (tableId) => dispatch(undo(tableId)),
-})
+const mapDispatchToProps = {
+  distribute,
+  undo,
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

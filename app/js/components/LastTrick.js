@@ -8,17 +8,16 @@ import Card from './Card';
 import '../../scss/components/lastTrick.scss';
 
 const LastTrick = ({toggleLastTrick,  lastTrick}) => {
-
   const {isLastTrickVisible} = useContext(LocalStateContext);
 
   return (
     <div className={`overlay ${isLastTrickVisible ? 'isVisible' : ''}`} onClick={toggleLastTrick} >
-    <div className="overlay-content hand is-normal">
-    { (lastTrick) ?
-      lastTrick.cards.map( c => <Card key={c} value={c} /> ) :
-      "Aucun plis n'a été joué pour le moment"
-    }
-    </div>
+      <div className="overlay-content hand is-normal">
+        { (lastTrick) ?
+          lastTrick.cards.map( c => <Card key={c} value={c} /> ) :
+          "Aucun plis n'a été joué pour le moment"
+        }
+      </div>
     </div>
     );
   };

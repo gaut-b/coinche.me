@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
-import { declare, launchGame, newGame } from '../redux/actions';
+import { declare, launchGame, newGame } from '../redux/actions/socketActions';
 import { createStructuredSelector } from 'reselect';
-import { LocalStateContext } from '../pages/GamePage';
 import Declaration from './Declaration';
-import DeclarationHistory from './DeclarationHistory';
-import {trumpTypes, trumpNames} from '../../../shared/constants/trumpTypes';
+import {trumpNames} from '../../../shared/constants/trumpTypes';
 import declarationTypes from '../../../shared/constants/declarationTypes';
 import { first, last, range } from '../../../shared/utils/array';
-import cardSymbols from '../../images/symbols';
 import {
   selectPlayers,
   selectCurrentPlayer,
@@ -24,10 +21,7 @@ import {name} from '../../../shared/utils/player';
 
 import '../../scss/components/DeclarationForm.scss';
 
-
 const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer, partnerId, isCoinched }) => {
-
-  const {tableId} = useContext(LocalStateContext);
 
   const goalOptions = range(8, 16)
     .map(i => 10*i)
@@ -44,14 +38,14 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
       // console.log(currentDeclaration, declarationsHistory)
       // If currentPlayer made a declaration and everybody else passed OR someone has surcoinched => launch the game
       if (((currentDeclaration.playerId === currentPlayer.id) && isActivePlayer) || (declarationsHistory.filter(d => d.type === declarationTypes.COINCHE).length === 2)) {
-        launchGame(tableId);
+        launchGame();
         return;
       };
     };
 
     // If everybody passed => create a new game
     if (declarationsHistory.length === 4 && !declarationsHistory.filter(d => d.type !== declarationTypes.PASS).length) {
-      newGame(tableId);
+      newGame();
       return;
     };
 
@@ -66,13 +60,13 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
   };
 
   const doPass = () => {
-    declare(tableId, currentPlayer.id, {
+    declare(currentPlayer.id, {
       type: declarationTypes.PASS,
     });
   };
 
   const doDeclare = () => {
-    declare(tableId, currentPlayer.id, {
+    declare(currentPlayer.id, {
       type: declarationTypes.DECLARE,
       trumpType: state.trumpType,
       goal: state.goal,
@@ -80,7 +74,7 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
   };
 
   const doCoinche = () => {
-    declare(tableId, currentPlayer.id, {
+    declare(currentPlayer.id, {
       type: declarationTypes.COINCHE,
     })
   };
@@ -151,11 +145,11 @@ const mapStateToProps = createStructuredSelector({
   isCoinched: selectIsCoinched,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  declare: (tableId, playerId, declaration) => dispatch(declare(tableId, playerId, declaration)),
-  launchGame: (tableId) => dispatch(launchGame(tableId)),
-  newGame: (tableId) => dispatch(newGame(tableId)),
-});
+const mapDispatchToProps = {
+  declare,
+  launchGame,
+  newGame,
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeclarationForm);
 

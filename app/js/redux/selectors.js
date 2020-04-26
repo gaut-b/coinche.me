@@ -2,7 +2,9 @@ import get from 'lodash.get';
 import { createSelector } from 'reselect';
 import {SOUTH} from '../../../shared/constants/positions';
 import {last} from '../../../shared/utils/array';
+import declarationTypes from '../../../shared/constants/declarationTypes';
 
+export const selectTableId = state => get(state, 'game.tableId');
 export const selectPlayers = state => get(state, 'game.players', []);
 export const selectTricks = state => get(state, 'game.tricks', []);
 export const selectDeck = state => get(state, 'game.deck', []);
