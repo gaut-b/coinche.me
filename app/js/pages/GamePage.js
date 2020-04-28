@@ -5,7 +5,7 @@ import { useBeforeunload } from 'react-beforeunload';
 import { subscribeServerUpdate, unsubscribeServerUpdate } from '../redux/actions/socketActions';
 import Layout from '../components/Layout';
 import Game from '../components/Game';
-import {localstorageUsernameKey} from '../constants';
+import {localStorageKeys} from '../constants';
 
 const GamePage = ({subscribeServerUpdate, unsubscribeServerUpdate, match: {params: {tableId}}}) => {
   if (!tableId) return (
@@ -17,7 +17,7 @@ const GamePage = ({subscribeServerUpdate, unsubscribeServerUpdate, match: {param
   });
 
   useEffect(() => {
-    subscribeServerUpdate(tableId, localStorage.getItem(localstorageUsernameKey))
+    subscribeServerUpdate(tableId, localStorage.getItem(localStorageKeys.USERNAME))
     return () => {
       // unsubscribeServerUpdate(tableId);
     }

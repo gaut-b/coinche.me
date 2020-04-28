@@ -12,12 +12,15 @@ export const random = a => {
 
 export const first = a => a[0];
 export const last = a => a[a.length - 1];
-export const nextIndex = (a, i) => (i+1) % a.length;
+export const addIndex = (a, i, j) => (i+j) % a.length;
+export const nextIndex = (a, i) => addIndex(a, i, 1);
 export const next = (a, i) => a[nextIndex(a, i)];
 
 export const switchIndexes = (a, index1, index2) => {
   return Object.assign([], a, {[index1]: a[index2], [index2]: a[index1]});
 };
+
+export const shift = (a, firstIndex) => a.map((el, i, arr) => arr[addIndex(arr, firstIndex, i)])
 
 export const range = (from, to) => {
   return [...Array(to - from + 1).keys()].map(i => `${i+from}`)

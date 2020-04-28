@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
-import {localstorageUsernameKey, queryParamToJoin} from '../constants';
+import {localStorageKeys, queryParamToJoin} from '../constants';
 
 const LandingPage = (props) => {
 
   const isJoiningTableId = new URLSearchParams(props.location.search).get(queryParamToJoin);
 
-  const [username, setUsername] = useState(localStorage.getItem(localstorageUsernameKey) || '');
-  const [mayNeedHelp, _setMayNeedHelp] = useState(!localStorage.getItem(localstorageUsernameKey) && !isJoiningTableId);
+  const [username, setUsername] = useState(localStorage.getItem(localStorageKeys.USERNAME) || '');
+  const [mayNeedHelp, _setMayNeedHelp] = useState(!localStorage.getItem(localStorageKeys.USERNAME) && !isJoiningTableId);
   const [tableId, setTableId] = useState(isJoiningTableId || '');
 
   const setUsernameAndSave = value => {
     setUsername(value);
-    localStorage.setItem(localstorageUsernameKey, value);
+    localStorage.setItem(localStorageKeys.USERNAME, value);
   };
 
   const joinTable = (e) => {

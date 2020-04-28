@@ -15,7 +15,7 @@ import Hand from './Hand.js';
 
 const HandSymbol = require('../../images/hand2.svg');
 
-const Player = ({position, player, tricks, canCollect, collect, activePlayer}) => {
+const Player = ({position, player, tricks, canCollect, collect, activePlayer, playCard}) => {
 
   if (!player) return null;
   const { name,
@@ -28,7 +28,6 @@ const Player = ({position, player, tricks, canCollect, collect, activePlayer}) =
 
   const handleClick = (e) => {
     if (!id) playCard(random(hand))
-    return;
   }
 
   const playerTricks = tricks.filter(({playerIndex, _}) => playerIndex === index);

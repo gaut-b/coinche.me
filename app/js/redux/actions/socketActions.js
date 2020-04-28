@@ -47,7 +47,7 @@ export const playCard = card =>
 export const getCardBack = card =>
   buildSocketDispatchAction(gameActionTypes.CARD_BACK, card)
 
-export const collect = card =>
+export const collect = playerIndex =>
   buildSocketDispatchAction(gameActionTypes.COLLECT, {playerIndex})
 
 export const newGame = () =>
