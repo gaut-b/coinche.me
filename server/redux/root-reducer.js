@@ -8,7 +8,7 @@ import {selectCurrentDeclaration, selectIsCoinched} from './selectors';
 
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
-  isGameStarted: false,
+  hasGameStarted: false,
   currentDeclaration: null,
   declarationsHistory: [],
   teams: [],
@@ -20,7 +20,9 @@ export const INITIAL_STATE = {
     sockets: [],
     disconnected: false,
   }),
-  preferences: {},
+  preferences: {
+
+  },
   score: null,
 };
 

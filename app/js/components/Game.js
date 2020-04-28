@@ -5,7 +5,7 @@ import {
   selectIsDistributed,
   selectIsLastTrick,
   selectTricks,
-  selectIsGameStarted
+  selectHasGameStarted
 } from '../redux/selectors/game';
 import {
   NORTH,
@@ -22,7 +22,7 @@ import DeclarationForm from './DeclarationForm.js';
 import ScoreReminder from './ScoreReminder.js';
 import DeclarationReminder from './DeclarationReminder';
 
-const Game = ({isDistributed, isLastTrick, isGameStarted, tricks}) => {
+const Game = ({isDistributed, isLastTrick, hasGameStarted, tricks}) => {
 
   const GameTable = () => {
     return (
@@ -30,12 +30,12 @@ const Game = ({isDistributed, isLastTrick, isGameStarted, tricks}) => {
         <div className="level-container">
           <div className="level is-mobile">
             <Player position={NORTH} />
-            {isGameStarted ? <DeclarationReminder /> : null}
+            {hasGameStarted ? <DeclarationReminder /> : null}
           </div>
           <div className="level is-mobile">
             <Player position={WEST} />
             <div className="level-item">
-            {!isGameStarted ? <DeclarationForm /> : <Table />}
+            {!hasGameStarted ? <DeclarationForm /> : <Table />}
             </div>
             <Player position={EAST} />
           </div>
@@ -61,7 +61,7 @@ const mapStateToProps = createStructuredSelector({
   isDistributed: selectIsDistributed,
   isLastTrick: selectIsLastTrick,
   tricks: selectTricks,
-  isGameStarted: selectIsGameStarted,
+  hasGameStarted: selectHasGameStarted,
 });
 
 export default connect(mapStateToProps)(Game);

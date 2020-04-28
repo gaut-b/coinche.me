@@ -9,7 +9,7 @@ export const selectPlayers = state => get(state, 'game.players', []);
 export const selectTricks = state => get(state, 'game.tricks', []);
 export const selectDeck = state => get(state, 'game.deck', []);
 export const selectDeclarationsHistory = state => get(state, 'game.declarationsHistory', []);
-export const selectIsGameStarted = state => get(state, 'game.isGameStarted');
+export const selectHasGameStarted = state => get(state, 'game.hasGameStarted');
 export const selectScore = state => get(state, 'game.score', []);
 export const selectTeams = state => get(state, 'game.teams', []);
 
