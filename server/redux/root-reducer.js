@@ -3,8 +3,13 @@ import actionTypes from './actionTypes';
 import {DECK32, DECK52} from '../constants/decks';
 import { sortHand, distribute, distributeCoinche, cutDeck, countPlayerScore, hasBelote } from '../utils/coinche';
 import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
+import options from '../../shared/constants/options';
 import {shuffle, first, next, last, switchIndexes, partition} from '../../shared/utils/array';
-import {selectCurrentDeclaration, selectIsCoinched} from './selectors';
+import {
+  selectCurrentDeclaration,
+  selectIsCoinched,
+  selectCurrentTrumpType,
+} from './selectors';
 
 export const INITIAL_STATE = {
   deck: shuffle(DECK32),
@@ -21,7 +26,7 @@ export const INITIAL_STATE = {
     disconnected: false,
   }),
   preferences: {
-
+    declarationMode: options.NO_DECLARATION,
   },
   score: null,
 };
@@ -97,21 +102,21 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ...state,
         tricks: [],
         teams,
-        players: playersWithCards
+        players: playersWithCards,
+        hasGameStarted: state.preferences.declarationMode === options.NO_DECLARATION,
       };
     };
     case actionTypes.PLAY_CARD: {
       const card = action.payload;
       const playingPlayerIndex = state.players.findIndex(p => p.hand.find(c => c === card));
       const activePlayer = next(state.players, playingPlayerIndex);
-      const trumpType = selectCurrentDeclaration(state).trumpType;
       return {
         ...state,
         players: state.players.map((p, i) => {
           if (i === playingPlayerIndex) {
             return {
               ...p,
-              hand: sortHand(p.hand.filter(c => c !== card).concat(p.onTable || []), trumpType),
+              hand: sortHand(p.hand.filter(c => c !== card).concat(p.onTable || []), selectCurrentTrumpType(state)),
               onTable: card,
               isActivePlayer: false,
             }
@@ -209,7 +214,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
         teams: updatedTeams,
-        isGameStarted: false,
+        hasGameStarted: false,
         deck: newDeck,
         tricks: [],
         players: playersWithCards,
@@ -253,7 +258,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         players: playersUpdated,
-        isGameStarted: true,
+        hasGameStarted: true,
       }
     };
     case actionTypes.GET_SCORE: {

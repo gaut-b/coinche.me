@@ -16,11 +16,9 @@ const Card = ({value, onTable, isActivePlayer, isHidden, isSelectable, playCard,
   const handleClick = (e) => {
     if (!isSelectable) return;
     const cardValue = value;
-    if (!isActivePlayer) {
-      if (!window.confirm("Ce n'est pas votre tour !"))
-      return;
+    if (isActivePlayer || window.confirm("Ce n'est pas votre tour !")) {
+      (onTable.find(({value}) => value === cardValue)) ? getCardBack(value) : playCard(value);
     };
-    (onTable.find(({value}) => value === cardValue)) ? getCardBack(value) : playCard(value);
   }
 
   return (

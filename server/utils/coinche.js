@@ -5,7 +5,7 @@ import { next } from '../../shared/utils/array';
 
 export const sortHand = (hand, trumpType) => {
 
-  const sortingFunction = (trumpType) ? sortByType(trumpType) : undefined;
+  const sortingFunction = sortByType(trumpType || trumpTypes.NO_TRUMP);
 
   const sortedSpades = hand.filter(c => c.includes('S')).sort(sortingFunction);
   const sortedHearts = hand.filter(c => c.includes('H')).sort(sortingFunction);
