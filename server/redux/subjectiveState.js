@@ -22,15 +22,15 @@ export default function subjectiveState(state, socketId) {
     }
   })
 
-  const updatedTeams = state.teams.map(team => {
-    if (team.players.includes(playerId)) team.name = 'NOUS';
-    else team.name = 'EUX'
-    return team;
-  })
+  // const updatedTeams = state.teams.map(team => {
+  //   if (team.players.includes(playerId)) team.name = 'NOUS';
+  //   else team.name = 'EUX'
+  //   return team;
+  // })
 
   return {
     ...state,
     players: updatedPlayers,
-    teams: updatedTeams,
+    // teams: updatedTeams,
   };
 };

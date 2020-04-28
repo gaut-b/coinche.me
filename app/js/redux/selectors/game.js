@@ -2,6 +2,7 @@ import get from 'lodash.get';
 import { createSelector } from 'reselect';
 import {SOUTH} from '../../../../shared/constants/positions';
 import {last} from '../../../../shared/utils/array';
+import {equals} from '../../../../shared/utils/player';
 import declarationTypes from '../../../../shared/constants/declarationTypes';
 
 export const selectTableId = state => get(state, 'game.tableId');
@@ -18,6 +19,11 @@ export const selectNbPlayers = createSelector(
   (players) => players.length,
 );
 
+export const selectHumanPlayers = createSelector(
+  [selectPlayers],
+  players => players.filter(p => p.id)
+);
+
 export const selectPlayerByPosition = createSelector(
   [selectPlayers],
   players => position => players.find(player => player.position === position)
@@ -28,6 +34,16 @@ export const selectCurrentPlayer = createSelector(
   (players) => players.find(player => player.position === SOUTH)
 );
 
+export const selectActivePlayer = createSelector(
+  [selectPlayers],
+  players => players.find(p => p.isActivePlayer),
+);
+
+export const selectIsActivePlayer = createSelector(
+  [selectCurrentPlayer, selectActivePlayer],
+  (currentPlayer, activePlayer) => equals(currentPlayer, activePlayer),
+);
+
 export const selectIsDistributed = createSelector(
   [selectPlayers],
   players => players.filter(p => ((p.hand || []).length)).length
@@ -36,11 +52,6 @@ export const selectIsDistributed = createSelector(
 export const selectIsLastTrick = createSelector(
   [selectDeck, selectPlayers, selectTricks],
   (deck, players, tricks) => (tricks.length * players.length) === deck.length,
-);
-
-export const selectHumanPlayers = createSelector(
-  [selectPlayers],
-  players => players.filter(p => p.id)
 );
 
 export const selectOnTable = createSelector(
@@ -56,27 +67,6 @@ export const selectCanCollect = createSelector(
 export const selectLastTrick = createSelector(
   [selectTricks],
   (tricks) => tricks[0],
-);
-
-export const selectActivePlayer = createSelector(
-  [selectPlayers],
-  players => players.find(p => p.isActivePlayer),
-);
-
-export const selectIsActivePlayer = createSelector(
-  [selectCurrentPlayer],
-  (player) => {
-    if (!player) return false;
-    return player.isActivePlayer;
-  },
-);
-
-export const selectActivePlayerName = createSelector(
-  [selectPlayers],
-  (players) => {
-    const activePlayer = players.find(p => p.isActivePlayer)
-    if (activePlayer) return activePlayer.name;
-  },
 );
 
 export const selectLastMasterIndex = createSelector(

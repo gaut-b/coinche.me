@@ -5,7 +5,7 @@ import {SOUTH, NORTH} from '../../../shared/constants/positions';
 import {pluralize} from '../../../shared/utils/string';
 import {random} from '../../../shared/utils/array';
 import { playCard, collect } from '../redux/actions/socketActions';
-import { selectPlayerByPosition, selectCanCollect, selectActivePlayerName, selectTricks } from '../redux/selectors/game';
+import { selectPlayerByPosition, selectCanCollect, selectActivePlayer, selectTricks } from '../redux/selectors/game';
 
 
 import '../../scss/components/player.scss';
@@ -15,7 +15,7 @@ import Hand from './Hand.js';
 
 const HandSymbol = require('../../images/hand2.svg');
 
-const Player = ({position, player, tricks, canCollect, collect, activePlayerName}) => {
+const Player = ({position, player, tricks, canCollect, collect, activePlayer}) => {
 
   if (!player) return null;
   const { name,
@@ -35,7 +35,7 @@ const Player = ({position, player, tricks, canCollect, collect, activePlayerName
 
   const $name = (
     <div className={`name ${disconnected ? 'has-text-danger' : ''}`} title={disconnected ? 'Déconnecté' : ''}>
-      {(name === activePlayerName) ?
+      {(player.index === activePlayer.index) ?
         <span className="icon">
           <img src={HandSymbol}/>
         </span> :
@@ -67,7 +67,7 @@ const mapStateToProps = (state, ownProps) => ({
   player: selectPlayerByPosition(state)(ownProps.position),
   tricks: selectTricks(state),
   canCollect: selectCanCollect(state),
-  activePlayerName: selectActivePlayerName(state),
+  activePlayer: selectActivePlayer(state),
 });
 
 const mapDispatchToProps = {

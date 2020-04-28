@@ -1,27 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { selectTeams } from '../redux/selectors/game';
+import {
+	selectScore,
+} from '../redux/selectors/game';
 
 import '../../scss/components/ScoreReminder.scss';
 
-const ScoreReminder = ({ teams }) => {
+const ScoreReminder = ({ score }) => {
 	return (
 		<div className="table-container score-reminder">
 			<table className="table is-fullwidth">
 				<thead>
 					<tr>
-						{teams.map( team =>
-							<td key={team.name}>{team.name}</td>
-						)}
+						<td>NOUS</td>
+						<td>EUX</td>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						{teams.map( team =>
-							<td key={team.name}>{team.totalScore || 0}</td>
-						)}
-					</tr>
+					{score.map( ([us, others], index) =>
+						<tr key={index}>
+							<td>{us}</td>
+							<td>{others}</td>
+						</tr>
+					)}
 				</tbody>
 			</table>
 		</div>
@@ -29,7 +31,7 @@ const ScoreReminder = ({ teams }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-	teams: selectTeams,
+	score: selectScore,
 });
 
 export default connect(mapStateToProps)(ScoreReminder);
