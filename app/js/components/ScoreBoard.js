@@ -4,16 +4,14 @@ import { createStructuredSelector } from 'reselect';
 import { getScore } from '../redux/actions/socketActions';
 import {
 	selectPlayers,
-	selectLastMasterIndex,
 	selectCurrentPlayer,
 	selectTeams,
-	selectPartnerId,
 	selectCurrentDeclaration,
 } from '../redux/selectors/game';
 
 import Declaration from './Declaration';
 
-const ScoreBoard = ({ getScore, players, currentPlayer, lastMasterIndex, currentDeclaration, teams, partnerId }) => {
+const ScoreBoard = ({ getScore, players, currentPlayer, currentDeclaration, teams}) => {
 
 	useEffect(() => {
 	  getScore()
@@ -60,11 +58,9 @@ const ScoreBoard = ({ getScore, players, currentPlayer, lastMasterIndex, current
 
 const mapStateToProps = createStructuredSelector({
 	players: selectPlayers,
-	lastMasterIndex: selectLastMasterIndex,
 	currentPlayer: selectCurrentPlayer,
 	currentDeclaration: selectCurrentDeclaration,
 	teams: selectTeams,
-	partnerId: selectPartnerId
 });
 
 const mapDispatchToProps = {

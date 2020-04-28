@@ -12,7 +12,7 @@ import {
   selectIsActivePlayer,
   selectActivePlayer,
   selectDeclarationsHistory,
-  selectPartnerId,
+  selectPartner,
   selectCurrentDeclaration,
   selectIsCoinched,
 } from '../redux/selectors/game';
@@ -21,7 +21,7 @@ import {name} from '../../../shared/utils/player';
 
 import '../../scss/components/DeclarationForm.scss';
 
-const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer, partnerId, isCoinched }) => {
+const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer, partner, isCoinched }) => {
 
   const goalOptions = range(8, 16)
     .map(i => 10*i)
@@ -83,8 +83,8 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
 
   if (currentDeclaration) {
     const lastBid = last(declarationsHistory);
-    const isCoincheEnabled = (currentPlayer.id !== lastBid.playerId) && (partnerId !== lastBid.playerId) && (currentDeclaration.playerId === lastBid.playerId);
-    const isOverCoincheEnabled = isCoinched.length && ((currentPlayer.id === currentDeclaration.playerId) || (partnerId === currentDeclaration.playerId));
+    const isCoincheEnabled = (currentPlayer.id !== lastBid.playerId) && (partner.id !== lastBid.playerId) && (currentDeclaration.playerId === lastBid.playerId);
+    const isOverCoincheEnabled = isCoinched.length && ((currentPlayer.id === currentDeclaration.playerId) || (partner.id === currentDeclaration.playerId));
     isCoincheVisible = isCoincheEnabled || isOverCoincheEnabled;
   }
   const isDeclareDisabled = !state.goal || !state.trumpType || currentDeclaration && (currentDeclaration.goal === 250) || isCoinched.length;
@@ -141,7 +141,7 @@ const mapStateToProps = createStructuredSelector({
   currentDeclaration: selectCurrentDeclaration,
   declarationsHistory: selectDeclarationsHistory,
   isActivePlayer: selectIsActivePlayer,
-  partnerId: selectPartnerId,
+  partner: selectPartner,
   isCoinched: selectIsCoinched,
 });
 
