@@ -1,10 +1,15 @@
-import { combineReducers } from 'redux';
 import actionTypes from './actionTypes';
-import {DECK32, DECK52} from '../constants/decks';
-import { sortHand, distribute, distributeCoinche, cutDeck, countPlayerScore, hasBelote } from '../utils/coinche';
-import {NORTH, EAST, SOUTH, WEST} from '../../shared/constants/positions';
+import {DECK32} from '../constants/decks';
+import {
+  sortHand,
+  distributeCoinche,
+  cutDeck,
+  countPlayerScore,
+  hasBelote,
+  gatherTricks,
+} from '../utils/coinche';
 import options from '../../shared/constants/options';
-import {shuffle, first, next, nextIndex, last, switchIndexes, partition} from '../../shared/utils/array';
+import {shuffle, first, nextIndex, switchIndexes, firstIndex} from '../../shared/utils/array';
 import {
   selectCurrentDeclaration,
   selectIsCoinched,
@@ -13,7 +18,6 @@ import {
 } from './selectors';
 
 export const INITIAL_STATE = {
-  deck: shuffle(DECK32),
   hasGameStarted: false,
   declarationsHistory: [],
   tricks: [],
@@ -29,7 +33,6 @@ export const INITIAL_STATE = {
   },
   score: [
     [0, 0],
-    [120, 0],
   ],
 };
 
@@ -40,7 +43,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       const samePlayerIndex = state.players.findIndex(p => p.id === playerId);
       const firstAvailableIndex = state.players.findIndex(p => !p.id);
       const firstDisconnectedIndex = state.players.findIndex(p => p.disconnected);
-      const newPlayerIndex = [samePlayerIndex, firstAvailableIndex, firstDisconnectedIndex].find(i => i > -1);
+      const newPlayerIndex = firstIndex([samePlayerIndex, firstAvailableIndex, firstDisconnectedIndex]);
       if (newPlayerIndex === undefined) return state;
       return {
         ...state,
@@ -81,30 +84,22 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       }
     };
     case actionTypes.DISTRIBUTE: {
-      const dealerId = action.payload.playerId;
-      const dealerIndex = state.players.findIndex(p => p.id === dealerId);
-      const activePlayerIndex = nextIndex(state.players, dealerIndex);
+      const previousDealerIndex = state.players.findIndex(p => p.isDealer);
+      const dealerIndex = firstIndex([action.payload.playerIndex, nextIndex(state.players, previousDealerIndex), 0]);
+
       const playersWithDealer = state.players.map((p, index) => ({
         ...p,
-        hand: (p.hand.length) ? [] : p.hand,
+        hand: [],
         onTable: null,
         isDealer: index === dealerIndex,
-        isActivePlayer: index === activePlayerIndex,
+        isActivePlayer: index === nextIndex(state.players, dealerIndex),
       }));
-
-      // const teams = (state.teams.length)
-      // ? (state.teams)
-      // : partition(state.players.map(p => p.id), (p, i) => i%2).map(players => ({
-      //   players,
-      // }))
-
-      const playersWithCards = distributeCoinche(state.deck, playersWithDealer, dealerIndex);
+      const deck = cutDeck(state.tricks.length ? gatherTricks(state.tricks) : shuffle(DECK32));
 
       return {
         ...state,
         tricks: [],
-        // teams,
-        players: playersWithCards,
+        players: distributeCoinche(playersWithDealer, deck, dealerIndex),
         hasGameStarted: state.preferences.declarationMode === options.NO_DECLARATION,
       };
     };
@@ -171,52 +166,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
           }
         })
       }
-    };
-    // DEPRECATED use DISTRIBUTE instead
-    case actionTypes.NEW_GAME: {
-
-      const dealerIndex = state.players.findIndex(p => p.isDealer)
-      const newDealerIndex = nextIndex(state.players, dealerIndex);
-      const newActivePlayerIndex = nextIndex(state.players, newDealerIndex);
-
-      // A refactorer aussi, très moche !
-      const tricks = state.players.map((p, index) => {
-        return state.tricks.filter(({playerIndex}) => index === playerIndex)
-          .reduce((tricks, trick) => tricks.concat(trick.cards), [])
-      })
-
-      // Rassemble les cartes en gardant les plis des équipes.
-      // très moche, à refactorer
-      const newDeck = (!tricks.length)
-        ? [].concat(tricks[0]).concat(tricks[2]).concat(tricks[1]).concat(tricks[3])
-        : state.deck;
-
-      const resetedPlayers = state.players.map((p, index) => {
-        return {
-          ...p,
-          hand: [],
-          onTable: null,
-          isDealer: index === newDealerIndex,
-          isActivePlayer: index === newActivePlayerIndex,
-        }
-      });
-
-      // const updatedTeams = state.teams.map(team => {
-      //   if (!team.currentGame) return team;
-      //   team.totalScore = (team.totalScore || 0) + team.currentGame.gameTotal;
-      //   team.currentGame = null;
-      //   return team;
-      // });
-      const playersWithCards = distributeCoinche(newDeck, resetedPlayers, newDealerIndex);
-
-      return {
-        ...INITIAL_STATE,
-        // teams: updatedTeams,
-        hasGameStarted: false,
-        deck: newDeck,
-        tricks: [],
-        players: playersWithCards,
-      };
     };
     case actionTypes.DECLARE: {
       const {playerId, trumpType, goal, type} = action.payload;

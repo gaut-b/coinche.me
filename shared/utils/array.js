@@ -1,3 +1,5 @@
+import {isNumber} from './boolean';
+
 export const shuffle = a => {
   for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -6,8 +8,11 @@ export const shuffle = a => {
   return a;
 }
 
+export const randomIndex = a => {
+  return Math.floor(Math.random() * a.length);
+}
 export const random = a => {
-  return a[Math.floor(Math.random() * a.length)];
+  return a[randomIndex(a)];
 }
 
 export const first = a => a[0];
@@ -15,6 +20,8 @@ export const last = a => a[a.length - 1];
 export const addIndex = (a, i, j) => (i+j) % a.length;
 export const nextIndex = (a, i) => addIndex(a, i, 1);
 export const next = (a, i) => a[nextIndex(a, i)];
+
+export const firstIndex = indexes => indexes.find(i => isNumber(i) && i > -1)
 
 export const switchIndexes = (a, index1, index2) => {
   return Object.assign([], a, {[index1]: a[index2], [index2]: a[index1]});

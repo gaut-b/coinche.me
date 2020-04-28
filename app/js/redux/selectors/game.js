@@ -51,7 +51,7 @@ export const selectIsDistributed = createSelector(
 
 export const selectIsLastTrick = createSelector(
   [selectDeck, selectPlayers, selectTricks],
-  (deck, players, tricks) => (tricks.length * players.length) === deck.length,
+  (deck, players, tricks) => players.every(p => p.hand.length === 0),
 );
 
 export const selectOnTable = createSelector(

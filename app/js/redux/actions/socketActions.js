@@ -35,8 +35,8 @@ const buildSocketDispatchAction = (type, payload) => ({
   }
 })
 
-export const distribute = playerId =>
-  buildSocketDispatchAction(gameActionTypes.DISTRIBUTE, {playerId})
+export const distribute = playerIndex =>
+  buildSocketDispatchAction(gameActionTypes.DISTRIBUTE, {playerIndex})
 
 export const swichTeams = indexes =>
   buildSocketDispatchAction(gameActionTypes.SWITCH_TEAMS, {indexes})

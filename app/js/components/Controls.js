@@ -64,7 +64,7 @@ const Controls = ({humanPlayers, currentPlayer, distribute, swichTeams, players,
               <span className="is-hidden-mobile">&nbsp;une partie</span>
             </button>
           </li>
-          {isDevelopment && disableDistribute && <li><button className="button is-text is-small" onClick={e => distribute(currentPlayer.id)}>(Forcer)</button></li>}
+          {isDevelopment && disableDistribute && <li><button className="button is-text is-small" onClick={e => distribute(currentPlayer.index)}>(Forcer)</button></li>}
           <li>
             <button className={`button ${disableDistribute ? 'is-primary' : 'is-text'}`} onClick={copyUrlToClipboard}>
               {isCopied ? 'Copié !' : <span>Copier l'URL<span className="is-hidden-mobile"> à partager pour rejoindre la partie</span></span>}

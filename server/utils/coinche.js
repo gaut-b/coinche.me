@@ -1,7 +1,7 @@
 import { DECK32 } from '../constants/decks';
 import trumpTypes from '../../shared/constants/trumpTypes';
 import gameScore from '../constants/gameScore';
-import { next } from '../../shared/utils/array';
+import { next, shift, randomIndex, shuffle } from '../../shared/utils/array';
 
 export const sortHand = (hand, trumpType) => {
 
@@ -15,7 +15,13 @@ export const sortHand = (hand, trumpType) => {
   return [].concat(sortedSpades).concat(sortedHearts).concat(sortedClubs).concat(sortedDiamonds);
 };
 
-export const distributeCoinche = (deck, players, dealerIndex) => {
+export const gatherTricks = tricks => tricks.reduce((a, t) => {
+  return a.concat(shuffle(t.cards));
+}, []);
+
+export const cutDeck = cards => shift(cards, randomIndex(cards))
+
+export const distributeCoinche = (players, deck, dealerIndex) => {
   if (deck.length !== 32) return players;
 
   const newDeck = cutDeck(deck);
@@ -53,12 +59,6 @@ export const distribute = (deck, players, dealerIndex, nbCardsToDistribute=1) =>
         hand: sortHand(player.hand),
       };
   });
-};
-
-export const cutDeck = (deck) => {
-  const indexToCut = Math.floor(Math.random() * 24) + 4; //returns an integer betwenn 4 and 28
-  const copiedDeck = [...deck];
-  return [...deck.slice(indexToCut + 1, deck.length), ...deck.slice(0, indexToCut + 1)];
 };
 
 export const countTrick = (trick, trumpType) => {

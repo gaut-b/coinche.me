@@ -36,7 +36,7 @@ const Score = ({tricks, distribute, preferences}) => {
         <h2 className="title is-2">Eux</h2>
         <TeamHand tricks={others} />
       </div>
-      <button className="button is-primary is-large" onClick={() => distribute()} style={{marginTop: '0rem'}}>Redistribuer</button>
+      <button className="button is-primary is-large" onClick={() => distribute()}>Redistribuer</button>
     </div>
   );
 };
