@@ -9,6 +9,7 @@
   &.is-west, &.is-east {
     margin: 1rem 0;
     min-width: 10vw;
+
   }
 
   &.is-north {
@@ -18,21 +19,39 @@
     }
   }
 
-  @media screen and (max-width: $tablet) {
+  @include compact-mode() {
+    $name-width: 50vh;
     &:not(.is-south) {
       .hand {
         display: none;
       }
     }
-    &.is-west .name {
-      transform: rotate(-90deg) translateX(-50%) translateY(25%);
-      transform-origin: left;
-      max-width: 20vw;
+    &.is-west, &.is-east {
+      position: relative;
+      margin: 0;
+      width: 0;
+      height: 0;
+      min-width: 0;
+      .name {
+        position: absolute;
+        width: $name-width;
+        left: -$name-width/2;
+        right: -$name-width/2;
+        margin: auto;
+        transform-origin: center;
+      }
     }
-    &.is-east .name {
-      transform: rotate(90deg) translateX(50%) translateY(25%);
-      transform-origin: right;
-      max-width: 20vw;
+
+    &.is-west {
+      .name {
+        transform: rotate(-90deg);
+      }
+    }
+    &.is-east {
+      position: relative;
+      .name {
+        transform: rotate(90deg);
+      }
     }
   }
 

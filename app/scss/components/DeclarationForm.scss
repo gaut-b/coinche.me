@@ -7,16 +7,44 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+	max-width: 15rem;
 	&.is-disabled .form {
 		pointer-events: none;
 		opacity: 0.4;
 	}
-	.title {
-		margin-bottom: 1rem;
+	.headers {
+		@include compact-mode() {
+			display: none;
+		}
+		.title {
+			margin-bottom: 1rem;
+		}
 	}
 	[name="COINCHE"] {
 		pointer-events: auto;
 		opacity: 1;
+	}
+
+	.field.all-options {
+		@include compact-mode() {
+			display: block;
+			margin: auto;
+
+			.control {
+				display: block;
+				margin-bottom: 0.75rem;
+				text-align: center;
+				select, button {
+					border-radius: 3rem !important;
+				}
+				.select {
+					font-size: 0.75rem;
+					&, select {
+						width: 100%;
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -9,3 +9,9 @@
   width: 100%;
   margin-bottom: 4rem;
 }
+
+@mixin compact-mode() {
+  @media screen and (max-width: $tablet), screen and (max-aspect-ratio: 1/1) {
+    @content;
+  }
+}

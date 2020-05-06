@@ -6,11 +6,16 @@ body {
   @include background();
   // background: url(../images/leather_1.png);
   // background-color: $background;
+  // @media screen and (max-width: $tablet) {
+  //   background: red;
+  // }
+  // @media screen and (max-aspect-ratio: 1/1) {
+  //   background: blue;
+  // }
 }
 
 .content {
   a {
-    // font-weight: bold;
     text-decoration: underline;
   }
 }

@@ -50,14 +50,11 @@ export const getCardBack = card =>
 export const collect = playerIndex =>
   buildSocketDispatchAction(gameActionTypes.COLLECT, {playerIndex})
 
-export const newGame = () =>
-  buildSocketDispatchAction(gameActionTypes.NEW_GAME, {})
-
 export const undo = () =>
   buildSocketDispatchAction(gameActionTypes.UNDO, {})
 
-export const declare = (playerId, declaration) =>
-  buildSocketDispatchAction(gameActionTypes.DECLARE, {playerId, ...declaration})
+export const declare = (playerIndex, declaration) =>
+  buildSocketDispatchAction(gameActionTypes.DECLARE, {playerIndex, ...declaration})
 
 export const launchGame = () =>
   buildSocketDispatchAction(gameActionTypes.LAUNCH_GAME, {})

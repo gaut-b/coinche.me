@@ -29,7 +29,7 @@ export const INITIAL_STATE = {
     disconnected: false,
   }),
   preferences: {
-    declarationMode: options.NO_DECLARATION,
+    declarationMode: options.FINAL_DECLARATION,
   },
   score: [
     [0, 0],
@@ -168,9 +168,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       }
     };
     case actionTypes.DECLARE: {
-      const {playerId, trumpType, goal, type} = action.payload;
-      const playerIndex = state.players.findIndex(p => p.id === playerId);
-
+      const {playerIndex, trumpType, goal, type} = action.payload;
       const playersUpdated = state.players.map((p, i) => {
         return {
           ...p,
@@ -182,7 +180,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         ...state,
         players: playersUpdated,
         declarationsHistory: state.declarationsHistory.concat({
-          playerId,
+          playerIndex,
           trumpType,
           goal,
           type,

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { connect } from 'react-redux';
-import { declare, launchGame, newGame } from '../redux/actions/socketActions';
+import { declare, launchGame, distribute } from '../redux/actions/socketActions';
 import { createStructuredSelector } from 'reselect';
 import Declaration from './Declaration';
 import {trumpNames} from '../../../shared/constants/trumpTypes';
 import declarationTypes from '../../../shared/constants/declarationTypes';
+import options from '../../../shared/constants/options';
 import { first, last, range } from '../../../shared/utils/array';
 import {
   selectPlayers,
@@ -15,19 +16,37 @@ import {
   selectPartner,
   selectCurrentDeclaration,
   selectIsCoinched,
+  selectPreferences,
 } from '../redux/selectors/game';
 
 import {name} from '../../../shared/utils/player';
 
 import '../../scss/components/DeclarationForm.scss';
 
-const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclaration, declarationsHistory, declare, launchGame, newGame, isActivePlayer, partner, isCoinched }) => {
+const DeclarationForm = ({
+  players,
+  currentPlayer,
+  activePlayer,
+  currentDeclaration,
+  declarationsHistory,
+  declare,
+  launchGame,
+  distribute,
+  isActivePlayer,
+  partner,
+  isCoinched,
+  preferences,
+}) => {
+
+  const onlyFinalDeclaration = preferences.declarationMode === options.FINAL_DECLARATION;
+  const canDeclare = onlyFinalDeclaration || isActivePlayer;
 
   const goalOptions = range(8, 16)
     .map(i => 10*i)
     .filter(i => !currentDeclaration || (i > currentDeclaration.goal))
     .map(i => ({name: i, value: i}))
     .concat({name: 'Capot', value: 250})
+    .concat({name: 'Générale', value: 500})
 
   const [state, setState] = useState({goal: first(goalOptions).value});
 
@@ -45,7 +64,7 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
 
     // If everybody passed => create a new game
     if (declarationsHistory.length === 4 && !declarationsHistory.filter(d => d.type !== declarationTypes.PASS).length) {
-      newGame();
+      distribute();
       return;
     };
 
@@ -55,26 +74,27 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
     const target = event.target;
     setState({
       ...state,
-      [target.name]: target.value,
+      [target.name]: target.value || null,
     })
   };
 
   const doPass = () => {
-    declare(currentPlayer.id, {
+    declare(currentPlayer.index, {
       type: declarationTypes.PASS,
     });
   };
 
   const doDeclare = () => {
-    declare(currentPlayer.id, {
+    declare(state.playerIndex || currentPlayer.index, {
       type: declarationTypes.DECLARE,
       trumpType: state.trumpType,
       goal: state.goal,
+      isCoinched: state.isCoinched,
     })
   };
 
   const doCoinche = () => {
-    declare(currentPlayer.id, {
+    declare(currentPlayer.index, {
       type: declarationTypes.COINCHE,
     })
   };
@@ -85,25 +105,39 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
     const lastBid = last(declarationsHistory);
     const isCoincheEnabled = (currentPlayer.id !== lastBid.playerId) && (partner.id !== lastBid.playerId) && (currentDeclaration.playerId === lastBid.playerId);
     const isOverCoincheEnabled = isCoinched.length && ((currentPlayer.id === currentDeclaration.playerId) || (partner.id === currentDeclaration.playerId));
-    isCoincheVisible = isCoincheEnabled || isOverCoincheEnabled;
+    isCoincheVisible = !onlyFinalDeclaration && isCoincheEnabled || isOverCoincheEnabled;
   }
-  const isDeclareDisabled = !state.goal || !state.trumpType || currentDeclaration && (currentDeclaration.goal === 250) || isCoinched.length;
+
+  const isDeclareDisabled = () => {
+    return ['goal', 'trumpType'].concat(onlyFinalDeclaration ? ['playerIndex'] : []).some(v => !state[v]);
+  }
+
+  const title = () => {
+    if (onlyFinalDeclaration) return 'Annonce finale';
+    return <Declaration value={last(declarationsHistory)} />;
+  }
+
+  const subTitle = () => {
+    if (onlyFinalDeclaration) return 'L\'un des joueurs saisit l\'annonce finale';
+    if (isActivePlayer) return 'C\'est à votre tour d\'annoncer';
+    return `A ${name(activePlayer)} de parler`
+  }
 
   return (
-    <div className={`declaration ${isActivePlayer ? '' : 'is-disabled'}`}>
-      <div>
+    <div className={`declaration ${canDeclare ? '' : 'is-disabled'}`}>
+      <div className="headers">
         {previousDeclarations.length ? <ul>
           {previousDeclarations.map((d, i) => <li key={i} ><Declaration value={d} /></li>)}
         </ul> : null}
         <h3 className="title is-3 is-spaced">
-          {<Declaration value={last(declarationsHistory)} />}
+          {title()}
         </h3>
         <p className="subtitle is-4">
-          {isActivePlayer ? 'C\'est à votre tour d\'annoncer' : `A ${name(activePlayer)} de parler`}
+          {subTitle()}
         </p>
       </div>
       <div className="form">
-        <div className="field has-addons has-addons-centered">
+        <div className="field has-addons has-addons-centered all-options">
           <p className="control">
             <span className="select">
               <select name="goal" onChange={handleChange}>
@@ -114,22 +148,45 @@ const DeclarationForm = ({ players, currentPlayer, activePlayer, currentDeclarat
           <p className="control">
             <span className="select">
               <select name="trumpType" onChange={handleChange}>
-                <option value={null} defaultValue={true}>Quelle couleur ?</option>
+                <option value={''} defaultValue={true}>Quelle couleur ?</option>
                 {Object.entries(trumpNames).map(([k, v]) => <option key={k} value={k} >{v}</option>)}
               </select>
             </span>
           </p>
           <p className="control">
-            <button className="button is-primary" type="submit" name={declarationTypes.DECLARE} disabled={isDeclareDisabled} onClick={e => doDeclare()}>Annoncer</button>
+            <span className="select">
+              <select name="playerIndex" onChange={handleChange}>
+                <option value={''} defaultValue={true}>Par ?</option>
+                {players.map(p => <option key={p.index} value={p.index} >{name(p)}</option>)}
+              </select>
+            </span>
+          </p>
+          <p className="control">
+            <span className="select">
+              <select name="isCoinched" onChange={handleChange}>
+                <option value={''} defaultValue={true}>Coinché ?</option>
+                <option value={declarationTypes.COINCHE} >C'est coinché !</option>
+                <option value={declarationTypes.SURCOINCHE}>Surcoinché !!</option>
+              </select>
+            </span>
+          </p>
+          <p className="control">
+            <button className="button is-primary" disabled={isDeclareDisabled()} onClick={e => doDeclare()}>
+              {onlyFinalDeclaration ? 'Saisir' : 'Annoncer'}
+            </button>
           </p>
         </div>
         <div className="field">
-          <button className="button is-primary" type="submit" name={declarationTypes.PASS} onClick={e => doPass()}>Passer</button>
+          { onlyFinalDeclaration ?
+            <button className="button is-primary" onClick={e => distribute()}>Redistribuer</button> :
+            <button className="button is-primary" onClick={e => doPass()}>Passer</button>}
         </div>
       </div>
-      <div className="field">
-        <button className={`button is-primary ${!isCoincheVisible ? 'is-hidden' : ''}`} type="submit" name={declarationTypes.COINCHE} onClick={e => doCoinche()}>{`${!isCoinched.length ? 'Coincher' : 'Surcoincher'}`}</button>
-      </div>
+      {isCoincheVisible ? (
+        <div className="field">
+          <button className={'button is-primary'} onClick={e => doCoinche()}>{`${!isCoinched.length ? 'Coincher' : 'Surcoincher'}`}</button>
+        </div>
+      ) : null}
     </div>
   );
 };
@@ -143,12 +200,13 @@ const mapStateToProps = createStructuredSelector({
   isActivePlayer: selectIsActivePlayer,
   partner: selectPartner,
   isCoinched: selectIsCoinched,
+  preferences: selectPreferences,
 });
 
 const mapDispatchToProps = {
   declare,
   launchGame,
-  newGame,
+  distribute,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeclarationForm);
